@@ -2,7 +2,6 @@
   <div class="container">
     <div class="left-side">
       <div class="panel">
-        <Banner />
         <DataPanel />
         <ContentChart />
       </div>
@@ -23,18 +22,18 @@
       <a-grid :cols="24" :row-gap="16">
         <a-grid-item :span="24">
           <div class="panel moduler-wrap">
-            <QuickOperation />
-            <RecentlyVisited />
+<!--            <QuickOperation />-->
+<!--            <RecentlyVisited />-->
           </div>
         </a-grid-item>
         <a-grid-item class="panel" :span="24">
-          <Carousel />
+<!--          <Carousel />-->
         </a-grid-item>
         <a-grid-item class="panel" :span="24">
-          <Announcement />
+<!--          <Announcement />-->
         </a-grid-item>
         <a-grid-item class="panel" :span="24">
-          <Docs />
+<!--          <Docs />-->
         </a-grid-item>
       </a-grid>
     </div>
@@ -42,16 +41,18 @@
 </template>
 
 <script lang="ts" setup>
-  import Banner from './components/banner.vue';
+  //  线上总内容
   import DataPanel from './components/data-panel.vue';
   import ContentChart from './components/content-chart.vue';
+  // 线上热门内容
   import PopularContent from './components/popular-content.vue';
+  // 百分比占比图
   import CategoriesPercent from './components/categories-percent.vue';
-  import RecentlyVisited from './components/recently-visited.vue';
-  import QuickOperation from './components/quick-operation.vue';
-  import Announcement from './components/announcement.vue';
-  import Carousel from './components/carousel.vue';
-  import Docs from './components/docs.vue';
+  // import RecentlyVisited from './components/recently-visited.vue';
+  // import QuickOperation from './components/quick-operation.vue';
+  // import Announcement from './components/announcement.vue';
+  // import Carousel from './components/carousel.vue';
+  // import Docs from './components/docs.vue';
 </script>
 
 <script lang="ts">

@@ -26,7 +26,7 @@
     return {
       legend: {
         left: 'center',
-        data: ['纯文本', '图文类', '视频类'],
+        data: ['无持有nft', '持有nft>50', '持有nft>100'],
         bottom: 0,
         icon: 'circle',
         itemWidth: 8,
@@ -48,7 +48,7 @@
             left: 'center',
             top: '40%',
             style: {
-              text: '内容量',
+              text: '总数',
               textAlign: 'center',
               fill: isDark ? '#ffffffb3' : '#4E5969',
               fontSize: 14,
@@ -85,21 +85,21 @@
           data: [
             {
               value: [148564],
-              name: '纯文本',
+              name: '无持有nft',
               itemStyle: {
                 color: isDark ? '#3D72F6' : '#249EFF',
               },
             },
             {
               value: [334271],
-              name: '图文类',
+              name: '持有nft>50',
               itemStyle: {
                 color: isDark ? '#A079DC' : '#313CA9',
               },
             },
             {
               value: [445694],
-              name: '视频类',
+              name: '持有nft>100',
               itemStyle: {
                 color: isDark ? '#6CAAF5' : '#21CCFF',
               },

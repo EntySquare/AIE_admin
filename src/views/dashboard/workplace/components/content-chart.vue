@@ -1,17 +1,17 @@
 <template>
-  <a-spin :loading="loading" style="width: 100%">
+  <a-spin :loading="loading" :style="{width: '100%' , height:'100% '}">
     <a-card
       class="general-card"
       :header-style="{ paddingBottom: 0 }"
       :body-style="{
         paddingTop: '20px',
       }"
-      :title="$t('workplace.contentData')"
+      title="用户增幅统计(24小时)"
     >
       <template #extra>
-        <a-link>{{ $t('workplace.viewMore') }}</a-link>
+        <a-link>查看更多</a-link>
       </template>
-      <Chart height="289px" :option="chartOption" />
+      <Chart height="310px" :option="chartOption" />
     </a-card>
   </a-spin>
 </template>
@@ -41,30 +41,27 @@
   const { loading, setLoading } = useLoading(true);
   const xAxis = ref<string[]>([]);
   const chartsData = ref<number[]>([]);
-  const graphicElements = ref([
-    graphicFactory({ left: '2.6%' }),
-    graphicFactory({ right: 0 }),
-  ]);
+  // const graphicElements = ref([
+  //   graphicFactory({ left: '4%' }),
+  //   graphicFactory({ right: 0 }),
+  // ]);
   const { chartOption } = useChartOption(() => {
     return {
       grid: {
-        left: '2.6%',
-        right: '0',
+        left: '7%',
+        right: '3%',
         top: '10',
         bottom: '30',
       },
       xAxis: {
         type: 'category',
         offset: 2,
-        data: xAxis.value,
+        data: ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'],
         boundaryGap: false,
+
         axisLabel: {
           color: '#4E5969',
-          formatter(value: number, idx: number) {
-            if (idx === 0) return '';
-            if (idx === xAxis.value.length - 1) return '';
-            return `${value}`;
-          },
+
         },
         axisLine: {
           show: false,
@@ -74,11 +71,6 @@
         },
         splitLine: {
           show: true,
-          interval: (idx: number) => {
-            if (idx === 0) return false;
-            if (idx === xAxis.value.length - 1) return false;
-            return true;
-          },
           lineStyle: {
             color: '#E5E8EF',
           },
@@ -99,7 +91,7 @@
         axisLabel: {
           formatter(value: any, idx: number) {
             if (idx === 0) return value;
-            return `${value}k`;
+            return `${value}%`;
           },
         },
         splitLine: {
@@ -116,19 +108,20 @@
           const [firstElement] = params as ToolTipFormatterParams[];
           return `<div>
             <p class="tooltip-title">${firstElement.axisValueLabel}</p>
-            <div class="content-panel"><span>总内容量</span><span class="tooltip-value">${(
+            <div class="content-panel"><span>增幅人数</span><span class="tooltip-value">${(
               Number(firstElement.value) * 10000
             ).toLocaleString()}</span></div>
           </div>`;
         },
         className: 'echarts-tooltip-diy',
       },
-      graphic: {
-        elements: graphicElements.value,
-      },
+      // graphic: {
+      //   elements: graphicElements.value,
+      // },
       series: [
         {
           data: chartsData.value,
+          // data: [22222,222,2222,222,2222,222,2,222],
           type: 'line',
           smooth: true,
           // symbol: 'circle',
@@ -175,24 +168,24 @@
     };
   });
   const fetchData = async () => {
-    setLoading(true);
-    try {
-      const { data: chartData } = await queryContentData();
-      chartData.forEach((el: ContentDataRecord, idx: number) => {
-        xAxis.value.push(el.x);
-        chartsData.value.push(el.y);
-        if (idx === 0) {
-          graphicElements.value[0].style.text = el.x;
-        }
-        if (idx === chartData.length - 1) {
-          graphicElements.value[1].style.text = el.x;
-        }
-      });
-    } catch (err) {
-      // you can report use errorHandler or other
-    } finally {
-      setLoading(false);
-    }
+    // setLoading(true);
+    // try {
+    //   const { data: chartData } = await queryContentData();
+    //   chartData.forEach((el: ContentDataRecord, idx: number) => {
+    //     // xAxis.value.push(el.x);
+    //     chartsData.value.push(el.y);
+    //     if (idx === 0) {
+    //       // graphicElements.value[0].style.text = el.x;
+    //     }
+    //     if (idx === chartData.length - 1) {
+    //       // graphicElements.value[1].style.text = el.x;
+    //     }
+    //   });
+    // } catch (err) {
+    //   // you can report use errorHandler or other
+    // } finally {
+    //   setLoading(false);
+    // }
   };
   fetchData();
 </script>

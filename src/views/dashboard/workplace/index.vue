@@ -3,37 +3,33 @@
     <div class="left-side">
       <div class="panel">
         <DataPanel />
-        <ContentChart />
       </div>
       <a-grid :cols="24" :col-gap="16" :row-gap="16" style="margin-top: 16px">
+<!--        //柱状图-->
+        <a-grid-item
+          :span="{ xs: 24, sm: 24, md: 24, lg: 12, xl: 12, xxl: 12 }"
+        >
+          <ContentChart />
+        </a-grid-item>
+<!--        //热门专辑-->
         <a-grid-item
           :span="{ xs: 24, sm: 24, md: 24, lg: 12, xl: 12, xxl: 12 }"
         >
           <PopularContent />
         </a-grid-item>
+      </a-grid>
+      <a-grid :cols="24" :col-gap="16" :row-gap="16" style="margin-top: 16px">
+<!--        //折线图-->
+        <a-grid-item
+          :span="{ xs: 24, sm: 24, md: 24, lg: 12, xl: 12, xxl: 12 }"
+        >
+          <PopularContent />
+        </a-grid-item>
+<!--        //圆形图-->
         <a-grid-item
           :span="{ xs: 24, sm: 24, md: 24, lg: 12, xl: 12, xxl: 12 }"
         >
           <CategoriesPercent />
-        </a-grid-item>
-      </a-grid>
-    </div>
-    <div class="right-side">
-      <a-grid :cols="24" :row-gap="16">
-        <a-grid-item :span="24">
-          <div class="panel moduler-wrap">
-<!--            <QuickOperation />-->
-<!--            <RecentlyVisited />-->
-          </div>
-        </a-grid-item>
-        <a-grid-item class="panel" :span="24">
-<!--          <Carousel />-->
-        </a-grid-item>
-        <a-grid-item class="panel" :span="24">
-<!--          <Announcement />-->
-        </a-grid-item>
-        <a-grid-item class="panel" :span="24">
-<!--          <Docs />-->
         </a-grid-item>
       </a-grid>
     </div>

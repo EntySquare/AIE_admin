@@ -8,7 +8,7 @@
       }"
     >
       <template #title>
-        {{ $t('workplace.categoriesPercent') }}
+        用户分布图
       </template>
       <Chart height="310px" :option="chartOption" />
     </a-card>
@@ -59,7 +59,7 @@
             left: 'center',
             top: '50%',
             style: {
-              text: '928,531',
+              text: '928,666',
               textAlign: 'center',
               fill: isDark ? '#ffffffb3' : '#1D2129',
               fontSize: 16,

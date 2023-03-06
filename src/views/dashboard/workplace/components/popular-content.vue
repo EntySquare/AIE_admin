@@ -61,10 +61,6 @@
     }
   };
 
-
-  const typeChange = (contentType: string) => {
-    fetchData(contentType);
-  };
   fetchData('text');
 </script>
 

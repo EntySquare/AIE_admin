@@ -9,7 +9,7 @@
         <a-grid-item
           :span="{ xs: 24, sm: 24, md: 24, lg: 12, xl: 12, xxl: 12 }"
         >
-          <ContentChart />
+          <BarChart />
         </a-grid-item>
 <!--        //热门专辑-->
         <a-grid-item
@@ -23,7 +23,7 @@
         <a-grid-item
           :span="{ xs: 24, sm: 24, md: 24, lg: 12, xl: 12, xxl: 12 }"
         >
-          <PopularContent />
+          <ContentChart />
         </a-grid-item>
 <!--        //圆形图-->
         <a-grid-item
@@ -37,24 +37,16 @@
 </template>
 
 <script lang="ts" setup>
-  //  线上总内容
+  // 线上总内容
   import DataPanel from './components/data-panel.vue';
+  // 用户增幅统计
   import ContentChart from './components/content-chart.vue';
-  // 线上热门内容
+  // 热门专辑TOP
   import PopularContent from './components/popular-content.vue';
   // 百分比占比图
   import CategoriesPercent from './components/categories-percent.vue';
-  // import RecentlyVisited from './components/recently-visited.vue';
-  // import QuickOperation from './components/quick-operation.vue';
-  // import Announcement from './components/announcement.vue';
-  // import Carousel from './components/carousel.vue';
-  // import Docs from './components/docs.vue';
-</script>
-
-<script lang="ts">
-  export default {
-    name: 'Dashboard', // If you want the include property of keep-alive to take effect, you must name the component
-  };
+  // 交易额统计
+  import BarChart from './components/bar-chart.vue'
 </script>
 
 <style lang="less" scoped>

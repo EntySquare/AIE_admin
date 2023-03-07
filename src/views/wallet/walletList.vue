@@ -15,12 +15,15 @@
           重置
         </a-button>
       </div>
-      <a-table :data="data" :columns="columns">
+      <a-table :data="data">
         <template #columns>
           <a-table-column title="头像">
-            <template #address="{ record }">
+            <template #cell="{ record }">
               <a-avatar>
-                <img alt="avatar" :src="record.address" />
+                <img
+                  alt="avatar"
+                  :src="record.title"
+                />
               </a-avatar>
             </template>
           </a-table-column>

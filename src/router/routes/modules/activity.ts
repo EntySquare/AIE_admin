@@ -21,17 +21,7 @@ const ACTIVITY: AppRouteRecordRaw = {
         requiresAuth: true,
         roles: ['*'],
       },
-    },
-    {
-      path: 'publishActivity',
-      name: 'publishActivity',
-      component: () => import('@/views/activity/publishActivity.vue'),
-      meta: {
-        locale: '发布活动',
-        requiresAuth: true,
-        roles: ['*'],
-      },
-    },
+    }
   ],
 };
 

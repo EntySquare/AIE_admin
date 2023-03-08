@@ -22,6 +22,17 @@ const USER: AppRouteRecordRaw = {
         roles: ['*'],
       },
     },
+    {
+      path: 'userListInfo',
+      name: 'userListInfo',
+      component: () => import('@/views/user/userListInfo.vue'),
+      meta: {
+        locale: '用户详情',
+        requiresAuth: true,
+        // hideInMenu: true,
+        roles: ['*'],
+      },
+    },
   ],
 };
 

@@ -17,10 +17,8 @@
 </template>
 
 <script setup lang="ts">
-
   import useChartOption from "@/hooks/chart-option";
   import { ref } from "vue";
-
 
   const chartsData = ref<number[]>([]);
   const { chartOption } = useChartOption(() => {
@@ -51,8 +49,9 @@
           type: 'bar',
           showBackground: true,
           barWidth: '20px',
+          color: '#246EFF',
           backgroundStyle: {
-            color: 'rgba(0, 255, 255, 0.5)'
+            color: 'rgba(129,226,255,1.000)'
 
           }
         }

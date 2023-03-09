@@ -30,22 +30,26 @@
     <template #title>
       信息发布
     </template>
-    <a-space>
-      <div>标题</div>
-      <a-input :style="{width:'320px'}" placeholder="发布的标题..." allow-clear />
-    </a-space>
-    <div>
-      <div>内容</div>
-      <a-textarea placeholder="Please enter something" allow-clear :auto-size="{minRows: 10}"/>
-    </div>
 
+    <a-form :model="form" :style="{width:'400px'}" auto-label-width @submit="handleSubmit">
+      <a-form-item field="name" label="标题">
+        <a-input v-model="form.name" placeholder="发布的标题..." />
+      </a-form-item>
+      <a-form-item field="post" label="内容">
+        <a-textarea placeholder="发布的内容" allow-clear :auto-size="{minRows: 10}" />
+      </a-form-item>
+    </a-form>
   </a-modal>
 </template>
 
 <script setup lang="ts">
 import { reactive, ref } from "vue";
 
-
+const form = reactive({
+  name: '',
+  post: '',
+  isRead: false,
+})
 const newsSell = ref<boolean>(true);
 </script>
 

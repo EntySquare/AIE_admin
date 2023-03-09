@@ -1,20 +1,28 @@
 <template>
   <div style="padding: 20px">
-    <div class="whole">
-      <div class="title">钱包列表</div>
+    <a-card>
+      <a-typography-title :heading="6">
+        钱包列表
+      </a-typography-title>
       <a-divider />
-      <div class="arrange">
-        <div></div>
-        <a-input style="width: 350px" placeholder="手机号,昵称"></a-input>
-        <a-button class="search" type="primary">
-          <icon-search :size="20" style="margin-right: 8px" />
-          搜索
-        </a-button>
-        <a-button class="resetting">
-          <icon-loop :size="20" style="margin-right: 8px" />
-          重置
-        </a-button>
-      </div>
+      <a-form :model="form">
+        <a-row :gutter="16">
+          <a-col :span="4">
+            <a-input v-model="form.value2" placeholder="手机号,昵称" />
+          </a-col>
+          <a-col :span="8" >
+            <a-button type="primary" style="margin-right: 10px">
+              <icon-search :size="20"  />
+              查询
+            </a-button>
+            <a-button>
+              <icon-loop :size="20" />
+              重置
+            </a-button>
+          </a-col>
+        </a-row>
+      </a-form>
+      <a-divider />
       <a-table :data="data">
         <template #columns>
           <a-table-column title="头像">
@@ -34,17 +42,27 @@
             data-index="available"
           ></a-table-column>
           <a-table-column title="冻结金额" data-index="freeze"></a-table-column>
-          <a-table-column title="操作"></a-table-column>
+          <a-table-column title="操作">
+            <template #cell="{ record }">
+              <a-button @click="$modal.info({ title:'Name', content:record.name })" type="primary">详情</a-button>
+            </template>
+          </a-table-column>
         </template>
       </a-table>
-    </div>
+    </a-card>
   </div>
 </template>
 
-<script>
-  export default {
-    name: 'WalletList',
-    setup() {
+<script setup lang="ts">
+  import { reactive } from "vue";
+
+  const form = reactive({
+    value1: '',
+    value2: '',
+    value3: '',
+    value4: '',
+    value5: '',
+  })
       const columns = [
         {
           title: '头像',
@@ -125,38 +143,8 @@
         },
       ];
 
-      return {
-        columns,
-        data,
-      };
-    },
-  };
 </script>
 
 <style scoped>
-  .whole {
-    background: white;
-    padding: 15px;
-  }
 
-  .title {
-    margin-top: 10px;
-    font-size: 18px;
-    font-weight: bold;
-  }
-
-  .arrange {
-    display: flex;
-    margin-bottom: 30px;
-  }
-
-  .search {
-    margin-left: 40px;
-    border-radius: 4px;
-  }
-
-  .resetting {
-    margin-left: 40px;
-    border-radius: 4px;
-  }
 </style>

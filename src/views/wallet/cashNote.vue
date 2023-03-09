@@ -1,67 +1,69 @@
 <template>
   <div style="padding: 20px">
-    <div class="whole">
-      <div class="title">提现记录列表</div>
+    <a-card>
+      <a-typography-title :heading="6">
+        提现记录列表
+      </a-typography-title>
       <a-divider />
-      <div class="arrange">
-        <div class="nearLeft">
-          <text style="margin-right: 30px">充值类型</text>
-          <a-space direction="vertical" size="large">
-            <a-select
-              v-model="value"
-              :style="{ width: '240px' }"
-              placeholder="申请中,完成,拒绝"
-            >
-              <a-option
-                v-for="item of choice"
-                :key="item"
-                :value="item"
-                :label="item.label"
-              ></a-option>
-            </a-select>
-          </a-space>
-        </div>
-        <div class="nearRight">
-          <a-input style="width: 350px" placeholder="手机号,昵称"></a-input>
-          <a-button class="search" type="primary">
-            <icon-search :size="20" style="margin-right: 8px" />
-            搜索
-          </a-button>
-          <a-button class="resetting">
-            <icon-loop :size="20" style="margin-right: 8px" />
-            重置
-          </a-button>
-        </div>
-      </div>
-      <a-table :columns="columns" :data="data" :scroll="scroll" :scrollbar="scrollbar">
-        <template #operate="{ record }">
-          <a-popconfirm :content="'确定通过' + record.user" type="success" @ok="passOk" @cancel="passCancel">
-            <a-button class="pass" @click="passClick">通过</a-button>
-          </a-popconfirm>
-          <a-popconfirm :content="'确定拒绝' + record.user" type="error" @ok="refuseOk" @cancel="refuseCancel">
-            <a-button class="refuse" @click="refuseClick">拒绝</a-button>
-          </a-popconfirm>
+      <a-form :model="form">
+        <a-row :gutter="16">
+          <a-col :span="8">
+            <a-form-item field="value1" label="充值类型" label-col-flex="100px">
+              <a-space direction="vertical" size="large">
+                <a-select v-model="value"  :style="{width:'320px'}" placeholder="申请中,完成,拒绝">
+                  <a-option v-for="item of choice" :value="item" :label="item.label" :key="item"></a-option>
+                </a-select>
+              </a-space>
+            </a-form-item>
+          </a-col>
+          <a-col :span="4">
+            <a-input v-model="form.value2" placeholder="手机号,昵称" />
+          </a-col>
+          <a-col :span="8" >
+            <a-button type="primary" style="margin-right: 10px">
+              <icon-search :size="20"  />
+              查询
+            </a-button>
+            <a-button>
+              <icon-loop :size="20" />
+              重置
+            </a-button>
+          </a-col>
+        </a-row>
+      </a-form>
+      <a-table :data="data" style="margin-top: 10px">
+        <template #columns>
+          <a-table-column title="提现用户" data-index="key"></a-table-column>
+          <a-table-column title="提现金额" data-index=""></a-table-column>
+          <a-table-column title="银行卡" data-index="name"></a-table-column>
+          <a-table-column title="开户银行" data-index="surplus"></a-table-column>
+          <a-table-column title="状态" data-index="name"></a-table-column>
+          <a-table-column title="姓名" data-index="surplus"></a-table-column>
+          <a-table-column title="源数据" data-index="name"></a-table-column>
+          <a-table-column title="申请时间" data-index="surplus"></a-table-column>
+          <a-table-column title="数据修改时间" data-index="surplus"></a-table-column>
+          <a-table-column title="操作">
+            <template #cell="{ record }">
+              <a-popconfirm :content="'确定通过' + record.user" type="success" @ok="passOk" @cancel="passCancel">
+                <a-button type="primary" @click="passClick" style="margin-right: 10px">通过</a-button>
+              </a-popconfirm>
+              <a-popconfirm :content="'确定拒绝' + record.user" type="error" @ok="refuseOk" @cancel="refuseCancel" >
+                <a-button @click="refuseClick">拒绝</a-button>
+              </a-popconfirm>
+            </template>
+          </a-table-column>
         </template>
       </a-table>
-    </div>
+    </a-card>
   </div>
 </template>
 
-<script>
-import { ref } from "vue";
-import { Modal } from "@arco-design/web-vue";
+<script setup lang="ts">
 
-export default {
-  name: "CashNote",
-  setup() {
-    const show = ref(true);
-    const scrollbar = ref(true);
+import { reactive, ref } from "vue";
+
     const pass = ref(false);
     const refuse = ref(false);
-    const scroll = {
-      x: 1200,
-      y: 500
-    };
     const passClick = () => {
       pass.value = true;
     };
@@ -95,51 +97,6 @@ export default {
         value: "拒绝",
         label: "拒绝",
         other: "extra"
-      }
-    ];
-
-    const columns = [
-      {
-        title: "提现用户",
-        dataIndex: "user"
-      },
-      {
-        title: "提现金额",
-        dataIndex: "money"
-      },
-      {
-        title: "银行卡号",
-        dataIndex: "cardNo"
-      },
-      {
-        title: "开户银行",
-        dataIndex: "bank"
-      },
-      {
-        title: "状态",
-        dataIndex: "state"
-      },
-      {
-        title: "姓名",
-        dataIndex: "name"
-      },
-      {
-        title: "源数据",
-        dataIndex: "original"
-      },
-      {
-        title: "申请时间",
-        dataIndex: "applicationTime"
-      },
-      {
-        title: "数据修改时间",
-        dataIndex: "reviseTime"
-      },
-      {
-        title: "操作",
-        slotName: "operate",
-        fixed: "right",
-        width: 175
       }
     ];
     const data = [
@@ -190,72 +147,15 @@ export default {
       }
     ];
 
-    return {
-      show,
-      columns,
-      data,
-      choice,
-      scroll,
-      scrollbar,
-      pass,
-      passClick,
-      passOk,
-      passCancel,
-      refuse,
-      refuseClick,
-      refuseOk,
-      refuseCancel
-    };
-  }
-};
+const form = reactive({
+  value1: '',
+  value2: '',
+  value3: '',
+  value4: '',
+  value5: '',
+})
 </script>
 
 <style scoped>
-.whole {
-  background: white;
-  padding: 15px;
-}
 
-.title {
-  margin-top: 10px;
-  font-size: 18px;
-  font-weight: bold;
-}
-
-.arrange {
-  display: flex;
-  margin-bottom: 30px;
-}
-
-.nearLeft {
-  display: flex;
-  align-items: center;
-}
-
-.nearRight {
-  display: flex;
-  flex: 1;
-  justify-content: flex-end;
-}
-
-.search {
-  margin-left: 40px;
-  border-radius: 4px;
-}
-
-.resetting {
-  margin-left: 40px;
-  border-radius: 4px;
-}
-
-.pass {
-  background: green;
-  color: white;
-}
-
-.refuse {
-  background: #f53f3f;
-  color: white;
-  margin-left: 20px;
-}
 </style>

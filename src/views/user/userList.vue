@@ -12,10 +12,14 @@
           </a-col>
           <a-col :span="4" >
             <a-space  :size="18" style="margin-left: 100px">
-              <a-button type="primary" @click="getStoreList">
+              <a-button type="primary" style="margin-right: 10px">
+                <icon-search :size="20"  />
                 查询
               </a-button>
-              <a-button @click="reset"> 重置 </a-button>
+              <a-button>
+                <icon-loop :size="20" />
+                重置
+              </a-button>
             </a-space>
           </a-col>
         </a-row>

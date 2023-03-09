@@ -1,4 +1,5 @@
 <template>
+<!--  登录页面-->
   <div class="banner">
     <div class="banner-inner">
       <a-carousel class="carousel" animation-name="fade">

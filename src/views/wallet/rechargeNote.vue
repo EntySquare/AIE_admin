@@ -1,42 +1,55 @@
 <template>
   <div style="padding: 20px">
-    <div class="whole">
-      <div class="title">充值记录</div>
+    <a-card>
+      <a-typography-title :heading="6">
+        充值记录列表
+      </a-typography-title>
       <a-divider />
-      <div class="arrange">
-        <div class="nearLeft">
-          <text style="margin-right: 30px">充值类型</text>
-          <a-space direction="vertical" size="large">
-            <a-select v-model="value"  :style="{width:'320px'}" placeholder="微信,银行卡">
-              <a-option v-for="item of choice" :value="item" :label="item.label" :key="item"></a-option>
-            </a-select>
-          </a-space>
-        </div>
-
-        <div class="nearRight">
-          <a-input style="width: 350px;" placeholder="手机号,昵称"></a-input>
-          <a-button class="search" type="primary">
-            <icon-search :size="20" style="margin-right: 8px" />
-            搜索
-          </a-button>
-          <a-button class="resetting">
-            <icon-loop :size="20" style="margin-right: 8px" />
-            重置
-          </a-button>
-        </div>
-      </div>
-      <a-table :columns="columns" :data="data" :scroll="scroll" :scrollbar="scrollbar">
+      <a-form :model="form">
+        <a-row :gutter="16">
+          <a-col :span="8">
+            <a-form-item field="value1" label="充值类型" label-col-flex="100px">
+              <a-space direction="vertical" size="large">
+                <a-select v-model="value"  :style="{width:'320px'}" placeholder="微信,银行卡">
+                  <a-option v-for="item of choice" :value="item" :label="item.label" :key="item"></a-option>
+                </a-select>
+              </a-space>
+            </a-form-item>
+          </a-col>
+          <a-col :span="4">
+            <a-input v-model="form.value2" placeholder="手机号" />
+          </a-col>
+          <a-col :span="8" >
+            <a-button type="primary" style="margin-right: 10px">
+              <icon-search :size="20"  />
+              查询
+            </a-button>
+            <a-button>
+              <icon-loop :size="20" />
+              重置
+            </a-button>
+          </a-col>
+        </a-row>
+      </a-form>
+      <a-table :data="data" style="margin-top: 10px">
+        <template #columns>
+          <a-table-column title="充值用户" data-index="name"></a-table-column>
+          <a-table-column title="充值金额" data-index="surplus"></a-table-column>
+          <a-table-column title="充值类型" data-index="name"></a-table-column>
+          <a-table-column title="数据源" data-index="surplus"></a-table-column>
+          <a-table-column title="状态" data-index="name"></a-table-column>
+          <a-table-column title="充值时间" data-index="surplus"></a-table-column>
+        </template>
       </a-table>
+    </a-card>
+
+
     </div>
-  </div>
 </template>
 
-<script>
+<script setup lang="ts">
 import { reactive, ref } from "vue";
 
-export default {
-  name: "RechargeNote",
-  setup() {
     const show = ref(true);
     const value = ref();
     const scrollbar = ref(true);
@@ -114,61 +127,16 @@ export default {
       source: '32 Park Road, London',
       status: '32 Park Road, London',
     }]);
-
-    return {
-      columns,
-      data,
-      show,
-      value,
-      choice,
-      scroll,
-      scrollbar
-    };
-  }
-
-};
+const form = reactive({
+  value1: '',
+  value2: '',
+  value3: '',
+  value4: '',
+  value5: '',
+})
 </script>
 
 <style scoped>
 
-.whole {
-  background: white;
-  padding: 15px;
-
-}
-
-.title {
-  margin-top: 10px;
-  font-size: 18px;
-  font-weight: bold;
-}
-
-
-.arrange {
-  display: flex;
-  margin-bottom: 30px;
-}
-
-.nearLeft {
-  display: flex;
-  align-items: center;
-}
-
-.nearRight {
-  display: flex;
-  flex: 1;
-  justify-content: flex-end;
-}
-
-.search {
-  margin-left: 40px;
-  border-radius: 4px;
-}
-
-.resetting {
-  margin-left: 40px;
-  border-radius: 4px;
-
-}
 
 </style>

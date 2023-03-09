@@ -1,7 +1,7 @@
 <template>
   <div class="login-form-wrapper">
-    <div class="login-form-title">{{ $t('login.form.title') }}</div>
-    <div class="login-form-sub-title">{{ $t('login.form.title') }}</div>
+    <div class="login-form-title">登录玄武数藏</div>
+    <div class="login-form-sub-title">登录玄武数藏</div>
     <div class="login-form-error-msg">{{ errorMessage }}</div>
     <a-form
       ref="loginForm"
@@ -46,7 +46,7 @@
           <a-checkbox
             checked="rememberPassword"
             :model-value="loginConfig.rememberPassword"
-            @change="setRememberPassword as any"
+            @change="setRememberPassword"
           >
             {{ $t('login.form.rememberPassword') }}
           </a-checkbox>
@@ -85,11 +85,12 @@
     username: 'admin', // 演示默认值
     password: 'admin', // demo default value
   });
+  // 输入
   const userInfo = reactive({
     username: loginConfig.value.username,
     password: loginConfig.value.password,
   });
-
+  // 登录
   const handleSubmit = async ({
     errors,
     values,
@@ -103,7 +104,7 @@
       try {
         await userStore.login(values as LoginData);
         const { redirect, ...othersQuery } = router.currentRoute.value.query;
-        router.push({
+        await router.push({
           name: (redirect as string) || 'Workplace',
           query: {
             ...othersQuery,

@@ -1,127 +1,94 @@
 <template>
   <div style="padding: 20px">
-    <div class="whole">
-      <div class="title">账户列表</div>
-      <a-divider/>
-      <div class="arrange">
-        <div ></div>
-        <a-input style="width: 350px;" placeholder="手机号,昵称"></a-input>
-        <a-button class="search" type="primary"><icon-search :size="20" style="margin-right: 8px"/>搜索</a-button>
-        <a-button class="resetting"><icon-loop :size="20" style="margin-right: 8px"/>重置</a-button>
-      </div>
-      <a-table :columns="columns" :data="data">
-        <template #optional="{ record }">
-          <a-button @click="$modal.info({ title:'Name', content:record.name })">详细</a-button>
+    <a-card>
+      <a-typography-title :heading="6">
+        管理账户
+      </a-typography-title>
+      <a-divider />
+      <a-button type="primary" style="margin-top: 10px" :loading="loading" @click="addHomePageChart">
+        <template #icon>
+          <icon-plus />
+        </template>
+        添加账户
+      </a-button>
+      <a-table :data="data" style="margin-top: 20px">
+        <template #columns>
+          <a-table-column title="账户" data-index="title"></a-table-column>
+          <a-table-column title="角色" data-index="content"></a-table-column>
+          <a-table-column title="操作">
+            <template #cell="{ record }">
+              <a-button @click="$modal.info({ title:'Name', content:record.name })">删除</a-button>
+              <a-button style="margin-right: 10px" @click="$modal.info({ title:'Name', content:record.name })">修改角色</a-button>
+              <a-button style="margin-right: 10px" @click="$modal.info({ title:'Name', content:record.name })">修改密码</a-button>
+            </template>
+          </a-table-column>
         </template>
       </a-table>
-    </div>
+    </a-card>
   </div>
+  <!--  增加账户弹窗-->
+  <a-modal v-model:visible="addUser" title="添加账户">
+    <a-form :model="form">
+      <a-form-item field="name" label="用户名">
+        <a-input v-model="form.name" />
+      </a-form-item>
+      <a-form-item field="post" label="密码">
+        <a-input v-model="form.name" />
+      </a-form-item>
+      <a-form-item field="post" label="角色">
+        <a-select :style="{width:'320px'}" placeholder="Please select ...">
+          <a-option>Beijing</a-option>
+          <a-option>Shanghai</a-option>
+          <a-option>Guangzhou</a-option>
+          <a-option disabled>Disabled</a-option>
+        </a-select>
+      </a-form-item>
+    </a-form>
+  </a-modal>
+  <!--  修改角色弹窗-->
+  <a-modal v-model:visible="editUser" title="修改角色">
+    <a-form :model="form">
+      <a-form-item field="name" label="用户名">
+        <a-input v-model="form.content" />
+      </a-form-item>
+      <a-form-item field="name" label="角色">
+        <a-select :style="{width:'320px'}" placeholder="Please select ...">
+          <a-option>Beijing</a-option>
+          <a-option>Shanghai</a-option>
+          <a-option>Guangzhou</a-option>
+          <a-option disabled>Disabled</a-option>
+        </a-select>
+      </a-form-item>
+    </a-form>
+  </a-modal>
+  <!--  修改密码弹窗-->
+  <a-modal v-model:visible="editPass" title="修改密码">
+    <a-form :model="form">
+      <a-form-item field="name" label="用户名">
+        <a-input v-model="form.content" />
+      </a-form-item>
+      <a-form-item field="name" label="新密码">
+        <a-input v-model="form.content" />
+      </a-form-item>
+    </a-form>
+  </a-modal>
 </template>
 
-<script>
-  import { ref } from "vue";
+<script setup lang="ts">
+import { reactive, ref } from "vue";
 
-  export default {
-    name: 'Index',
-    setup() {
-      const show = ref(true)
-      const columns = [{
-        title: '所属用户',
-        dataIndex: 'name',
-      }, {
-        title: '余额',
-        dataIndex: 'salary',
-      }, {
-        title: '可用余额',
-        dataIndex: 'address',
-      }, {
-        title: '冻结金额',
-        dataIndex: 'email',
-      }, {
-        title: '操作',
-        slotName: 'optional'
-      }];
-      const data = [{
-        key: '1',
-        name: 'Jane Doe',
-        first: 'Jane',
-        last: 'Doe',
-        salary: 23000,
-        address: '32 Park Road, London',
-        email: 'jane.doe@example.com'
-      }, {
-        key: '2',
-        name: 'Alisa Ross',
-        first: 'Alisa',
-        last: 'Ross',
-        salary: 25000,
-        address: '35 Park Road, London',
-        email: 'alisa.ross@example.com'
-      }, {
-        key: '3',
-        name: 'Kevin Sandra',
-        first: 'Kevin',
-        last: 'Sandra',
-        salary: 22000,
-        address: '31 Park Road, London',
-        email: 'kevin.sandra@example.com'
-      }, {
-        key: '4',
-        name: 'Ed Hellen',
-        first: 'Ed',
-        last: 'Hellen',
-        salary: 17000,
-        address: '42 Park Road, London',
-        email: 'ed.hellen@example.com'
-      }, {
-        key: '5',
-        name: 'William Smith',
-        first: 'William',
-        last: 'Smith',
-        salary: 27000,
-        address: '62 Park Road, London',
-        email: 'william.smith@example.com'
-      }];
+const addUser = ref<boolean>(false);
+const editUser = ref<boolean>(false);
+const editPass = ref<boolean>(false);
+const form = reactive({
+  name: '',
+  picture: '',
+  content: '',
+});
 
-      return {
-        columns,
-        data,
-        show
-      }
-    },
-  };
 </script>
 
 <style scoped>
 
-.whole {
-  background: white;
-  padding: 15px;
-
-}
-
-.title{
-  margin-top: 10px;
-  font-size: 18px;
-  font-weight: bold;
-}
-
-
-
-.arrange{
-  display: flex;
-  margin-bottom: 30px;
-}
-
-.search{
-  margin-left: 40px;
-  border-radius: 4px;
-}
-
-.resetting{
-  margin-left: 40px;
-  border-radius: 4px;
-
-}
 
 </style>

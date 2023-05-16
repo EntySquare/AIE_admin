@@ -25,7 +25,15 @@ export interface LoginRes {
 // }
 
 export function login(data: LoginData) {
-  return axios.post<LoginRes>('/api/user/login', data);
+  // return axios.post<LoginRes>('/api/user/login', data);
+  if (!data.username) {
+    return failResponseWrap(null, '用户名不能为空', 50000);
+  }
+
+  if (!data.password) {
+    return failResponseWrap(null, '密码不能为空', 50000);
+  }
+  return axios.post<LoginRes, any>('/admin/login', data);
 }
 
 export function logout() {

@@ -103,7 +103,7 @@
                 </a-typography-title>
               </a-col>
               <a-col :span="6">
-                <a-button type="primary" :style="{marginTop: '10px'}" :loading="loading" @click="addLabel">
+                <a-button type="primary" :style="{marginTop: '10px'}" @click="addLabel">
                   <template #icon>
                     <icon-plus />
                   </template>
@@ -111,7 +111,7 @@
                 </a-button>
               </a-col>
             </a-row>
-            <a-table :data="data" style="margin-top: 10px">
+            <a-table style="margin-top: 10px">
               <template #columns>
                 <a-table-column title="排序" data-index="name"></a-table-column>
                 <a-table-column title="标签内容" data-index="surplus"></a-table-column>
@@ -193,7 +193,7 @@
         重置
       </a-button>
     </a-space>
-    <a-table :data="data" style="margin-top: 20px">
+    <a-table style="margin-top: 20px">
       <template #columns>
         <a-table-column title="图片" data-index="picture">
           <template #cell="{ record }">

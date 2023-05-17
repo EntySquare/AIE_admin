@@ -9,7 +9,7 @@ const UI: AppRouteRecordRaw = {
     locale: 'UI界面',
     requiresAuth: true,
     icon: 'icon-list',
-    order: 2,
+    order: 1,
   },
   children: [
     {

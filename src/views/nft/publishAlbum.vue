@@ -337,7 +337,7 @@
   import { ref, nextTick, onMounted } from 'vue';
   import { uploadFile } from '@/api/upload';
   import { createAlbum, Album } from '@/api/album';
-  import { Message } from '@arco-design/web-vue';
+  import { Message, RequestOption } from '@arco-design/web-vue';
   import { getUser } from '@/api/user';
 
   const circulation = ref<number>(0);
@@ -435,7 +435,7 @@
     tags3.value = tags3.value.filter((tag3) => tag3 !== key3);
   };
 
-  const customRequest1 = async (option: any) => {
+  const customRequest1 = async (option: RequestOption) => {
     const { onError, onSuccess, fileItem, name = 'file' } = option;
     const formData = new FormData();
     formData.append(name as string, fileItem.file as Blob);
@@ -448,7 +448,7 @@
     }
   };
 
-  const customRequest2 = async (option: any) => {
+  const customRequest2 = async (option: RequestOption) => {
     const { onError, onSuccess, fileItem, name = 'file' } = option;
     const formData = new FormData();
     formData.append(name as string, fileItem.file as Blob);
@@ -461,7 +461,7 @@
     }
   };
 
-  const customRequest3 = async (option: any) => {
+  const customRequest3 = async (option: RequestOption) => {
     const { onError, onSuccess, fileItem, name = 'file' } = option;
     const formData = new FormData();
     formData.append(name as string, fileItem.file as Blob);

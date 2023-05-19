@@ -1,7 +1,7 @@
 import axios from 'axios';
 import type { RouteRecordNormalized } from 'vue-router';
 import { UserState } from '@/store/modules/user/types';
-import { failResponseWrap } from "@/utils/setup-mock";
+import { failResponseWrap } from '@/utils/setup-mock';
 
 export interface LoginData {
   username: string;
@@ -12,6 +12,18 @@ export interface LoginRes {
   token: string;
   userInfo: UserState; // 用户信息要改
 }
+
+export interface UserPhoneRes {
+  avatar: string;
+  id: number;
+  nickname: string;
+  phone: string;
+}
+
+export interface UserPhoneResList {
+  user_list: UserPhoneRes[];
+}
+
 // 登录
 // export function login(data: LoginData) {
 //   if (!data.username) {
@@ -34,6 +46,10 @@ export function login(data: LoginData) {
     return failResponseWrap(null, '密码不能为空', 50000);
   }
   return axios.post<LoginRes, any>('/admin/login', data);
+}
+
+export function getUser(phone: string) {
+  return axios.post<UserPhoneResList>('/admin/user/all', { phone });
 }
 
 export function logout() {

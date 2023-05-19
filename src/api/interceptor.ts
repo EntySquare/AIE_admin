@@ -27,7 +27,9 @@ axios.interceptors.request.use(
       if (!config.headers) {
         config.headers = {};
       }
-      config.headers.Authorization = `Bearer ${token}`;
+      // config.headers.Authorization = `Bearer ${token}`;
+      // config.headers.Authorization = `${token}`;
+      config.headers = { token };
     }
     return config;
   },

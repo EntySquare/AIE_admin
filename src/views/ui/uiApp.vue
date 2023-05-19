@@ -110,7 +110,7 @@
   <a-modal v-model:visible="visibleTwo" title="新增市场页头轮播图">
     <a-form :model="form">
       <a-form-item field="name" label="图片">
-        <a-upload action="/" :default-file-list="fileList" />
+        <a-upload action="/" />
       </a-form-item>
     </a-form>
   </a-modal>

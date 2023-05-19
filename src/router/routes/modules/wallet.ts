@@ -9,7 +9,7 @@ const WALLET: AppRouteRecordRaw = {
     locale: '钱包',
     requiresAuth: true,
     icon: 'icon-list',
-    order: 7,
+    order: 6,
   },
   children: [
     {

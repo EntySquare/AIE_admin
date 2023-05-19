@@ -5,5 +5,9 @@ export interface UploadData {
   fileType: number;
 }
 export function uploadFile(data: FormData) {
-  return axios.post<any>('/admin/upload', data);
+  return axios.post<any>('/admin/upload', data, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
 }

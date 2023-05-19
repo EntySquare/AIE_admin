@@ -23,13 +23,13 @@
     color "^3.1.3"
 
 "@arco-design/web-vue@^2.40.0":
-  version "2.42.1"
-  resolved "https://registry.yarnpkg.com/@arco-design/web-vue/-/web-vue-2.42.1.tgz#b64af8e1ac5704da70fe962e50aa54e5e2ac5703"
-  integrity sha512-zzXmayX/DIJiPuxIntj3KJrLe6VrFoX6ixpmbrLl7SAnoecGAMSXnaAy6sw0xOybrZid3ytYEzAuqTI/p9aOQw==
+  version "2.46.0"
+  resolved "https://registry.yarnpkg.com/@arco-design/web-vue/-/web-vue-2.46.0.tgz#d9b0f5b0262b429083a065afd51b1bec687bbb0e"
+  integrity sha512-m26q6yBrrChY6DicMw2xtOBJcCUNk2q55LEB9WhVfkylxlYeCqJwy8bl82y/mmhPi+TJY8W6xdfi1vorjHCmbg==
   dependencies:
     "@arco-design/color" "^0.4.0"
     b-tween "^0.3.3"
-    b-validate "^1.3.1"
+    b-validate "^1.4.4"
     compute-scroll-into-view "^1.0.17"
     dayjs "^1.10.3"
     number-precision "^1.5.0"
@@ -1430,10 +1430,10 @@ b-tween@^0.3.3:
   resolved "https://registry.yarnpkg.com/b-tween/-/b-tween-0.3.3.tgz#7a93ed199c98cd41a33ba4c711a0fa7e86db3fa2"
   integrity sha512-oEHegcRpA7fAuc9KC4nktucuZn2aS8htymCPcP3qkEGPqiBH+GfqtqoG2l7LxHngg6O0HFM7hOeOYExl1Oz4ZA==
 
-b-validate@^1.3.1:
-  version "1.4.4"
-  resolved "https://registry.yarnpkg.com/b-validate/-/b-validate-1.4.4.tgz#084e8e1b1e2cdc5d9da72566b56d067bebae2dd7"
-  integrity sha512-E2tnSnxxKDyxP1G+TMTbVHA8XajfHHOJKeWm9YVRISSPtzTL7ZP/7tIYp01b+O83L5R/6i31+Su+vCOJBnQWFQ==
+b-validate@^1.4.4:
+  version "1.4.6"
+  resolved "https://registry.yarnpkg.com/b-validate/-/b-validate-1.4.6.tgz#950e2cf64e6e5ed74657f235cb81242ad341eb97"
+  integrity sha512-FLP1oaszKCOmDr1jv7yNAs7fTeEo6RFJhKre3jHbVi++jKZOZOMdhpDyTCh7jdndK7uoKRBznfdYnVh3VYdojg==
 
 bail@^1.0.0:
   version "1.0.5"
@@ -3000,10 +3000,10 @@ eslint-config-airbnb-base@^15.0.0:
     object.entries "^1.1.5"
     semver "^6.3.0"
 
-eslint-config-prettier@^8.5.0:
-  version "8.6.0"
-  resolved "https://registry.yarnpkg.com/eslint-config-prettier/-/eslint-config-prettier-8.6.0.tgz#dec1d29ab728f4fa63061774e1672ac4e363d207"
-  integrity sha512-bAF0eLpLVqP5oEVUFKpMA+NnRFICwn9X8B5jrR9FcqnYBuPbqWEjTEspPWMj5ye6czoSLDweCzSo3Ko7gGrZaA==
+eslint-config-prettier@^8.8.0:
+  version "8.8.0"
+  resolved "https://registry.yarnpkg.com/eslint-config-prettier/-/eslint-config-prettier-8.8.0.tgz#bfda738d412adc917fd7b038857110efe98c9348"
+  integrity sha512-wLbQiFre3tdGgpDv67NQKnJuTlcUVYHas3k+DZCc2U2BadthoEY4B7hLPvAxaqdyOGCzuLfii2fqGph10va7oA==
 
 eslint-import-resolver-node@^0.3.7:
   version "0.3.7"

@@ -15,7 +15,7 @@
               <a-upload
                 list-type="picture-card"
                 image-preview
-                :custom-request="customRequest"
+                :custom-request="customRequest1"
                 limit="1"
               />
             </a-col>
@@ -24,7 +24,7 @@
               <a-upload
                 list-type="picture-card"
                 image-preview
-                :custom-request="customRequest"
+                :custom-request="customRequest2"
                 limit="1"
               />
             </a-col>
@@ -37,7 +37,11 @@
                 <div style="line-height: 33px">专辑名称</div>
               </a-col>
               <a-col :span="5">
-                <a-input placeholder="输入专辑名" allow-clear />
+                <a-input
+                  v-model="albumName"
+                  placeholder="输入专辑名"
+                  allow-clear
+                />
               </a-col>
             </a-row>
             <a-divider />
@@ -47,22 +51,30 @@
                 <div style="line-height: 33px">发行量</div>
               </a-col>
               <a-col :span="5">
-                <a-input placeholder="输入发行量" allow-clear />
+                <a-input
+                  v-model="circulation"
+                  placeholder="输入发行量"
+                  allow-clear
+                />
               </a-col>
             </a-row>
             <a-divider />
 
             <a-row>
-              <a-col :span="18">
+              <a-col :span="15">
                 <div style="line-height: 33px">作者账号</div>
               </a-col>
-              <a-col :span="5">
-                <div>
-                  <a-button type="text">aaaaaa</a-button>
-                </div>
-              </a-col>
-              <a-col :span="1">
-                <div style="line-height: 33px"> ></div>
+              <a-col :span="8">
+                <a-select
+                  v-model="inputPhone"
+                  :options="options"
+                  placeholder="选择用户"
+                  :trigger-props="{ autoFitPopupMinWidth: true }"
+                  allow-search
+                  @search="handleSearch"
+                >
+                  <!--                  <a-option v-for="item of data" :value="item" :label="item.label" />-->
+                </a-select>
               </a-col>
             </a-row>
             <a-divider />
@@ -145,6 +157,7 @@
             </a-space>
             <a-typography-title :heading="6"> 专辑简介</a-typography-title>
             <a-textarea
+              v-model="profile"
               placeholder="请输入内容"
               allow-clear
               :auto-size="{ minRows: 10 }"
@@ -162,7 +175,7 @@
               <a-upload
                 list-type="picture-card"
                 image-preview
-                custom-request="uploadImage"
+                :custom-request="customRequest3"
                 limit="1"
               />
             </a-col>
@@ -174,7 +187,11 @@
               <div style="line-height: 33px">数字藏品名</div>
             </a-col>
             <a-col :span="5">
-              <a-input placeholder="输入数字藏品名" allow-clear />
+              <a-input
+                v-model="collectionName"
+                placeholder="输入数字藏品名"
+                allow-clear
+              />
             </a-col>
           </a-row>
           <a-divider />
@@ -191,13 +208,13 @@
               <!--              <a-checkbox value="1">发布</a-checkbox>-->
               <!--              <a-checkbox value="2">发售</a-checkbox>-->
 
-              <a-radio-group>
+              <a-radio-group v-model="sellState">
                 <a-radio value="1">发布</a-radio>
                 <a-radio value="2">发售</a-radio>
               </a-radio-group>
             </a-col>
             <a-col :span="5">
-              <a-input placeholder="输入发售价" allow-clear />
+              <a-input v-model="price" placeholder="输入发售价" allow-clear />
             </a-col>
           </a-row>
           <a-divider />
@@ -206,7 +223,11 @@
               <div style="line-height: 33px">出售价上限</div>
             </a-col>
             <a-col :span="5">
-              <a-input placeholder="输入出售价上限" allow-clear />
+              <a-input
+                v-model="priceLimit"
+                placeholder="输入出售价上限"
+                allow-clear
+              />
             </a-col>
           </a-row>
           <a-divider />
@@ -296,7 +317,9 @@
       </a-grid>
       <a-space direction="vertical"></a-space>
       <a-row align="end">
-        <a-button type="primary" long>完成并上传</a-button>
+        <a-button type="primary" long @click="handleCreate"
+          >完成并上传</a-button
+        >
       </a-row>
     </a-card>
   </div>
@@ -311,13 +334,24 @@
 </template>
 
 <script setup lang="ts">
-  import { ref, nextTick } from 'vue';
+  import { ref, nextTick, onMounted } from 'vue';
   import { uploadFile } from '@/api/upload';
   import { createAlbum, Album } from '@/api/album';
+  import { Message } from '@arco-design/web-vue';
+  import { getUser } from '@/api/user';
 
-  // async function uploadImage(data: UploadData) {
-  //   const { res } = await upload(data);
-  // }
+  const circulation = ref<number>(0);
+  const albumName = ref<string>();
+  const collectionName = ref<string>();
+  const price = ref<number>(0.0);
+  const profile = ref<string>();
+  const inputPhone = ref<string>('');
+  const sellState = ref<number>(0);
+  const priceLimit = ref<number>(0);
+
+  const options = ref<string[]>([]);
+  // const options = ref(['Option1', 'Option2', 'Option3']);
+  const loading = ref(false);
 
   const tags1 = ref<string[]>([]);
   const inputRef1 = ref<any>();
@@ -333,6 +367,10 @@
   const inputRef3 = ref<any>();
   const showInput3 = ref(false);
   const inputVal3 = ref('');
+
+  const imgPath1 = ref('');
+  const imgPath2 = ref('');
+  const imgPath3 = ref('');
 
   const handleEdit1 = () => {
     showInput1.value = true;
@@ -397,17 +435,92 @@
     tags3.value = tags3.value.filter((tag3) => tag3 !== key3);
   };
 
-  const customRequest = async (option: any) => {
-    const { onError, onSuccess, fileItem, name = '' } = option;
+  const customRequest1 = async (option: any) => {
+    const { onError, onSuccess, fileItem, name = 'file' } = option;
     const formData = new FormData();
     formData.append(name as string, fileItem.file as Blob);
     try {
       const res = await uploadFile(formData);
       onSuccess(res);
+      imgPath1.value = res.data.url;
     } catch (error) {
       onError(error);
     }
   };
+
+  const customRequest2 = async (option: any) => {
+    const { onError, onSuccess, fileItem, name = 'file' } = option;
+    const formData = new FormData();
+    formData.append(name as string, fileItem.file as Blob);
+    try {
+      const res = await uploadFile(formData);
+      onSuccess(res);
+      imgPath2.value = res.data.url;
+    } catch (error) {
+      onError(error);
+    }
+  };
+
+  const customRequest3 = async (option: any) => {
+    const { onError, onSuccess, fileItem, name = 'file' } = option;
+    const formData = new FormData();
+    formData.append(name as string, fileItem.file as Blob);
+    try {
+      const res = await uploadFile(formData);
+      onSuccess(res);
+      imgPath3.value = res.data.url;
+    } catch (error) {
+      onError(error);
+    }
+  };
+
+  const handleSearch = async (value: string) => {
+    if (value) {
+      loading.value = true;
+      const res = await getUser(value);
+      // console.log(11111111);
+      // console.log(res.data.user_list);
+      const users = res.data.user_list;
+
+      const opList: string[] = [];
+      for (let i = 0; i < users.length; i += 1) {
+        opList.push(`${users[i].nickname}:${users[i].phone}`);
+      }
+      //   res.data.userList.forEach((user) => {
+      //
+      // });
+      options.value = opList;
+      loading.value = false;
+      // console.log(options.value);
+    }
+  };
+
+  const handleCreate = async () => {
+    const data: Album = {
+      authority: tags1.value,
+      background_img: imgPath1.value,
+      circulation: parseInt(circulation.value.toString(), 10),
+      face_img: imgPath2.value,
+      labels: tags2.value,
+      name: albumName.value ?? '',
+      nft_category: tags3.value,
+      nft_img: imgPath3.value,
+      nft_name: collectionName.value ?? '',
+      price: parseFloat(price.value.toString()),
+      profile: profile.value ?? '',
+      phone: inputPhone.value.slice(-11) ?? '',
+      status: parseInt(sellState.value.toString(), 10),
+      user_price_limit: parseInt(priceLimit.value.toString(), 10),
+    };
+    const res = await createAlbum(data);
+    if (res.data === 'success') {
+      Message.success('创建成功');
+    }
+  };
+
+  onMounted(() => {
+    // handleSearch(phoneInput);
+  });
 </script>
 
 <style scoped>

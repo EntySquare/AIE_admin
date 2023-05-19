@@ -9,7 +9,7 @@ const MANAGE: AppRouteRecordRaw = {
     locale: '管理账户',
     requiresAuth: true,
     icon: 'icon-list',
-    order: 8,
+    order: 7,
   },
   children: [
     {

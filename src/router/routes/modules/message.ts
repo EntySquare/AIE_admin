@@ -9,7 +9,7 @@ const MESSAGE: AppRouteRecordRaw = {
     locale: '信息',
     requiresAuth: true,
     icon: 'icon-list',
-    order: 6,
+    order: 5,
   },
   children: [
     {

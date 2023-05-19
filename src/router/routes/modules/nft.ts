@@ -9,7 +9,7 @@ const UI: AppRouteRecordRaw = {
     locale: 'NFT',
     requiresAuth: true,
     icon: 'icon-list',
-    order: 3,
+    order: 2,
   },
   children: [
     {

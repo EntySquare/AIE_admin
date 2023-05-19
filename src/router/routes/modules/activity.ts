@@ -9,7 +9,7 @@ const ACTIVITY: AppRouteRecordRaw = {
     locale: '活动',
     requiresAuth: true,
     icon: 'icon-list',
-    order: 4,
+    order: 3,
   },
   children: [
     {

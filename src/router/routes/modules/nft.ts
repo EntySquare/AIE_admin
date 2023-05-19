@@ -12,16 +12,16 @@ const UI: AppRouteRecordRaw = {
     order: 2,
   },
   children: [
-    {
-      path: 'publishNFT',
-      name: 'publishNFT',
-      component: () => import('@/views/nft/publishNFT.vue'),
-      meta: {
-        locale: '发布NFT',
-        requiresAuth: true,
-        roles: ['*'],
-      },
-    },
+    // {
+    //   path: 'publishNFT',
+    //   name: 'publishNFT',
+    //   component: () => import('@/views/nft/publishNFT.vue'),
+    //   meta: {
+    //     locale: '发布NFT',
+    //     requiresAuth: true,
+    //     roles: ['*'],
+    //   },
+    // },
     {
       path: 'publishAlbum',
       name: 'publishAlbum',
@@ -37,7 +37,7 @@ const UI: AppRouteRecordRaw = {
       name: 'nftList',
       component: () => import('@/views/nft/nftList.vue'),
       meta: {
-        locale: 'NFT列表',
+        locale: '数字藏品列表',
         requiresAuth: true,
         roles: ['*'],
       },
@@ -53,15 +53,25 @@ const UI: AppRouteRecordRaw = {
       },
     },
     {
-      path: 'batchReleaseNFT',
-      name: 'batchReleaseNFT',
-      component: () => import('@/views/nft/batchReleaseNFT.vue'),
+      path: 'albumList',
+      name: 'albumList',
+      component: () => import('@/views/nft/albumList.vue'),
       meta: {
-        locale: '批量发布NFT',
+        locale: '材料列表',
         requiresAuth: true,
         roles: ['*'],
       },
     },
+    // {
+    //   path: 'batchReleaseNFT',
+    //   name: 'batchReleaseNFT',
+    //   component: () => import('@/views/nft/batchReleaseNFT.vue'),
+    //   meta: {
+    //     locale: '批量发布NFT',
+    //     requiresAuth: true,
+    //     roles: ['*'],
+    //   },
+    // },
   ],
 };
 

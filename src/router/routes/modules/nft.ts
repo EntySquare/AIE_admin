@@ -53,9 +53,9 @@ const UI: AppRouteRecordRaw = {
       },
     },
     {
-      path: 'albumList',
-      name: 'albumList',
-      component: () => import('@/views/nft/albumList.vue'),
+      path: 'materialList',
+      name: 'materialList',
+      component: () => import('@/views/nft/materialList.vue'),
       meta: {
         locale: '材料列表',
         requiresAuth: true,

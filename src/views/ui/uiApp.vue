@@ -91,29 +91,30 @@
         </template>
       </a-table>
     </a-card>
+
+    <!--  增加首页轮播图弹窗-->
+    <a-modal v-model:visible="visible" title="新增首页轮播图">
+      <a-form :model="form">
+        <a-form-item field="name" label="图片">
+          <a-upload action="/admin/upload" :draggable="true" />
+        </a-form-item>
+        <a-form-item field="post" label="标题">
+          <a-input v-model="form.name" />
+        </a-form-item>
+        <a-form-item field="post" label="内容">
+          <a-input v-model="form.content" />
+        </a-form-item>
+      </a-form>
+    </a-modal>
+    <!--  增加市场页头轮播图弹窗-->
+    <a-modal v-model:visible="visibleTwo" title="新增市场页头轮播图">
+      <a-form :model="form">
+        <a-form-item field="name" label="图片">
+          <a-upload action="/" />
+        </a-form-item>
+      </a-form>
+    </a-modal>
   </div>
-  <!--  增加首页轮播图弹窗-->
-  <a-modal v-model:visible="visible" title="新增首页轮播图">
-    <a-form :model="form">
-      <a-form-item field="name" label="图片">
-        <a-upload action="/admin/upload" :draggable="true"/>
-      </a-form-item>
-      <a-form-item field="post" label="标题">
-        <a-input v-model="form.name" />
-      </a-form-item>
-      <a-form-item field="post" label="内容">
-        <a-input v-model="form.content" />
-      </a-form-item>
-    </a-form>
-  </a-modal>
-  <!--  增加市场页头轮播图弹窗-->
-  <a-modal v-model:visible="visibleTwo" title="新增市场页头轮播图">
-    <a-form :model="form">
-      <a-form-item field="name" label="图片">
-        <a-upload action="/" />
-      </a-form-item>
-    </a-form>
-  </a-modal>
 </template>
 
 <script setup lang="ts">
@@ -148,7 +149,6 @@
     picture: '',
     content: '',
   });
-
 </script>
 
 <style scoped>

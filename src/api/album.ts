@@ -48,6 +48,7 @@ export function createAlbum(data: Album) {
   return axios.post<any>('/admin/album/create', data);
 }
 
+// 获取专辑列表
 export function fetchAlbumList(params: AlbumsParams) {
   return axios.post<any>('/admin/album/list', params);
 }

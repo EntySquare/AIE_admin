@@ -323,14 +323,6 @@
       </a-row>
     </a-card>
   </div>
-  <!--  添加标签弹窗-->
-  <!--  <a-modal v-model:visible="visible" title="添加类型">-->
-  <!--    <a-form :model="form">-->
-  <!--      <a-form-item field="name" label="类型">-->
-  <!--        <a-input v-model="form.label" />-->
-  <!--      </a-form-item>-->
-  <!--    </a-form>-->
-  <!--  </a-modal>-->
 </template>
 
 <script setup lang="ts">

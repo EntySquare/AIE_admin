@@ -32,10 +32,15 @@
           </a-table-column>
         </template>
       </a-table>
-      <a-modal v-model:visible="visible" title="创建盲盒">
+      <a-modal
+        v-model:visible="visible"
+        title="创建盲盒"
+        width="40vw"
+        @ok="handleModalOk"
+      >
         <a-form :model="form">
           <a-form-item label="每日试玩次数">
-            <a-input-number v-model="form.daily_pay_limit" mode="button" />
+            <a-input-number v-model="form.dailyLimit" mode="button" />
           </a-form-item>
           <a-form-item label="是否隐藏">
             <a-switch
@@ -53,7 +58,11 @@
             />
           </a-form-item>
           <a-form-item label="说明文字">
-            <a-input v-model="form.illustrate_text" />
+            <a-textarea
+              v-model="form.illText"
+              placeholder="请输入说明"
+              allow-clear
+            />
           </a-form-item>
           <a-form-item label="盲盒名称">
             <a-input v-model="form.name" />
@@ -63,54 +72,46 @@
             :key="index"
             :label="`开奖数据-${index + 1}`"
           >
-            <a-input-group>
-              <a-select
-                v-model="out.type"
-                :style="{ width: '100px' }"
-                placeholder="类型"
-                @change="testClick"
-              >
-                <a-option
-                  v-for="item of typeData"
-                  :key="item"
-                  :value="item.type"
-                  :label="item.label"
+            <a-row justify="space-between">
+              <a-input-group>
+                <selectData
+                  v-model:id="form.outData[index].id"
+                  v-model:typeId="form.outData[index].id_types"
+                  width="12vw"
                 />
-              </a-select>
-              <a-input :style="{ width: '60px' }" placeholder="权重" />
-              <a-input :style="{ width: '80px' }" placeholder="出货数量" />
-              <a-select
-                v-model="out.rarity"
-                :style="{ width: '100px' }"
-                placeholder="稀有度"
-                @change="testClick"
-              >
-                <a-option
-                  v-for="item of rarityData"
-                  :key="item"
-                  :value="item.rarity"
-                  :label="item.label"
-                />
-              </a-select>
-            </a-input-group>
-            <a-button
-              :style="{ marginLeft: '5px' }"
-              @click="handleDelete(index)"
-              ><template #icon> <icon-minus /> </template
-            ></a-button
-            >
-          </a-form-item>
-            <a-form-item label-col-flex="429px">
-              <a-button @click="handleAdd"
-              ><template #icon> <icon-plus /> </template
+                <a-input :style="{ width: '5vw' }" placeholder="权重" />
+                <a-input :style="{ width: '5vw' }" placeholder="出货数量" />
+                <a-select
+                  v-model="out.rarity"
+                  :style="{ width: '5vw' }"
+                  placeholder="稀有度"
+                  @change="testClick"
+                >
+                  <a-option
+                    v-for="item of rarityData"
+                    :key="item"
+                    :value="item.rarity"
+                    :label="item.label"
+                  />
+                </a-select>
+              </a-input-group>
+              <a-button
+                :style="{ marginLeft: '10px' }"
+                @click="handleDelete(index)"
+                ><template #icon> <icon-minus /> </template
               ></a-button>
-            </a-form-item>
-          
+            </a-row>
+          </a-form-item>
+          <a-form-item>
+            <a-button @click="handleAdd"
+              ><template #icon> <icon-plus /> </template
+            ></a-button>
+          </a-form-item>
           <a-form-item label="价格（分）">
-            <a-input-number v-model="form.price" />
+            <a-input-number v-model="form.price" placeholder="请输入价格" />
           </a-form-item>
           <a-form-item label="排序">
-            <a-input v-model="form.sort" />
+            <a-input-number v-model="form.sort" placeholder="排序" />
           </a-form-item>
           <a-form-item label="是否有效">
             <a-switch
@@ -150,7 +151,9 @@
 <script setup lang="ts">
   import { reactive, ref } from 'vue';
   import { arcoUpload } from '@/api/upload';
-  import { RequestOption } from '@arco-design/web-vue';
+  import { Message, RequestOption } from '@arco-design/web-vue';
+  import selectData from '@/views/common/selectData.vue';
+  import { createBox, Box } from '@/api/box';
 
   const actSell = ref<boolean>(false);
   const visible = ref<boolean>(false);
@@ -161,17 +164,6 @@
   const showModal = () => {
     visible.value = true;
   };
-
-  const typeData = [
-    {
-      type: 1,
-      label: '材料',
-    },
-    {
-      type: 2,
-      label: '专辑',
-    },
-  ];
 
   const rarityData = [
     {
@@ -199,30 +191,51 @@
       label: '不朽',
     },
   ];
-
   const form = reactive({
-    daily_pay_limit: 0,
+    dailyLimit: 0,
     hide: false,
-    illustrate_img: '',
-    illustrate_text: '',
+    illImg: '',
+    illText: '',
     name: '',
-    outData: [{ weight: 0, id: 0, type: 1, outNum: 0, rarity: 0 }],
+    outData: [
+      { draw_probability: 0, id: 0, id_types: 1, out_num: 0, rarity: 0 },
+    ],
     price: 0,
-    sort: 0,
+    sort: null,
     valid: false,
   });
   const handleAdd = () => {
     form.outData.push({
-      weight: 0,
+      draw_probability: 0,
       id: 0,
-      type: 1,
-      outNum: 0,
+      id_types: 1,
+      out_num: 0,
       rarity: 0,
     });
   };
 
   const handleDelete = (index: number) => {
-    form.outData.splice(index, 1);
+    if (form.outData.length > 1) {
+      form.outData.splice(index, 1);
+    }
+  };
+
+  const handleModalOk = async () => {
+    const boxData: Box = {
+      daily_pay_limit: form.dailyLimit,
+      hide: form.hide,
+      illustrate_img: imgPath.value,
+      illustrate_text: form.illText,
+      name: form.name,
+      out_data: form.outData,
+      price: form.price ?? 0,
+      sort: form.sort ?? 0,
+      valid: form.valid,
+    };
+    const res = await createBox(boxData);
+    if (res.data === 'success') {
+      Message.success('创建成功');
+    }
   };
 
   function testClick() {

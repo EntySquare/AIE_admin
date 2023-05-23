@@ -16,8 +16,8 @@
       v-model="selectName"
       :options="options"
       :field-names="{ value: 'label', label: 'label' }"
-      :style="{ width: '320px' }"
-      placeholder="Please select ..."
+      :style="{ width: width }"
+      placeholder="选择类型"
       @change="change"
     />
   </div>
@@ -35,6 +35,10 @@
       },
       typeId: {
         type: Number,
+        required: true,
+      },
+      width: {
+        type: String,
         required: true,
       },
     },

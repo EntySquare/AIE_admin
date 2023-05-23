@@ -16,7 +16,7 @@
             <icon-search :size="20" />
             查询
           </a-button>
-          <a-button @click="queryMaterialListData()">
+          <a-button @click="resetQuery()">
             <icon-loop :size="20" />
             重置
           </a-button>
@@ -59,7 +59,7 @@
 </template>
 
 <script setup lang="ts">
-  import { reactive, ref } from 'vue';
+  import { onMounted, reactive, ref } from 'vue';
   import { Pagination } from '@/types/global';
   import useLoading from '@/hooks/loading';
   import {
@@ -98,9 +98,19 @@
     }
   };
 
+  // 重置查询
+  const resetQuery = async () => {
+    condition.value = '';
+    await queryMaterialListData();
+  };
+
   const onPageChange = (current: number) => {
     queryMaterialListData({ name: condition.value, current, pageSize: 10 });
   };
+
+  onMounted(() => {
+    resetQuery();
+  });
 </script>
 
 <style scoped>

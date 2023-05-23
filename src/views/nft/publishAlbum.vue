@@ -51,10 +51,11 @@
                 <div style="line-height: 33px">发行量</div>
               </a-col>
               <a-col :span="5">
-                <a-input
+                <a-input-number
                   v-model="circulation"
                   placeholder="输入发行量"
                   allow-clear
+                  mode="button"
                 />
               </a-col>
             </a-row>
@@ -214,7 +215,12 @@
               </a-radio-group>
             </a-col>
             <a-col :span="5">
-              <a-input v-model="price" placeholder="输入发售价" allow-clear />
+              <a-input-number
+                v-model="price"
+                placeholder="输入发售价"
+                allow-clear
+                mode="button"
+              />
             </a-col>
           </a-row>
           <a-divider />
@@ -223,10 +229,11 @@
               <div style="line-height: 33px">出售价上限</div>
             </a-col>
             <a-col :span="5">
-              <a-input
+              <a-input-number
                 v-model="priceLimit"
                 placeholder="输入出售价上限"
                 allow-clear
+                mode="button"
               />
             </a-col>
           </a-row>
@@ -315,11 +322,13 @@
           <!--          </a-button>-->
         </a-grid-item>
       </a-grid>
-      <a-space direction="vertical"></a-space>
-      <a-row align="end">
-        <a-button type="primary" long @click="handleCreate"
-          >完成并上传</a-button
-        >
+      <a-divider />
+      <a-row justify="center">
+        <a-col :span="4">
+          <a-button type="primary" long @click="handleCreate"
+            >完成并上传</a-button
+          >
+        </a-col>
       </a-row>
     </a-card>
   </div>

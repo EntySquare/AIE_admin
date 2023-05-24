@@ -72,11 +72,37 @@
           </a-table-column>
           <a-table-column title="操作">
             <template #cell="{ record }">
-              <a-button
-                style="margin-right: 10px"
-                @click="updateVisible(2, record.id)"
-                >详情
-              </a-button>
+              <div style="display: flex">
+                <a-button
+                  type="outline"
+                  style="margin-right: 10px"
+                  @click="updateVisible(2, record.id)"
+                  >编辑
+                </a-button>
+                <a-popover position="left" trigger="click">
+                  <a-button
+                    type="outline"
+                    @click="queryBoxDetailData(record.id)"
+                    >详情</a-button
+                  >
+                  <template #content>
+                    <a-descriptions
+                      :data="detailData"
+                      style="margin-top: 20px"
+                      title="详情"
+                      :column="1"
+                    >
+                      <a-descriptions-item
+                        v-for="(item, index) in detailData"
+                        :key="index"
+                        :label="`开奖数据-${index + 1}`"
+                      >
+                        <a-tag>{{ item }}</a-tag>
+                      </a-descriptions-item>
+                    </a-descriptions>
+                  </template>
+                </a-popover>
+              </div>
             </template>
           </a-table-column>
         </template>
@@ -94,13 +120,20 @@
 
 <script setup lang="ts">
   import { onMounted, reactive, ref } from 'vue';
-  import { fetchBoxList, BoxRes, BoxParams } from '@/api/box';
+  import {
+    fetchBoxList,
+    BoxRes,
+    BoxParams,
+    fetchBoxDetail,
+    Box,
+  } from '@/api/box';
   import useLoading from '@/hooks/loading';
   import { Pagination } from '@/types/global';
   import ModalForm from '@/views/box/components/modalForm.vue';
 
   const { setLoading } = useLoading(true);
   const tableData = ref<BoxRes[]>([]);
+  const detailData = ref<any>();
   const basePagination: Pagination = {
     current: 1,
     pageSize: 10,
@@ -123,6 +156,27 @@
       tableData.value = res.data.blindBox_list;
       pagination.current = params.current;
       pagination.total = res.data.blindBox_list.length;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // 查询盲盒详情
+  const queryBoxDetailData = async (id: number) => {
+    setLoading(true);
+    try {
+      const res = await fetchBoxDetail(id);
+      detailData.value = res.data.out_data;
+      // detailData.value = [
+      //   {
+      //     label: '权重',
+      //     value: res.data.out_data[0].draw_probability,
+      //   },
+      //   {
+      //     label: '数据',
+      //     value: res.data.out_data[0].out_num,
+      //   },
+      // ];
     } finally {
       setLoading(false);
     }

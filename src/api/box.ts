@@ -65,3 +65,8 @@ export function fetchBoxListAll() {
 export function fetchBoxList(params: BoxParams) {
   return axios.post<BoxResList>('/admin/blindBox/list', params);
 }
+
+// 盲盒详情
+export function fetchBoxDetail(id: number) {
+  return axios.post<Box>('/admin/blindBox/detail', { id });
+}

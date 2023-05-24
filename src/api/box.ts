@@ -22,7 +22,46 @@ export interface Box {
   valid: boolean; // 是否有效
 }
 
+export interface BoxRes {
+  daily_pay_limit: number; // 每日试玩次数
+  created_at: string; // 创建时间
+  // 是否隐藏
+  hide: boolean;
+  id?: number; // 盲盒id
+  illustrate_img: string; // 说明图片
+  illustrate_text: string; // 说明文字
+  name: string; // 盲盒名称
+  price: number; // 价格(单位:分)
+  sort: number; // 排序
+  valid: boolean; // 是否有效
+}
+
+export interface BoxResList {
+  blindBox_list: BoxRes[];
+}
+
+export interface BoxParams {
+  name: string;
+  current: number;
+  pageSize: number;
+}
+
 // 创建盲盒
 export function createBox(data: Box) {
   return axios.post<string>('/admin/blindBox/create', data);
+}
+
+// 修改盲盒
+export function updateBox(data: Box) {
+  return axios.post<string>('/admin/blindBox/update', data);
+}
+
+// 查询盲盒所有列表
+export function fetchBoxListAll() {
+  return axios.post<BoxResList>('/admin/blindBox/all');
+}
+
+// 查询盲盒列表
+export function fetchBoxList(params: BoxParams) {
+  return axios.post<BoxResList>('/admin/blindBox/list', params);
 }

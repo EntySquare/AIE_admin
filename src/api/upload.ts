@@ -1,5 +1,5 @@
 import axios from 'axios';
-import {RequestOption} from "@arco-design/web-vue";
+import { RequestOption } from '@arco-design/web-vue';
 
 export interface UploadData {
   file: File;
@@ -25,4 +25,11 @@ export async function arcoUpload(option: RequestOption): Promise<string> {
     onError(error);
   }
   return '';
+}
+
+export async function editorUpload(file: File): Promise<string> {
+  const formData = new FormData();
+  formData.append('file', file as Blob);
+  const res = await uploadFile(formData);
+  return res.data.url;
 }

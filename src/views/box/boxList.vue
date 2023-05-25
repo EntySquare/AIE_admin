@@ -98,7 +98,7 @@
                       <a-descriptions-item
                         v-for="(item, j) in forData"
                         :key="j"
-                        :label="outDataMap(j, item)"
+                        :label="outDataMap(j)"
                       >
                         {{ item }}
                       </a-descriptions-item>
@@ -168,16 +168,11 @@
       setLoading(false);
     }
   };
-  const outDataMap = (key: string, value: any) => {
+  const outDataMap = (key: string) => {
     const outMap: Map<string, string> = new Map();
     outMap.set('draw_probability', '权重');
     outMap.set('id', 'id');
-    if (key === 'id_types' && value === 1) {
-      outMap.set('id_types', '材料');
-    }
-    if (key === 'id_types' && value === 2) {
-      outMap.set('id_types', '专辑');
-    }
+    outMap.set('id_types', '类型');
     outMap.set('in_progress', '传入进度');
     outMap.set('num_compel', '强制要求数量');
     outMap.set('out_num', '出货数量');

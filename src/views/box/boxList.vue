@@ -87,17 +87,20 @@
                   >
                   <template #content>
                     <a-descriptions
-                      :data="detailData"
+                      v-for="(forData, i) in detailData"
+                      :key="i"
+                      :data="forData"
+                      :bordered="true"
                       style="margin-top: 20px"
-                      title="详情"
-                      :column="1"
+                      :title="`开奖数据-${i + 1}`"
+                      :column="3"
                     >
                       <a-descriptions-item
-                        v-for="(item, index) in detailData"
-                        :key="index"
-                        :label="`开奖数据-${index + 1}`"
+                        v-for="(item, j) in forData"
+                        :key="j"
+                        :label="outDataMap(j, item)"
                       >
-                        <a-tag>{{ item }}</a-tag>
+                        {{ item }}
                       </a-descriptions-item>
                     </a-descriptions>
                   </template>
@@ -120,13 +123,7 @@
 
 <script setup lang="ts">
   import { onMounted, reactive, ref } from 'vue';
-  import {
-    fetchBoxList,
-    BoxRes,
-    BoxParams,
-    fetchBoxDetail,
-    Box,
-  } from '@/api/box';
+  import { fetchBoxList, BoxRes, BoxParams, fetchBoxDetail } from '@/api/box';
   import useLoading from '@/hooks/loading';
   import { Pagination } from '@/types/global';
   import ModalForm from '@/views/box/components/modalForm.vue';
@@ -167,19 +164,25 @@
     try {
       const res = await fetchBoxDetail(id);
       detailData.value = res.data.out_data;
-      // detailData.value = [
-      //   {
-      //     label: '权重',
-      //     value: res.data.out_data[0].draw_probability,
-      //   },
-      //   {
-      //     label: '数据',
-      //     value: res.data.out_data[0].out_num,
-      //   },
-      // ];
     } finally {
       setLoading(false);
     }
+  };
+  const outDataMap = (key: string, value: any) => {
+    const outMap: Map<string, string> = new Map();
+    outMap.set('draw_probability', '权重');
+    outMap.set('id', 'id');
+    if (key === 'id_types' && value === 1) {
+      outMap.set('id_types', '材料');
+    }
+    if (key === 'id_types' && value === 2) {
+      outMap.set('id_types', '专辑');
+    }
+    outMap.set('in_progress', '传入进度');
+    outMap.set('num_compel', '强制要求数量');
+    outMap.set('out_num', '出货数量');
+    outMap.set('rarity', '稀有度');
+    return outMap.get(key);
   };
 
   const updateVisible = (type: any, index: number) => {

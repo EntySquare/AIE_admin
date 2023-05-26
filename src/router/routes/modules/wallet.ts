@@ -45,4 +45,4 @@ const WALLET: AppRouteRecordRaw = {
   ],
 };
 
-export default WALLET;
+// export default WALLET;

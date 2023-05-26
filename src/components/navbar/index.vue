@@ -44,33 +44,33 @@
           </a-button>
         </a-tooltip>
       </li>
-      <li>
-        <a-tooltip :content="$t('settings.navbar.alerts')">
-          <div class="message-box-trigger">
-            <a-badge :count="9" dot>
-              <a-button
-                class="nav-btn"
-                type="outline"
-                :shape="'circle'"
-                @click="setPopoverVisible"
-              >
-                <icon-notification />
-              </a-button>
-            </a-badge>
-          </div>
-        </a-tooltip>
-        <a-popover
-          trigger="click"
-          :arrow-style="{ display: 'none' }"
-          :content-style="{ padding: 0, minWidth: '400px' }"
-          content-class="message-popover"
-        >
-          <div ref="refBtn" class="ref-btn"></div>
-          <template #content>
-            <message-box />
-          </template>
-        </a-popover>
-      </li>
+<!--      <li>-->
+<!--        <a-tooltip :content="$t('settings.navbar.alerts')">-->
+<!--          <div class="message-box-trigger">-->
+<!--            <a-badge :count="9" dot>-->
+<!--              <a-button-->
+<!--                class="nav-btn"-->
+<!--                type="outline"-->
+<!--                :shape="'circle'"-->
+<!--                @click="setPopoverVisible"-->
+<!--              >-->
+<!--                <icon-notification />-->
+<!--              </a-button>-->
+<!--            </a-badge>-->
+<!--          </div>-->
+<!--        </a-tooltip>-->
+<!--        <a-popover-->
+<!--          trigger="click"-->
+<!--          :arrow-style="{ display: 'none' }"-->
+<!--          :content-style="{ padding: 0, minWidth: '400px' }"-->
+<!--          content-class="message-popover"-->
+<!--        >-->
+<!--          <div ref="refBtn" class="ref-btn"></div>-->
+<!--          <template #content>-->
+<!--            <message-box />-->
+<!--          </template>-->
+<!--        </a-popover>-->
+<!--      </li>-->
       <li>
         <a-tooltip
           :content="
@@ -115,35 +115,36 @@
             <img alt="avatar" :src="avatar" />
           </a-avatar>
           <template #content>
-            <a-doption>
-              <a-space @click="switchRoles">
-                <icon-tag />
-                <span>
-                  {{ $t('messageBox.switchRoles') }}
-                </span>
-              </a-space>
-            </a-doption>
-            <a-doption>
-              <a-space @click="$router.push({ name: 'Info' })">
-                <icon-user />
-                <span>
-                  {{ $t('messageBox.userCenter') }}
-                </span>
-              </a-space>
-            </a-doption>
-            <a-doption>
-              <a-space @click="$router.push({ name: 'Setting' })">
-                <icon-settings />
-                <span>
-                  {{ $t('messageBox.userSettings') }}
-                </span>
-              </a-space>
-            </a-doption>
+<!--            <a-doption>-->
+<!--              <a-space @click="switchRoles">-->
+<!--                <icon-tag />-->
+<!--                <span>-->
+<!--                  {{ $t('messageBox.switchRoles') }}-->
+<!--                </span>-->
+<!--              </a-space>-->
+<!--            </a-doption>-->
+<!--            <a-doption>-->
+<!--              <a-space @click="$router.push({ name: 'Info' })">-->
+<!--                <icon-user />-->
+<!--                <span>-->
+<!--                  {{ $t('messageBox.userCenter') }}-->
+<!--                </span>-->
+<!--              </a-space>-->
+<!--            </a-doption>-->
+<!--            <a-doption>-->
+<!--              <a-space @click="$router.push({ name: 'Setting' })">-->
+<!--                <icon-settings />-->
+<!--                <span>-->
+<!--                  {{ $t('messageBox.userSettings') }}-->
+<!--                </span>-->
+<!--              </a-space>-->
+<!--            </a-doption>-->
             <a-doption>
               <a-space @click="handleLogout">
                 <icon-export />
                 <span>
-                  {{ $t('messageBox.logout') }}
+<!--                  {{ $t('messageBox.logout') }}-->
+                  退出登录
                 </span>
               </a-space>
             </a-doption>

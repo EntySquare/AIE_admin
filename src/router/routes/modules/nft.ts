@@ -6,9 +6,9 @@ const UI: AppRouteRecordRaw = {
   name: 'nft',
   component: DEFAULT_LAYOUT,
   meta: {
-    locale: 'NFT',
+    locale: '数字藏品',
     requiresAuth: true,
-    icon: 'icon-list',
+    icon: 'icon-fire',
     order: 2,
   },
   children: [

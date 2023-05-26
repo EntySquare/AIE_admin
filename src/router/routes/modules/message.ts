@@ -8,7 +8,7 @@ const MESSAGE: AppRouteRecordRaw = {
   meta: {
     locale: '公告',
     requiresAuth: true,
-    icon: 'icon-list',
+    icon: 'icon-brush',
     order: 5,
   },
   children: [

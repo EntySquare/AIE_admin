@@ -8,7 +8,7 @@ const BOX: AppRouteRecordRaw = {
   meta: {
     locale: '盲盒',
     requiresAuth: true,
-    icon: 'icon-components',
+    icon: 'icon-common',
     order: 9,
   },
   children: [

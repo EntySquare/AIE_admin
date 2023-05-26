@@ -1,38 +1,105 @@
 import axios from 'axios';
 
-export interface MessageRecord {
-  id: number;
-  type: string;
+/**
+ * types.CreateBulletinReq
+ */
+export interface BulletinReq {
+  /**
+   * 活动ID
+   */
+  activity_id?: number;
+  /**
+   * 内容
+   */
+  content: string;
+  /**
+   * 标签
+   */
+  tags: string[];
+  /**
+   * 标题
+   */
   title: string;
-  subTitle: string;
-  avatar?: string;
+}
+/**
+ * types.Bulletin
+ */
+export interface Bulletin {
+  /**
+   * 活动ID
+   */
+  activity_id: number;
+  /**
+   * 内容
+   */
   content: string;
-  time: string;
-  status: 0 | 1;
-  messageType?: number;
-}
-export type MessageListType = MessageRecord[];
-
-export function queryMessageList() {
-  return axios.post<MessageListType>('/api/message/list');
-}
-
-interface MessageStatus {
-  ids: number[];
-}
-
-export function setMessageStatus(data: MessageStatus) {
-  return axios.post<MessageListType>('/api/message/read', data);
-}
-
-export interface ChatRecord {
+  /**
+   * 创建时间
+   */
+  created_at: string;
   id: number;
-  username: string;
-  content: string;
-  time: string;
-  isCollect: boolean;
+  /**
+   * 标签 以{}形式
+   */
+  tags: string;
+  /**
+   * 标题
+   */
+  title: string;
+  /**
+   * 修改时间
+   */
+  updated_at: string;
 }
 
-export function queryChatList() {
-  return axios.post<ChatRecord[]>('/api/chat/list');
+/**
+ * types.GetBulletinListResp
+ */
+export interface BulletinList {
+  bulletin_list: Bulletin[];
+  /**
+   * 当前页
+   */
+  current_page: number;
+  /**
+   * 总数
+   */
+  total: number;
+}
+
+/**
+ * types.GetBulletinListReq
+ */
+export interface BulletinParam {
+  /**
+   * 当前页码 默认1
+   */
+  pageNum?: number;
+  /**
+   * 每页数 默认10
+   */
+  pageSize?: number;
+  /**
+   * 标签
+   */
+  tag?: string;
+  /**
+   * 标题
+   */
+  title?: string;
+}
+
+// 查询公告列表
+export function fetchBulletinList(data: BulletinParam) {
+  return axios.post<BulletinList>('/admin/bulletin/list', data);
+}
+
+// 创建公告
+export function createBulletin(data: BulletinReq) {
+  return axios.post<string>('/admin/bulletin/create', data);
+}
+
+// 修改公告
+export function updateBulletin() {
+  return axios.post<any>('/admin/bulletin/update');
 }

@@ -3,6 +3,8 @@
   import { Editor, Toolbar } from '@wangeditor/editor-for-vue';
   import { IEditorConfig, SlateElement } from '@wangeditor/editor';
   import { editorUpload } from '@/api/upload';
+  
+  const emit = defineEmits(['confirm']);
 
   const mode = 'default';
   // 编辑器实例，必须用 shallowRef，重要！
@@ -40,6 +42,7 @@
     editorRef.value = editor; // 记录 editor 实例，重要！
   };
   const handleChange = (editor: any) => {
+    emit("confirm",editor.getHtml());
     console.log('change:', editor.getHtml());
   };
   const handleDestroyed = (editor: any) => {
@@ -104,7 +107,7 @@
       console.log('updated image', src, alt, url);
     },
   };
-  
+
   editorConfig.MENU_CONF!.uploadImage = {
     // 自定义上传
     async customUpload(file: File, insertFn: InsertFnType) {  // TS 语法

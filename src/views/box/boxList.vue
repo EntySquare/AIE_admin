@@ -111,14 +111,14 @@
         </template>
       </a-table>
     </a-card>
+    <modal-form
+      :visible="modalVisible"
+      :title="modalTitle"
+      :rid="rid"
+      @update-visible="updateVisible"
+      @refresh="queryBoxListData"
+    ></modal-form>
   </div>
-  <modal-form
-    :visible="modalVisible"
-    :title="modalTitle"
-    :rid="rid"
-    @update-visible="updateVisible"
-    @refresh="queryBoxListData"
-  ></modal-form>
 </template>
 
 <script setup lang="ts">

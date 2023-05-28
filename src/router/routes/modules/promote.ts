@@ -8,7 +8,7 @@ const PROMOTE: AppRouteRecordRaw = {
   meta: {
     locale: '推广',
     requiresAuth: true,
-    icon: 'icon-list',
+    icon: 'icon-send',
     order: 8,
   },
   children: [

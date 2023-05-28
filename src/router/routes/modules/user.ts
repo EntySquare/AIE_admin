@@ -8,7 +8,7 @@ const USER: AppRouteRecordRaw = {
   meta: {
     locale: '用户',
     requiresAuth: true,
-    icon: 'icon-list',
+    icon: 'icon-user',
     order: 4,
   },
   children: [

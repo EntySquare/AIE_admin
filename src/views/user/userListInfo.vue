@@ -186,8 +186,8 @@
 
   onMounted(async () => {
     userId.value = useRoute().query.id;
-    // queryUserListData(userId.value);
-    await queryUserListData(1);
+    await queryUserListData(userId.value);
+    // await queryUserListData(1);
   });
 </script>
 

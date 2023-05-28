@@ -24,6 +24,63 @@ export interface UserPhoneResList {
   user_list: UserPhoneRes[];
 }
 
+/**
+ * types.UserList
+ */
+export interface User {
+  /**
+   * 创作的nft数量
+   */
+  author_nft_count?: number;
+  /**
+   * 头像
+   */
+  avatar?: string;
+  /**
+   * 余额
+   */
+  balance?: string;
+  /**
+   * 创建时间
+   */
+  created_at?: string;
+  /**
+   * 持有的nft数量
+   */
+  holder_nft_count?: number;
+  /**
+   * id
+   */
+  id?: number;
+  /**
+   * 昵称
+   */
+  nickname?: string;
+  /**
+   * 手机号
+   */
+  phone?: string;
+  /**
+   * 发布的专辑数量
+   */
+  publish_album_count?: number;
+}
+
+/**
+ * types.GetUserListResp
+ */
+export interface UserList {
+  /**
+   * 当前页
+   */
+  current_page?: number;
+  /**
+   * 总数
+   */
+  total?: number;
+  user_list?: User[];
+}
+
 // 登录
 // export function login(data: LoginData) {
 //   if (!data.username) {

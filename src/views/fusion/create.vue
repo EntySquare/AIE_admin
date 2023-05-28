@@ -32,66 +32,61 @@
           />
         </a-form-item>
         <a-form-item
-          v-for="(cellItem, i) of form.in_data"
+          v-for="(inItem, i) of form.in_data"
           :key="i"
-          :label="`融合数据-第${i + 1}格`"
+          :label="`融合数据-第${i + 1}种`"
         >
-          <a-row
-            v-for="(inItem, j) of cellItem"
-            :key="j"
-            justify="space-between"
-          >
-            <div></div>
-            <a-input-group>
-              <selectData
-                v-model:id="form.in_data[i][j].id"
-                v-model:typeId="form.in_data[i][j].id_types"
-                width="12vw"
-              />
-              <a-input
-                v-model="inItem.in_progress"
-                :style="{ width: '5vw' }"
-                placeholder="进度值"
-              />
-              <a-input
-                v-model="inItem.num_compel"
-                :style="{ width: '5vw' }"
-                placeholder="强制要求数量"
-              />
-            </a-input-group>
-            <a-button
-              :style="{ marginLeft: '10px' }"
-              @click="handleDeleteCell(i)"
-              ><template #icon> <icon-minus /> </template
-            ></a-button>
-            <a-button
-              :style="{ marginLeft: '10px' }"
-              @click="handleAddCellDetail(i)"
-              ><template #icon> <icon-plus /> </template
-            ></a-button>
-          </a-row>
+          <div></div>
+          <a-input-group>
+            <selectData
+              v-model:id="inItem.id"
+              v-model:typeId="inItem.id_types"
+              width="12vw"
+            />
+            <a-input-number
+              v-model="inItem.in_progress"
+              :style="{ width: '5vw' }"
+              placeholder="进度值"
+            />
+            <a-input-number
+              v-model="inItem.num_compel"
+              :style="{ width: '10vw' }"
+              placeholder="强制要求数量"
+            />
+          </a-input-group>
+          <a-button :style="{ marginLeft: '10px' }" @click="handleDeleteCell(i)"
+            ><template #icon> <icon-minus /> </template
+          ></a-button>
         </a-form-item>
         <a-form-item>
-          <a-button @click="handleAddCell"
+          <a-button @click="handleAddIn"
             ><template #icon> <icon-plus /> </template
           ></a-button>
         </a-form-item>
         <a-form-item
-          v-for="(out, index) of form.out_data"
+          v-for="(outItem, index) of form.out_data"
           :key="index"
           :label="`开奖数据-${index + 1}`"
         >
           <a-row justify="space-between">
             <a-input-group>
               <selectData
-                v-model:id="form.out_data[index].id"
-                v-model:typeId="form.out_data[index].id_types"
+                v-model:id="outItem.id"
+                v-model:typeId="outItem.id_types"
                 width="12vw"
               />
-              <a-input :style="{ width: '5vw' }" placeholder="权重" />
-              <a-input :style="{ width: '5vw' }" placeholder="出货数量" />
+              <a-input-number
+                v-model="outItem.draw_probability"
+                :style="{ width: '5vw' }"
+                placeholder="权重"
+              />
+              <a-input-number
+                v-model="outItem.out_num"
+                :style="{ width: '5vw' }"
+                placeholder="出货数量"
+              />
               <a-select
-                v-model="out.rarity"
+                v-model="outItem.rarity"
                 :style="{ width: '5vw' }"
                 placeholder="稀有度"
               >
@@ -111,7 +106,7 @@
           </a-row>
         </a-form-item>
         <a-form-item>
-          <a-button @click="handleAdd"
+          <a-button @click="handleAddOut"
             ><template #icon> <icon-plus /> </template
           ></a-button>
         </a-form-item>
@@ -119,7 +114,7 @@
           <a-upload
             draggable
             image-preview
-            :custom-request="uploadImg"
+            :custom-request="uploadImg2"
             :limit="1"
           />
         </a-form-item>
@@ -130,18 +125,24 @@
           <a-input-number v-model="form.sort" placeholder="排序" />
         </a-form-item>
       </a-form>
+      <a-row justify="center">
+        <a-col :span="4">
+          <a-button type="primary" long @click="handleCreate"
+            >完成并上传</a-button
+          >
+        </a-col>
+      </a-row>
     </a-card>
   </div>
 </template>
 
 <script setup lang="ts">
-  import { reactive, ref } from 'vue';
-  import { RequestOption } from '@arco-design/web-vue';
+  import { reactive } from 'vue';
+  import { Message, RequestOption } from '@arco-design/web-vue';
   import { arcoUpload } from '@/api/upload';
   import selectData from '@/views/box/components/selectData.vue';
-  import { Fusion } from '@/api/fusion';
+  import { createFusion, Fusion } from '@/api/fusion';
 
-  const imgPath = ref<string>('');
   const rarityData = [
     {
       rarity: 0,
@@ -173,24 +174,20 @@
     hide: false,
     illustrate_img: '',
     illustrate_text: '',
-    in_data: [[{ id: 0, id_types: 1, in_progress: 0, num_compel: 0 }]],
+    in_data: [{ id: 0, id_types: 0 }],
     name: '',
-    out_data: [
-      { draw_probability: 0, id: 0, id_types: 1, out_num: 0, rarity: 0 },
-    ],
+    out_data: [{ id: 0, id_types: 1 }],
     progress: 0,
     reward_img: '',
     sort: 0,
   });
-  const handleAddCell = () => {
-    form.in_data.push([
-      {
-        id: 0,
-        id_types: 1,
-        in_progress: 0,
-        num_compel: 0,
-      },
-    ]);
+  const handleAddIn = () => {
+    form.in_data.push({
+      id: 0,
+      id_types: 1,
+      in_progress: 0,
+      num_compel: 0,
+    });
   };
 
   const handleDeleteCell = (index: number) => {
@@ -199,16 +196,7 @@
     }
   };
 
-  const handleAddCellDetail = (index: number) => {
-    form.in_data[index].push({
-      id: 0,
-      id_types: 1,
-      in_progress: 0,
-      num_compel: 0,
-    });
-  };
-
-  const handleAdd = () => {
+  const handleAddOut = () => {
     form.out_data.push({
       draw_probability: 0,
       id: 0,
@@ -224,8 +212,29 @@
     }
   };
 
+  const handleCreate = async () => {
+    const fusionData: Fusion = {
+      hide: form.hide,
+      illustrate_img: form.illustrate_img,
+      illustrate_text: form.illustrate_text,
+      in_data: form.in_data,
+      name: form.name,
+      out_data: form.out_data,
+      reward_img: form.reward_img,
+      sort: form.sort,
+    };
+    const res = await createFusion(fusionData);
+    if (res.data === 'success') {
+      Message.success('创建成功');
+    }
+  };
+
   async function uploadImg(option: RequestOption) {
-    imgPath.value = await arcoUpload(option);
+    form.illustrate_img = await arcoUpload(option);
+  }
+
+  async function uploadImg2(option: RequestOption) {
+    form.reward_img = await arcoUpload(option);
   }
 </script>
 

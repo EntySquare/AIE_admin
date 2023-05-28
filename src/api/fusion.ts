@@ -53,7 +53,7 @@ export interface Fusion {
   /**
    * 坑位数据
    */
-  in_data: FusionDetail[][];
+  in_data: FusionDetail[];
   /**
    * 融合名称
    */
@@ -65,7 +65,7 @@ export interface Fusion {
   /**
    * （冗余）进度条数值 部分融合类型 是进度条玩法 进度条冲满100%的时候 送OutData 的奖励
    */
-  progress: number;
+  progress?: number;
   /**
    * 奖励图片
    */

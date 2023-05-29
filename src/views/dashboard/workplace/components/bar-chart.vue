@@ -1,5 +1,4 @@
 <template>
-  <a-spin :loading="loading" :style="{width: '100%' , height:'100% '}">
     <a-card
       class="general-card"
       :header-style="{ paddingBottom: 0 }"
@@ -13,7 +12,6 @@
       </template>
       <Chart height="310px" :option="chartOption" />
     </a-card>
-  </a-spin>
 </template>
 
 <script setup lang="ts">

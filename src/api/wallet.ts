@@ -115,7 +115,30 @@ export interface WithdrawParam {
   status?: number;
 }
 
+/**
+ * types.AuditWithdrawReq
+ */
+export interface AuditParam {
+  /**
+   * 状态0=全部 1=待审核 2=审核通过 3=审核不通过 默认0
+   */
+  audit_status?: number;
+  /**
+   * id
+   */
+  id?: number;
+  /**
+   * 原因或备注 只有审核不通过时才需要 必填
+   */
+  remark?: string;
+}
+
 // 获取提现列表
 export function fetchWithdrawList(params: WithdrawParam) {
   return axios.post<WithdrawList>('/admin/withdraw/list', params);
+}
+
+// 审核提现
+export function auditWithdraw(params: AuditParam) {
+  return axios.post<any>('/admin/withdraw/audit', params);
 }

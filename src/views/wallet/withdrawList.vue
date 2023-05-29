@@ -85,7 +85,12 @@
             </template>
           </a-table-column>
           <a-table-column title="手续费" data-index="charge"></a-table-column>
-          <a-table-column title="原因" data-index="remark"></a-table-column>
+          <a-table-column
+            title="原因"
+            data-index="remark"
+            :ellipsis="true"
+            :tooltip="{ 'background-color': '#4080ff' }"
+          ></a-table-column>
           <a-table-column
             title="订单编号"
             data-index="serial_number"
@@ -100,11 +105,11 @@
             </template>
           </a-table-column>
           <a-table-column title="操作" :width="200" align="center">
-            <template #cell="{}">
+            <template #cell="{ record }">
               <a-popconfirm
                 :content="'确定通过？'"
                 type="info"
-                @ok="passOk"
+                @ok="passOk(record.id)"
                 @cancel="passCancel"
               >
                 <a-button
@@ -114,14 +119,27 @@
                   >通过</a-button
                 >
               </a-popconfirm>
-              <a-popconfirm
-                :content="'确定拒绝？'"
-                type="error"
-                @ok="refuseOk"
-                @cancel="refuseCancel"
-              >
-                <a-button @click="refuseClick">拒绝</a-button>
-              </a-popconfirm>
+              <a-button @click="showModal"
+                >拒绝
+                <a-modal
+                  v-model:visible="modalVisible"
+                  title="拒绝原因"
+                  @ok="
+                    reqAuditWithdraw({
+                      audit_status: 3,
+                      id: record.id,
+                      remark: remark,
+                    })
+                  "
+                >
+                  <a-input
+                    v-model="remark"
+                    placeholder="填写拒绝原因"
+                    :max-length="50"
+                    allow-clear
+                    show-word-limit
+                  /> </a-modal
+              ></a-button>
             </template>
           </a-table-column>
         </template>
@@ -132,37 +150,28 @@
 
 <script setup lang="ts">
   import { onMounted, reactive, ref } from 'vue';
-  import { fetchWithdrawList, WithdrawParam, Withdraw } from '@/api/wallet';
+  import {
+    fetchWithdrawList,
+    WithdrawParam,
+    Withdraw,
+    AuditParam,
+    auditWithdraw,
+  } from '@/api/wallet';
   import useLoading from '@/hooks/loading';
   import { Pagination } from '@/types/global';
+  import { Message } from '@arco-design/web-vue';
 
   const { setLoading } = useLoading(true);
   const tableData = ref<Withdraw[]>([]);
+  const remark = ref<string>('');
+  const modalVisible = ref<boolean>(false);
   const pagination: Pagination = reactive({
     current: 1,
     pageSize: 10,
   });
 
   const pass = ref(false);
-  const refuse = ref(false);
-  const passClick = () => {
-    pass.value = true;
-  };
-  const passOk = () => {
-    pass.value = false;
-  };
-  const passCancel = () => {
-    pass.value = false;
-  };
-  const refuseClick = () => {
-    refuse.value = true;
-  };
-  const refuseOk = () => {
-    refuse.value = false;
-  };
-  const refuseCancel = () => {
-    refuse.value = false;
-  };
+
   const withdrawStatus = [
     {
       value: 0,
@@ -200,6 +209,10 @@
     },
   ];
 
+  const showModal = () => {
+    modalVisible.value = !modalVisible.value;
+  };
+
   const form = reactive<WithdrawParam>({
     audit_status: undefined,
     serial_number: undefined,
@@ -225,6 +238,32 @@
     } finally {
       setLoading(false);
     }
+  };
+
+  // 审核提现
+  const reqAuditWithdraw = async (
+    params: AuditParam = {
+      id: pagination.current,
+      remark: remark.value,
+    }
+  ) => {
+    const res = await auditWithdraw(params);
+    if (res.data === 'success') {
+      Message.success('操作成功');
+    } else {
+      Message.success('操作失败');
+    }
+  };
+
+  const passClick = () => {
+    pass.value = true;
+  };
+  const passOk = (id: number) => {
+    pass.value = false;
+    reqAuditWithdraw({ audit_status: 2, id, remark: remark.value });
+  };
+  const passCancel = () => {
+    pass.value = false;
   };
 
   // 重置查询

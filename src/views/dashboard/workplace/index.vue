@@ -40,13 +40,13 @@
   // 线上总内容
   import DataPanel from './components/data-panel.vue';
   // 用户增幅统计
-  import ContentChart from './components/content-chart.vue';
+  // import ContentChart from './components/content-chart.vue';
   // 热门专辑TOP
-  import PopularContent from './components/popular-content.vue';
+  // import PopularContent from './components/popular-content.vue';
   // 百分比占比图
-  import CategoriesPercent from './components/categories-percent.vue';
+  // import CategoriesPercent from './components/categories-percent.vue';
   // 交易额统计
-  import BarChart from './components/bar-chart.vue'
+  // import BarChart from './components/bar-chart.vue';
 </script>
 
 <style lang="less" scoped>

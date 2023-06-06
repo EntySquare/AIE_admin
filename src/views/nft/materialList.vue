@@ -90,7 +90,7 @@
     setLoading(true);
     try {
       const res = await fetchMaterialList(params);
-      tableData.value = res.data.list;
+      tableData.value = res.data.material_list;
       pagination.current = params.current;
       pagination.total = res.data.length;
     } finally {

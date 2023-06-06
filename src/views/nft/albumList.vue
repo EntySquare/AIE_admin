@@ -59,7 +59,7 @@
             title="作品总数"
             data-index="nft_num"
           ></a-table-column>
-          <a-table-column title="简介" data-index="profile"></a-table-column>
+<!--          <a-table-column title="简介" data-index="profile"></a-table-column>-->
           <a-table-column
             title="剩余数量"
             data-index="remaining_quantity"
@@ -95,7 +95,7 @@
     setLoading(true);
     try {
       const res = await fetchAlbumList(params);
-      tableData.value = res.data.list;
+      tableData.value = res.data.album_list;
       pagination.current = params.current;
       pagination.total = res.data.length;
     } finally {

@@ -56,8 +56,8 @@
             data-index="publish_album_count"
           ></a-table-column>
           <a-table-column title="详情">
-            <template #cell="{ rowIndex }">
-              <a-button style="margin-right: 10px" @click="onRowClick(rowIndex)"
+            <template #cell="{ record }">
+              <a-button style="margin-right: 10px" @click="onRowClick(record.id)"
                 >查看</a-button
               >
             </template>

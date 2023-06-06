@@ -1,154 +1,153 @@
 <template>
-  <div class="container">
-    <a-card class="card-div">
-      <a-typography-title :heading="6"> 活动列表 </a-typography-title>
-      <a-button style="margin-top: 20px" type="primary" @click="updateVisible">
-        <template #icon>
-          <icon-plus />
-        </template>
-        发布活动
-      </a-button>
-      <a-table :data="tableData" style="margin-top: 20px">
-        <template #columns>
-          <a-table-column title="活动名字" data-index="name"></a-table-column>
-          <a-table-column title="活动图片" data-index="mini_img">
-            <template #cell="{ record }">
-              <a-image :src="record.mini_img" height="80px" width="120px">
-              </a-image>
-            </template>
-          </a-table-column>
-          <a-table-column title="专辑列表">
-            <template #cell="{ record }">
-              <div v-for="(item1, i) of record" :key="i">
-                <div v-for="item2 of item1" :key="item2.name">
-                  <p>{{ item2.name }}</p>
+  <div>
+    <div class="container">
+      <a-card class="card-div">
+        <a-typography-title :heading="6"> 活动列表 </a-typography-title>
+        <a-button style="margin-top: 20px" type="primary" @click="updateVisible">
+          <template #icon>
+            <icon-plus />
+          </template>
+          发布活动
+        </a-button>
+        <a-table :data="tableData" style="margin-top: 20px">
+          <template #columns>
+            <a-table-column title="活动名字" data-index="name"></a-table-column>
+            <a-table-column title="活动图片" data-index="mini_img">
+              <template #cell="{ record }">
+                <a-image :src="record.mini_img" height="80px" width="120px">
+                </a-image>
+              </template>
+            </a-table-column>
+            <a-table-column title="专辑列表">
+              <template #cell="{ record }">
+                <div v-for="(item1, i) of record" :key="i">
+                  <div v-for="item2 of item1" :key="item2.name">
+                    <p>{{ item2.name }}</p>
+                  </div>
                 </div>
-              </div>
-            </template>
-          </a-table-column>
-          <a-table-column
-            title="创建时间"
-            data-index="created_at"
-          ></a-table-column>
-          <a-table-column
-            title="开始时间"
-            data-index="start_at"
-          ></a-table-column>
-          <a-table-column title="结束时间" data-index="end_at"></a-table-column>
-          <a-table-column title="是否隐藏" data-index="hide">
-            <template #cell="{ record }">
-              <p v-if="record.hide === true">是</p>
-              <p v-else-if="record.hide === false">否</p>
-            </template>
-          </a-table-column>
-          <a-table-column title="活动图片" data-index="illustrate_img">
-            <template #cell="{ record }">
-              <a-image :src="record.illustrate_img" height="80px" width="120px">
-              </a-image>
-            </template>
-          </a-table-column>
-          <a-table-column
-            title="说明文字"
-            data-index="illustrate_text"
-          ></a-table-column>
-          <a-table-column title="操作">
-            <template #cell="{ record }">
-              <a-button
-                style="margin-right: 10px"
-                @click="$modal.info({ title: 'Name', content: record.name })"
+              </template>
+            </a-table-column>
+            <a-table-column
+                title="创建时间"
+                data-index="created_at"
+            ></a-table-column>
+            <a-table-column
+                title="开始时间"
+                data-index="start_at"
+            ></a-table-column>
+            <a-table-column title="结束时间" data-index="end_at"></a-table-column>
+            <a-table-column title="是否隐藏" data-index="hide">
+              <template #cell="{ record }">
+                <p v-if="record.hide === true">是</p>
+                <p v-else-if="record.hide === false">否</p>
+              </template>
+            </a-table-column>
+            <a-table-column title="活动图片" data-index="illustrate_img">
+              <template #cell="{ record }">
+                <a-image :src="record.illustrate_img" height="80px" width="120px">
+                </a-image>
+              </template>
+            </a-table-column>
+            <!--          <a-table-column title="说明文字" data-index="illustrate_text"></a-table-column>-->
+            <a-table-column title="操作">
+              <template #cell="{ record }">
+                <a-button
+                    style="margin-right: 10px"
+                    @click="$modal.info({ title: 'Name', content: record.name })"
                 >删除</a-button
-              >
-            </template>
-          </a-table-column>
-        </template>
-      </a-table>
-    </a-card>
+                >
+              </template>
+            </a-table-column>
+          </template>
+        </a-table>
+      </a-card>
+    </div>
+    <!--    发布活动弹窗-->
+    <a-modal
+        v-model:visible="modalVisible"
+        title="新增活动"
+        width="40vw"
+        @ok="handleCreate"
+    >
+      <a-form :model="form">
+        <a-form-item label="活动名字">
+          <a-input v-model="form.name" />
+        </a-form-item>
+        <a-form-item label="是否隐藏">
+          <a-switch
+              v-model="form.hide"
+              :checked-value="true"
+              :unchecked-value="false"
+          />
+        </a-form-item>
+        <a-form-item label="专辑">
+          <a-select
+              v-model="form.album_ids"
+              :options="selectorAlbum"
+              :style="{ width: '360px' }"
+              placeholder="请选择专辑"
+              multiple
+              :scrollbar="true"
+          >
+          </a-select>
+        </a-form-item>
+        <a-form-item label="融合">
+          <a-select
+              v-model="form.fusion_ids"
+              :options="selectorFusion"
+              :style="{ width: '360px' }"
+              placeholder="请选择融合"
+              multiple
+              :scrollbar="true"
+          >
+          </a-select>
+        </a-form-item>
+        <a-form-item label="材料">
+          <a-select
+              v-model="form.material_ids"
+              :options="selectorMaterial"
+              :style="{ width: '360px' }"
+              placeholder="请选择材料"
+              multiple
+              :scrollbar="true"
+          >
+          </a-select>
+        </a-form-item>
+        <a-form-item label="说明图片">
+          <a-upload
+              draggable
+              image-preview
+              :custom-request="uploadImg"
+              :limit="1"
+          />
+        </a-form-item>
+        <a-form-item label="说明文字">
+          <a-textarea
+              v-model="form.illustrate_text"
+              placeholder="请输入说明"
+              allow-clear
+          />
+        </a-form-item>
+        <a-form-item label="活动小图">
+          <a-upload
+              draggable
+              image-preview
+              :custom-request="uploadImg2"
+              :limit="1"
+          />
+        </a-form-item>
+        <a-form-item label="选择开始/结束时间">
+          <a-range-picker
+              style="width: 100vw; margin: 0 0 24px 0"
+              show-time
+              :time-picker-props="{ defaultValue: ['00:00:00', '09:09:06'] }"
+              format="YYYY-MM-DD HH:mm:ss"
+              @ok="onOk"
+          />
+        </a-form-item>
+      </a-form>
+    </a-modal>
   </div>
-  <!--    发布活动弹窗-->
-  <a-modal
-    v-model:visible="modalVisible"
-    title="新增活动"
-    width="40vw"
-    @ok="handleCreate"
-  >
-    <a-form :model="form">
-      <a-form-item label="活动名字">
-        <a-input v-model="form.name" />
-      </a-form-item>
-      <a-form-item label="是否隐藏">
-        <a-switch
-          v-model="form.hide"
-          :checked-value="true"
-          :unchecked-value="false"
-        />
-      </a-form-item>
-      <a-form-item label="专辑">
-        <a-select
-          v-model="form.album_ids"
-          :options="selectorAlbum"
-          :style="{ width: '360px' }"
-          placeholder="请选择专辑"
-          multiple
-          :scrollbar="true"
-        >
-        </a-select>
-      </a-form-item>
-      <a-form-item label="融合">
-        <a-select
-          v-model="form.fusion_ids"
-          :options="selectorFusion"
-          :style="{ width: '360px' }"
-          placeholder="请选择融合"
-          multiple
-          :scrollbar="true"
-        >
-        </a-select>
-      </a-form-item>
-      <a-form-item label="材料">
-        <a-select
-          v-model="form.material_ids"
-          :options="selectorMaterial"
-          :style="{ width: '360px' }"
-          placeholder="请选择材料"
-          multiple
-          :scrollbar="true"
-        >
-        </a-select>
-      </a-form-item>
-      <a-form-item label="说明图片">
-        <a-upload
-          draggable
-          image-preview
-          :custom-request="uploadImg"
-          :limit="1"
-        />
-      </a-form-item>
-      <a-form-item label="说明文字">
-        <a-textarea
-          v-model="form.illustrate_text"
-          placeholder="请输入说明"
-          allow-clear
-        />
-      </a-form-item>
-      <a-form-item label="活动小图">
-        <a-upload
-          draggable
-          image-preview
-          :custom-request="uploadImg2"
-          :limit="1"
-        />
-      </a-form-item>
-      <a-form-item label="选择开始/结束时间">
-        <a-range-picker
-          style="width: 100vw; margin: 0 0 24px 0"
-          show-time
-          :time-picker-props="{ defaultValue: ['00:00:00', '09:09:06'] }"
-          format="YYYY-MM-DD HH:mm:ss"
-          @ok="onOk"
-        />
-      </a-form-item>
-    </a-form>
-  </a-modal>
 </template>
 
 <script setup lang="ts">

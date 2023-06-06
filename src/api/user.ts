@@ -262,6 +262,85 @@ export interface UserDetailInfo {
 //   return axios.post<LoginRes, any>('/login', data);
 // }
 
+/**
+ * types.GetUserByRecommendReq
+ */
+export interface RecommendParam {
+  /**
+   * 最大推荐人数
+   */
+  max: number;
+  /**
+   * 最小推荐人数
+   */
+  min: number;
+}
+
+
+/**
+* types.UserRecommend
+*/
+export interface UserRecommend {
+  /**
+   * 推荐人数
+   */
+  count?: number;
+  /**
+   * 用户id
+   */
+  id: number;
+  /**
+   * 手机号
+   */
+  phone: string;
+}
+
+
+/**
+ * types.GetUserByRecommendResp
+ */
+export interface UserRecommendList {
+  /**
+   * 用户id列表
+   */
+  user_ids?: number[];
+  /**
+   * 用户推荐人列表
+   */
+  user_recommend?: UserRecommend[];
+}
+
+/**
+ * types.GetUserByMaterialIdReq
+ */
+export interface MaterialParam {
+  /**
+   * 材料id 必填
+   */
+  id: number;
+  /**
+   * 材料数量
+   */
+  quantity: number;
+}
+
+/**
+* types.HolderUser
+*/
+
+export interface HolderUser {
+  id: number;
+  phone: string;
+}
+/**
+ * types.GetHolderUserResp
+ */
+export interface HolderUserList {
+  holder_user: HolderUser[];
+  user_ids: number[];
+}
+
+
 export function login(data: LoginData) {
   // return axios.post<LoginRes>('/api/user/login', data);
   if (!data.username) {
@@ -298,4 +377,19 @@ export function getUserInfo() {
 
 export function getMenuList() {
   // return axios.post<RouteRecordNormalized[]>('/api/user/menu');
+}
+
+// 根据推荐人的下级有min～max人的用户【然后过滤掉没有开通钱包（杉德）】搜索用户所有
+export function getUserByRecommend(params: RecommendParam) {
+  return axios.post<UserRecommendList>('/admin/user/userByRecommend', params);
+}
+
+// 根据指定材料ID+数量搜索用户所有
+export function getUserByMaterialId(params: MaterialParam) {
+  return axios.post<HolderUserList>('/admin/user/userByMaterialId', params);
+}
+
+// 根据指定专辑ID搜索用户所有
+export function getUserByAlbumId(id: number) {
+  return axios.post<HolderUserList>('/admin/user/userByAlbumId', { id });
 }

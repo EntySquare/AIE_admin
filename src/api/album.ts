@@ -43,6 +43,24 @@ export interface AlbumsResList {
   total: number; // 总数
 }
 
+/**
+ * types.GiftOrDestroyAlbumReq
+ */
+export interface GiftOrDestroyAlbumParam {
+  /**
+   * 专辑id
+   */
+  id: number;
+  /**
+   * 数量=用户ids的长度
+   */
+  quantity: number;
+  /**
+   * 用户ids
+   */
+  user_ids: number[];
+}
+
 // 发布新专辑
 export function createAlbum(data: Album) {
   return axios.post<any>('/admin/album/create', data);
@@ -51,4 +69,14 @@ export function createAlbum(data: Album) {
 // 获取专辑列表
 export function fetchAlbumList(params: AlbumsParams) {
   return axios.post<any>('/admin/album/list', params);
+}
+
+//  根据用户IDs销毁专辑（NFT）
+export function presentAlbumByUserIds(param: GiftOrDestroyAlbumParam) {
+  return axios.post<string>('/admin/album/present', param);
+}
+
+//  根据用户IDs赠送专辑（NFT）
+export function giftAlbumByUserIds(param: GiftOrDestroyAlbumParam) {
+  return axios.post<string>('/admin/material/gift', param);
 }

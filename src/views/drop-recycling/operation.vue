@@ -6,7 +6,7 @@
       <!--  推广人数查询 -->
       <a-form :model="recommendForm">
         <a-row :gutter="16">
-          <a-col :span="4">
+          <a-col :span="5">
             <a-form-item
               field="min"
               label="推广人数查询"
@@ -41,7 +41,7 @@
       <!-- 碎片持有数量 -->
       <a-form :model="holdMaterialForm">
         <a-row :gutter="16">
-          <a-col :span="4">
+          <a-col :span="5">
             <a-form-item field="id" label="碎片持有人" label-col-flex="100px">
               <!-- <a-input
                 v-model="holdMaterialForm.id"
@@ -51,7 +51,6 @@
               <a-select
                 v-model="holdMaterialForm.id"
                 :options="selectorMaterial"
-                :style="{ width: '360px' }"
                 placeholder="请选择材料/碎片"
               >
               </a-select>
@@ -80,7 +79,7 @@
       <!-- 专辑持有人 -->
       <a-form :model="holdAlbumForm">
         <a-row :gutter="16">
-          <a-col :span="7">
+          <a-col :span="8">
             <a-form-item
               field="albumId"
               label="专辑持有人"
@@ -134,12 +133,11 @@
             <!-- 碎片持有数量 -->
             <a-form :model="giftOrPresentMaterialForm">
               <a-row :gutter="24">
-                <a-col :span="6">
+                <a-col :span="7">
                   <a-form-item field="id" label="" label-col-flex="20px">
                     <a-select
                       v-model="giftOrPresentMaterialForm.id"
                       :options="selectorMaterial"
-                      :style="{ width: '360px' }"
                       placeholder="请选择材料/碎片"
                       :scrollbar="true"
                     >
@@ -154,31 +152,32 @@
                     />
                   </a-form-item>
                 </a-col>
-                <a-col :span="12">
-                  <a-button
-                    type="primary"
-                    style="margin-right: 10px"
-                    @click="giftOrPresentMaterial(1)"
+                <a-col :span="10">
+                  <a-popconfirm
+                    content="赠送碎片 一旦执行成功则无法回滚,确定要执行?"
+                    @ok="giftOrPresentMaterial(1)"
                   >
-                    <icon-plus :size="20" />
-                    赠送碎片
-                  </a-button>
-                  <a-button
-                    type="primary"
-                    style="margin-right: 10px"
-                    @click="giftOrPresentMaterial(2)"
+                    <a-button type="primary" style="margin-right: 10px">
+                      <icon-plus :size="20" />
+                      赠送碎片
+                    </a-button>
+                  </a-popconfirm>
+                  <a-popconfirm
+                    content="回收碎片 一旦执行成功则无法回滚,确定要执行?"
+                    @ok="giftOrPresentMaterial(2)"
                   >
-                    <icon-minus :size="20" />
-                    回收碎片
-                  </a-button>
+                    <a-button type="primary" style="margin-right: 10px">
+                      <icon-minus :size="20" />
+                      回收碎片
+                    </a-button>
+                  </a-popconfirm>
                 </a-col>
               </a-row>
             </a-form>
 
             <a-col :span="24">
               <a-alert
-                >功能提示:注意赠送碎片时候直接空头给用户，销毁碎片的数值若用户不足够这么多碎片
-                依旧会回收掉</a-alert
+                >功能提示:注意赠送专辑数藏时如专辑数藏下NFT不足够赠送用户人数则报错回滚</a-alert
               >
             </a-col>
             <!-- 专辑持有 -->
@@ -196,27 +195,29 @@
                   </a-form-item>
                 </a-col>
                 <a-col :span="12">
-                  <a-button
-                    type="primary"
-                    style="margin-right: 10px"
-                    @click="giftOrPresentAlbum(1)"
+                  <a-popconfirm
+                    content="赠送专辑数藏 一旦执行成功则无法回滚,确定要执行?"
+                    @ok="giftOrPresentAlbum(1)"
                   >
-                    <icon-plus :size="20" />
-                    赠送专辑数藏
-                  </a-button>
-                  <a-button
-                    type="primary"
-                    style="margin-right: 10px"
-                    @click="giftOrPresentAlbum(2)"
+                    <a-button type="primary" style="margin-right: 10px">
+                      <icon-plus :size="20" />
+                      赠送专辑数藏
+                    </a-button>
+                  </a-popconfirm>
+                  <a-popconfirm
+                    content="回收专辑数藏 一旦执行成功则无法回滚,确定要执行?"
+                    @ok="giftOrPresentAlbum(2)"
                   >
-                    <icon-minus :size="20" />
-                    回收专辑数藏
-                  </a-button>
+                    <a-button type="primary" style="margin-right: 10px">
+                      <icon-minus :size="20" />
+                      回收专辑数藏
+                    </a-button>
+                  </a-popconfirm>
                 </a-col>
               </a-row>
             </a-form>
             <a-col :span="24">
-              <a-alert>功能提示:兑换碎片</a-alert>
+              <a-alert>功能提示:兑换碎片 待对接功能</a-alert>
             </a-col>
             <!-- TODO 还没有这个接口 待定 -->
             <!-- 兑换碎片 -->
@@ -308,16 +309,14 @@
                 title="创建时间"
                 data-index="created_at"
               ></a-table-column>
-              <a-table-column title="操作" data-index="user_count">
-                <!-- TODO 待完成查看用户  -->
-
-                <!-- <template #cell="{ record }">
-                 <a-button
+              <a-table-column title="操作">
+                <template #cell="{ record }">
+                  <a-button
                     style="margin-right: 10px"
-                    @click="onRowClick(record.id)"
+                    @click="queryUserByIds(record.user_ids)"
                     >查看</a-button
-                  > 
-                </template>-->
+                  >
+                </template>
               </a-table-column>
             </template>
           </a-table>
@@ -337,302 +336,320 @@
 </template>
 
 <script setup lang="ts">
-  import { Notification, Message } from '@arco-design/web-vue';
-  import { onMounted, reactive, ref } from 'vue';
-  import {
-    getUserByRecommend,
-    getUserByMaterialId,
-    getUserByAlbumId,
-    UserDetailInfo,
-    RecommendParam,
-    MaterialParam,
-  } from '@/api/user';
-  import selectData from '@/views/box/components/selectData.vue';
-  import { fetchItemSelector, ItemMap } from '@/api/activity';
-  import {
-    presentAlbumByUserIds,
-    giftAlbumByUserIds,
-    GiftOrDestroyAlbumParam,
-  } from '@/api/album';
-  import {
-    fetchDropRecyclingLogList,
-    DropRecyclingLog,
-    DropRecyclingLogListParam,
-  } from '@/api/log';
-  import {
-    presentMaterialByUserIds,
-    giftMaterialByUserIds,
-    GiftOrDestroyMaterialParam,
-  } from '@/api/material';
-  import useLoading from '@/hooks/loading';
-  import { number } from 'echarts/core';
-  import { Pagination } from '@/types/global';
+import { Notification, Message } from '@arco-design/web-vue';
+import { onMounted, reactive, ref } from 'vue';
+import {
+  getUserByRecommend,
+  getUserByMaterialId,
+  getUserByAlbumId,
+  getUserByIds,
+} from '@/api/user';
+import selectData from '@/views/box/components/selectData.vue';
+import { fetchItemSelector, ItemMap } from '@/api/activity';
+import {
+  presentAlbumByUserIds,
+  giftAlbumByUserIds,
+  GiftOrDestroyAlbumParam,
+} from '@/api/album';
+import {
+  fetchDropRecyclingLogList,
+  DropRecyclingLog,
+  DropRecyclingLogListParam,
+} from '@/api/log';
+import {
+  presentMaterialByUserIds,
+  giftMaterialByUserIds,
+  GiftOrDestroyMaterialParam,
+} from '@/api/material';
+import useLoading from '@/hooks/loading';
+import { Pagination } from '@/types/global';
 
-  const { setLoading } = useLoading(true);
-  const selectorAlbum = ref<ItemMap[]>([]);
-  const selectorFusion = ref<ItemMap[]>([]);
-  const selectorMaterial = ref<ItemMap[]>([]);
-  const userCount = ref<number>(0);
-  const pagination: Pagination = reactive({
-    current: 1,
+const { setLoading } = useLoading(true);
+const selectorAlbum = ref<ItemMap[]>([]);
+const selectorFusion = ref<ItemMap[]>([]);
+const selectorMaterial = ref<ItemMap[]>([]);
+const userCount = ref<number>(0);
+const pagination: Pagination = reactive({
+  current: 1,
+  pageSize: 10,
+  total: 0,
+});
+const listType = ref<any>(1);
+const tableData = ref<DropRecyclingLog[]>([]);
+
+// 查询空投/回收操作日志列表
+const queryLogListData = async () => {
+  const params: DropRecyclingLogListParam = {
+    list_type: listType.value,
+    pageNum: pagination.current,
     pageSize: 10,
-    total: 0,
-  });
-  const listType = ref<any>(1);
-  const tableData = ref<DropRecyclingLog[]>([]);
+  };
+  setLoading(true);
+  try {
+    const res = await fetchDropRecyclingLogList(params);
+    tableData.value = res.data.drop_recycling_log_list ?? [];
+    pagination.current = res.data.current_page ?? 1;
+    pagination.total = res.data.total;
+  } finally {
+    setLoading(false);
+  }
+};
+const cutListType = (v: any) => {
+  listType.value = v;
+  queryLogListData();
+};
 
-  // 查询空投/回收操作日志列表
-  const queryLogListData = async () => {
-    const params: DropRecyclingLogListParam = {
-      list_type: listType.value,
-      pageNum: pagination.current,
-      pageSize: 10,
+// recommendForm 用户关系人数
+const recommendForm = reactive<any>({
+  min: '',
+  max: '',
+});
+//  holdMaterialForm 持有指定材料/碎片 数量
+const holdMaterialForm = reactive<any>({
+  id: '',
+  quantity: '',
+});
+
+// holdAlbumForm 持有指定专辑
+const holdAlbumForm = reactive<any>({
+  id: '',
+  userIds: [],
+});
+
+const giftOrPresentMaterialForm = reactive<any>({
+  id: '',
+  quantity: '',
+});
+
+const giftOrPresentAlbumForm = reactive<any>({
+  id: '',
+});
+
+const userIds = ref<any>([]);
+const userStr = ref<string>('');
+
+const openInfo = ref<boolean>(false);
+const editPrice = ref<boolean>(false);
+const profile = ref<string>();
+
+// 兑换
+const exchangeForm = reactive<any>({
+  in_data: { id: 0, id_types: 0 },
+  out_data: { id: 0, id_types: 1 },
+  num: 0,
+});
+// 物品选择器
+const queryItemSelector = async () => {
+  setLoading(true);
+  try {
+    const res = await fetchItemSelector();
+    selectorAlbum.value = res.data.album_list ?? [];
+    selectorFusion.value = res.data.fusion_list ?? [];
+    selectorMaterial.value = res.data.material_list ?? [];
+    // console.log(selectorData1.value);
+  } finally {
+    setLoading(false);
+  }
+};
+
+onMounted(() => {
+  queryLogListData();
+  queryItemSelector();
+});
+
+const processingUser = (ids: any, data: any) => {
+  userCount.value = ids.length;
+  userIds.value = ids;
+
+  userStr.value = data.map((item) => item.phone);
+};
+
+const messageType = (operType: number) => {
+  if (operType === 1) {
+    Message.success('赠送成功');
+  } else if (operType === 2) {
+    Message.success('销毁/回收成功');
+  }
+};
+
+// giftOrPresentMaterial 赠送/销毁材料
+const giftOrPresentMaterial = async (operType: number) => {
+  console.log('giftOrPresentMaterialForm', giftOrPresentMaterialForm);
+  setLoading(true);
+  try {
+    if (userIds.value.length === 0) {
+      Notification.error({
+        title: '提示',
+        content: '请选择用户',
+      });
+      return;
+    }
+    const param: GiftOrDestroyMaterialParam = {
+      id: giftOrPresentMaterialForm.id,
+      quantity: giftOrPresentMaterialForm.quantity,
+      user_ids: userIds.value,
     };
-    setLoading(true);
-    try {
-      const res = await fetchDropRecyclingLogList(params);
-      tableData.value = res.data.drop_recycling_log_list ?? [];
-      pagination.current = res.data.current_page ?? 1;
-      pagination.total = res.data.total;
-    } finally {
-      setLoading(false);
-    }
-  };
-  const cutListType = (v: any) => {
-    listType.value = v;
-    queryLogListData();
-  };
-
-  // recommendForm 用户关系人数
-  const recommendForm = reactive<any>({
-    min: '',
-    max: '',
-  });
-  //  holdMaterialForm 持有指定材料/碎片 数量
-  const holdMaterialForm = reactive<any>({
-    id: '',
-    quantity: '',
-  });
-
-  // holdAlbumForm 持有指定专辑
-  const holdAlbumForm = reactive<any>({
-    id: '',
-    userIds: [],
-  });
-
-  const giftOrPresentMaterialForm = reactive<any>({
-    id: '',
-    quantity: '',
-  });
-
-  const giftOrPresentAlbumForm = reactive<any>({
-    id: '',
-  });
-
-  const userIds = ref<any>([]);
-  const userStr = ref<string>('');
-
-  const openInfo = ref<boolean>(false);
-  const editPrice = ref<boolean>(false);
-  const profile = ref<string>();
-
-  // 兑换
-  const exchangeForm = reactive<any>({
-    in_data: { id: 0, id_types: 0 },
-    out_data: { id: 0, id_types: 1 },
-    num: 0,
-  });
-  // 物品选择器
-  const queryItemSelector = async () => {
-    setLoading(true);
-    try {
-      const res = await fetchItemSelector();
-      selectorAlbum.value = res.data.album_list ?? [];
-      selectorFusion.value = res.data.fusion_list ?? [];
-      selectorMaterial.value = res.data.material_list ?? [];
-      // console.log(selectorData1.value);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  onMounted(() => {
-    queryLogListData();
-    queryItemSelector();
-  });
-
-  const processingUser = (ids: any, data: any) => {
-    userCount.value = ids.length;
-    userIds.value = ids;
-
-    userStr.value = data.map((item) => item.phone);
-  };
-
-  const messageType = (operType: number) => {
+    // operType 1:赠送 2:销毁
     if (operType === 1) {
-      Message.success('赠送成功');
+      const res = await giftMaterialByUserIds(param);
+      console.log('giftM-res', res);
+      if (res.data === 'success') {
+        messageType(operType);
+      }
     } else if (operType === 2) {
-      Message.success('销毁/回收成功');
+      const res = await presentMaterialByUserIds(param);
+      console.log('present-res', res);
+      if (res.data === 'success') {
+        messageType(operType);
+      }
     }
-  };
+  } finally {
+    setLoading(false);
+  }
+};
 
-  // giftOrPresentMaterial 赠送/销毁材料
-  const giftOrPresentMaterial = async (operType: number) => {
-    console.log('giftOrPresentMaterialForm', giftOrPresentMaterialForm);
-    setLoading(true);
-    try {
-      if (userIds.value.length === 0) {
-        Notification.error({
-          title: '提示',
-          content: '请选择用户',
-        });
-        return;
-      }
-      const param: GiftOrDestroyMaterialParam = {
-        id: giftOrPresentMaterialForm.id,
-        quantity: giftOrPresentMaterialForm.quantity,
-        user_ids: userIds.value,
-      };
-      // operType 1:赠送 2:销毁
-      if (operType === 1) {
-        const res = await giftMaterialByUserIds(param);
-        console.log('giftM-res', res);
-        if (res.data === 'success') {
-          messageType(operType);
-        }
-      } else if (operType === 2) {
-        const res = await presentMaterialByUserIds(param);
-        console.log('present-res', res);
-        if (res.data === 'success') {
-          messageType(operType);
-        }
-      }
-    } finally {
-      setLoading(false);
+// giftOrPresentAlbum 赠送/销毁专辑
+const giftOrPresentAlbum = async (operType: number) => {
+  setLoading(true);
+  try {
+    if (userIds.value.length === 0) {
+      Notification.error({
+        title: '提示',
+        content: '请选择用户',
+      });
+      return;
     }
-  };
-
-  // giftOrPresentAlbum 赠送/销毁专辑
-  const giftOrPresentAlbum = async (operType: number) => {
-    setLoading(true);
-    try {
-      if (userIds.value.length === 0) {
-        Notification.error({
-          title: '提示',
-          content: '请选择用户',
-        });
-        return;
-      }
-      const param: GiftOrDestroyAlbumParam = {
-        id: giftOrPresentAlbumForm.id,
-        quantity: userIds.value.length,
-        user_ids: userIds.value,
-      };
-      // operType 1:赠送 2:销毁
-      if (operType === 1) {
-        const res = giftAlbumByUserIds(param);
-        const { code, data } = res;
-        console.log('gift-res', res);
-        if (res.data === 'success') {
-          messageType(operType);
-        }
-      } else if (operType === 2) {
-        const res = presentAlbumByUserIds(param);
-        console.log('present-res', res);
-        if (res.data === 'success') {
-          messageType(operType);
-        }
-      }
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // 查询用户推荐人数
-  const queryUserRecommend = async () => {
-    setLoading(true);
-    try {
-      if (
-        recommendForm.min === 0 ||
-        recommendForm.max === 0 ||
-        recommendForm.min === '' ||
-        recommendForm.max === ''
-      ) {
-        Notification.warning({
-          title: '参数错误',
-          content: '请输入推广人数的最少或最多人数!',
-        });
-        return;
-      }
-      const res = await getUserByRecommend(recommendForm);
+    const param: GiftOrDestroyAlbumParam = {
+      id: giftOrPresentAlbumForm.id,
+      quantity: userIds.value.length,
+      user_ids: userIds.value,
+    };
+    // operType 1:赠送 2:销毁
+    if (operType === 1) {
+      const res = giftAlbumByUserIds(param);
       const { code, data } = res;
-      if (code === 0) {
-        processingUser(data.user_ids, data.user_recommend);
+      console.log('gift-res', res);
+      if (res.data === 'success') {
+        messageType(operType);
       }
-    } finally {
-      setLoading(false);
+    } else if (operType === 2) {
+      const res = presentAlbumByUserIds(param);
+      console.log('present-res', res);
+      if (res.data === 'success') {
+        messageType(operType);
+      }
     }
-  };
+  } finally {
+    setLoading(false);
+  }
+};
 
-  // 查询碎片持有
-  const queryUserByMaterial = async () => {
-    setLoading(true);
-    try {
-      if (
-        holdMaterialForm.id === 0 ||
-        holdMaterialForm.quantity === 0 ||
-        holdMaterialForm.id === '' ||
-        holdMaterialForm.quantity === ''
-      ) {
-        Notification.warning({
-          title: '参数错误',
-          content: '请选择材料/碎片或输入数量!',
-        });
-        return;
-      }
-      const res = await getUserByMaterialId(holdMaterialForm);
-      const { code, data } = res;
-      if (code === 0) {
-        processingUser(data.user_ids, data.holder_user);
-      }
-      // tableData.value = res.data.activity_list ?? [];
-      // pagination.current = res.data.current_page ?? 1;
-      // pagination.total = res.data.total;
-    } finally {
-      setLoading(false);
+const queryUserByIds = async (ids: number[]) => {
+  setLoading(true);
+  try {
+    console.log('ids', ids, ids.length);
+    if (ids.length === 0) {
+      Notification.warning({
+        title: '参数错误',
+        content: '请选择用户Ids或选某个操作日志的查看功能!',
+      });
+      return;
     }
-  };
+    const res = await getUserByIds(ids);
+    const { code, data } = res;
+    if (code === 0) {
+      processingUser(data.user_ids, data.user_list);
+    }
+  } finally {
+    setLoading(false);
+  }
+};
 
-  // 查询专辑持有
-  const queryUserByAlbum = async () => {
-    setLoading(true);
-    try {
-      if (holdAlbumForm.id === 0 || holdAlbumForm.id === '') {
-        Notification.warning({
-          title: '参数错误',
-          content: '请选择专辑!',
-        });
-        return;
-      }
-      const res = await getUserByAlbumId(holdAlbumForm.id);
-      const { code, data } = res;
-      if (code === 0) {
-        processingUser(data.user_ids, data.holder_user);
-      }
-      // tableData.value = res.data.activity_list ?? [];
-      // pagination.current = res.data.current_page ?? 1;
-      // pagination.total = res.data.total;
-    } finally {
-      setLoading(false);
+// 查询用户推荐人数
+const queryUserRecommend = async () => {
+  setLoading(true);
+  try {
+    if (
+      recommendForm.min === 0 ||
+      recommendForm.max === 0 ||
+      recommendForm.min === '' ||
+      recommendForm.max === ''
+    ) {
+      Notification.warning({
+        title: '参数错误',
+        content: '请输入推广人数的最少或最多人数!',
+      });
+      return;
     }
-  };
+    const res = await getUserByRecommend(recommendForm);
+    const { code, data } = res;
+    if (code === 0) {
+      processingUser(data.user_ids, data.user_recommend);
+    }
+  } finally {
+    setLoading(false);
+  }
+};
+
+// 查询碎片持有
+const queryUserByMaterial = async () => {
+  setLoading(true);
+  try {
+    if (
+      holdMaterialForm.id === 0 ||
+      holdMaterialForm.quantity === 0 ||
+      holdMaterialForm.id === '' ||
+      holdMaterialForm.quantity === ''
+    ) {
+      Notification.warning({
+        title: '参数错误',
+        content: '请选择材料/碎片或输入数量!',
+      });
+      return;
+    }
+    const res = await getUserByMaterialId(holdMaterialForm);
+    const { code, data } = res;
+    if (code === 0) {
+      processingUser(data.user_ids, data.holder_user);
+    }
+    // tableData.value = res.data.activity_list ?? [];
+    // pagination.current = res.data.current_page ?? 1;
+    // pagination.total = res.data.total;
+  } finally {
+    setLoading(false);
+  }
+};
+
+// 查询专辑持有
+const queryUserByAlbum = async () => {
+  setLoading(true);
+  try {
+    if (holdAlbumForm.id === 0 || holdAlbumForm.id === '') {
+      Notification.warning({
+        title: '参数错误',
+        content: '请选择专辑!',
+      });
+      return;
+    }
+    const res = await getUserByAlbumId(holdAlbumForm.id);
+    const { code, data } = res;
+    if (code === 0) {
+      processingUser(data.user_ids, data.holder_user);
+    }
+    // tableData.value = res.data.activity_list ?? [];
+    // pagination.current = res.data.current_page ?? 1;
+    // pagination.total = res.data.total;
+  } finally {
+    setLoading(false);
+  }
+};
 </script>
 
 <style scoped>
-  .container {
-    padding: 16px 20px;
-  }
-  .col-div div {
-    margin-top: 5px;
-  }
+.container {
+  padding: 16px 20px;
+}
+.col-div div {
+  margin-top: 5px;
+}
 </style>

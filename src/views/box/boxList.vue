@@ -41,10 +41,10 @@
               </a-image>
             </template>
           </a-table-column>
-          <a-table-column
+          <!-- <a-table-column
             title="说明文字"
             data-index="illustrate_text"
-          ></a-table-column>
+          ></a-table-column> -->
           <a-table-column
             title="创建时间"
             data-index="created_at"
@@ -181,13 +181,14 @@
   };
 
   const updateVisible = (type: any, index: number) => {
-    modalVisible.value = !modalVisible.value;
     if (type === 1) {
       modalTitle.value = '创建';
     } else if (type === 2) {
       modalTitle.value = '修改';
       rid.value = index;
     }
+    modalVisible.value = !modalVisible.value;
+
   };
 
   onMounted(() => {

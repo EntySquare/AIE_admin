@@ -55,6 +55,29 @@ export interface Bulletin {
 /**
  * types.GetBulletinListResp
  */
+export interface BulletinDetail {
+  /**
+   * 活动ID
+   */
+  activity_id: number;
+  /**
+   * 内容
+   */
+  content: string;
+  id: number;
+  /**
+   * 标签 以[]形式
+   */
+  tags: string[];
+  /**
+   * 标题
+   */
+  title: string;
+}
+
+/**
+ * types.GetBulletinListResp
+ */
 export interface BulletinList {
   bulletin_list: Bulletin[];
   /**
@@ -100,6 +123,17 @@ export function createBulletin(data: BulletinReq) {
 }
 
 // 修改公告
-export function updateBulletin() {
-  return axios.post<any>('/admin/bulletin/update');
+export function updateBulletin(id:number, data:BulletinReq) {
+  data.id=id;
+  return axios.post<any>('/admin/bulletin/update',data);
+}
+
+// 公告详情
+export function fetchBulletinDetail(id:number) {
+  return axios.post<any>('/admin/bulletin/detail',{id});
+}
+
+// 删除公告
+export function deleteBulletin(id:number) {
+  return axios.post<any>('/admin/bulletin/delete',{id});
 }

@@ -2,10 +2,12 @@
   <div class="container">
     <a-card>
       <a-typography>
-        <a-typography-title :heading="6">创建融合</a-typography-title>
+        <a-typography-title :heading="6"
+          >{{ isEdit ? '编辑' : '创建' }}融合</a-typography-title
+        >
       </a-typography>
       <a-divider />
-      <a-form :model="form">
+      <a-form :model="form" :auto-label-width="true">
         <a-form-item label="名称">
           <a-input v-model="form.name" />
         </a-form-item>
@@ -76,6 +78,17 @@
                 width="12vw"
               />
               <a-input-number
+              v-model="outItem.in_progress"
+              :style="{ width: '7vw' }"
+              placeholder="进度条充能数值"
+            />
+            <a-input-number
+              v-model="outItem.num_compel"
+              :style="{ width: '7vw' }"
+              placeholder="强制要求数量"
+            />
+
+              <a-input-number
                 v-model="outItem.draw_probability"
                 :style="{ width: '5vw' }"
                 placeholder="权重"
@@ -92,7 +105,7 @@
               >
                 <a-option
                   v-for="item of rarityData"
-                  :key="item"
+                  :key="item.rarity"
                   :value="item.rarity"
                   :label="item.label"
                 />
@@ -137,12 +150,20 @@
 </template>
 
 <script setup lang="ts">
-  import { reactive } from 'vue';
+  import { reactive, onMounted, ref } from 'vue';
+  import { useRoute } from 'vue-router';
   import { Message, RequestOption } from '@arco-design/web-vue';
   import { arcoUpload } from '@/api/upload';
   import selectData from '@/views/box/components/selectData.vue';
-  import { createFusion, Fusion } from '@/api/fusion';
+  import {
+    createFusion,
+    Fusion,
+    fetchFusionDetail,
+    updateFusion,
+  } from '@/api/fusion';
 
+  const fusionId = ref(0);
+  const isEdit = ref(false);
   const rarityData = [
     {
       rarity: 0,
@@ -198,11 +219,13 @@
 
   const handleAddOut = () => {
     form.out_data.push({
-      draw_probability: 0,
+      draw_probability: 0, // 对应id的出奖概率 50=50% 权重
       id: 0,
       id_types: 1,
-      out_num: 0,
-      rarity: 0,
+      out_num: 0, // 碎片出货数量
+      rarity: 0, // 稀有度
+      in_progress:0, // 单个 进度条充能数值
+      num_compel: 0, // 强制要求数量 如果没要求传0 
     });
   };
 
@@ -223,9 +246,16 @@
       reward_img: form.reward_img,
       sort: form.sort,
     };
-    const res = await createFusion(fusionData);
-    if (res.data === 'success') {
-      Message.success('创建成功');
+    if (fusionId.value === 0) {
+      const res = await createFusion(fusionData);
+      if (res.data === 'success') {
+        Message.success('创建成功');
+      }
+    } else {
+      const res = await updateFusion(fusionId.value, fusionData);
+      if (res.data === 'success') {
+        Message.success('修改成功');
+      }
     }
   };
 
@@ -236,6 +266,31 @@
   async function uploadImg2(option: RequestOption) {
     form.reward_img = await arcoUpload(option);
   }
+
+  const queryFusionDetail = async (id: number) => {
+    const res = await fetchFusionDetail(id);
+    // form.hide = res.data.hide;
+    // form.illustrate_img = res.data.illustrate_img;
+    // form.illustrate_text = res.data.illustrate_text;
+    // form.in_data = res.data.in_data;
+    // form.name = res.data.name;
+    // form.out_data = res.data.out_data;
+    // form.progress = res.data.progress;
+    // form.reward_img = res.data.reward_img;
+    // form.sort = res.data.sort;
+    Object.assign(form, res.data);
+  };
+
+  onMounted(async () => {
+    const value = useRoute().query.id;
+    if (value !== undefined) {
+      isEdit.value = true;
+      fusionId.value = value;
+      await queryFusionDetail(value);
+    }
+
+    // await queryUserListData(1);
+  });
 </script>
 
 <style scoped></style>

@@ -92,6 +92,8 @@
     Bulletin,
     createBulletin,
     BulletinReq,
+    fetchBulletinDetail,
+    deleteBulletin
   } from '@/api/message';
   import useLoading from '@/hooks/loading';
   import { Pagination } from '@/types/global';
@@ -167,6 +169,17 @@
       tableData.value = res.data.bulletin_list;
       pagination.current = res.data.current_page;
       pagination.total = res.data.total;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // 查询公告详情
+  const queryBulletinDetail = async (id: number) => {
+    setLoading(true);
+    try {
+      const res = await fetchBulletinDetail(id);
+     
     } finally {
       setLoading(false);
     }

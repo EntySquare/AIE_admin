@@ -329,14 +329,20 @@ export interface MaterialParam {
 */
 
 export interface HolderUser {
-  id: number;
-  phone: string;
+  avatar?: string;
+  id?: number;
+  nickname?: string;
+  phone?: string;
 }
 /**
  * types.GetHolderUserResp
  */
 export interface HolderUserList {
   holder_user: HolderUser[];
+  user_ids: number[];
+}
+export interface UserByIdsList {
+  user_list: HolderUser[];
   user_ids: number[];
 }
 
@@ -392,4 +398,9 @@ export function getUserByMaterialId(params: MaterialParam) {
 // 根据指定专辑ID搜索用户所有
 export function getUserByAlbumId(id: number) {
   return axios.post<HolderUserList>('/admin/user/userByAlbumId', { id });
+}
+
+// 根据用户IDs搜索用户所有
+export function getUserByIds(ids: number[]) {
+  return axios.post<UserByIdsList>('/admin/user/userByIds', { user_ids: ids });
 }

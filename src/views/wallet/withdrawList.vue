@@ -113,13 +113,14 @@
                 @cancel="passCancel"
               >
                 <a-button
+                  v-if="record.audit_status === 1"
                   type="primary"
                   style="margin-right: 10px"
                   @click="passClick"
                   >通过</a-button
                 >
               </a-popconfirm>
-              <a-button @click="showModal"
+              <a-button v-if="record.audit_status === 1" @click="showModal"
                 >拒绝
                 <a-modal
                   v-model:visible="modalVisible"

@@ -32,6 +32,17 @@ const fusion: AppRouteRecordRaw = {
         roles: ['*'],
       },
     },
+    {
+      path: 'edit',
+      name: 'edit',
+      component: () => import('@/views/fusion/create.vue'),
+      meta: {
+        locale: '编辑融合',
+        requiresAuth: true,
+        roles: ['*'],
+         hideInMenu:true,
+      },
+    },
   ],
 };
 

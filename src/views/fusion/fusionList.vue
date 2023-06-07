@@ -31,10 +31,10 @@
               </a-image>
             </template>
           </a-table-column>
-          <a-table-column
+          <!-- <a-table-column
             title="说明文字"
             data-index="illustrate_text"
-          ></a-table-column>
+          ></a-table-column> -->
           <a-table-column
             title="创建时间"
             data-index="created_at"
@@ -56,6 +56,12 @@
           <a-table-column title="操作">
             <template #cell="{ record }">
               <div style="display: flex">
+                <a-button
+                style="margin-right: 10px;"
+                    type="outline"
+                    @click="edit(record.id)"
+                    >编辑</a-button
+                  >
                 <a-popover position="left" trigger="click">
                   <a-button
                     type="outline"
@@ -95,9 +101,11 @@
   import { onMounted, reactive, ref } from 'vue';
   import { fetchBoxDetail } from '@/api/box';
   import useLoading from '@/hooks/loading';
+  import { useRouter, useRoute } from 'vue-router';
   import { Pagination } from '@/types/global';
   import { fetchFusionList, FusionParam, FusionRes } from '@/api/fusion';
 
+  const router = useRouter();
   const { setLoading } = useLoading(true);
   const tableData = ref<FusionRes[]>([]);
   const detailData = ref<any>();
@@ -145,6 +153,15 @@
     outMap.set('out_num', '出货数量');
     outMap.set('rarity', '稀有度');
     return outMap.get(key);
+  };
+
+  const edit=(id:number) => {
+    router.push({
+      path: '/fusion/edit',
+      query: {
+        id,
+      },
+    });
   };
 
   onMounted(() => {

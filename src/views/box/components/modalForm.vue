@@ -2,11 +2,11 @@
   <a-modal
     :visible="visible"
     :title="title"
-    width="40vw"
+    width="60vw"
     @ok="handleModalOk"
     @update:visible="handleModalUpdate"
   >
-    <a-form :model="form">
+    <a-form :model="form" :auto-label-width="true">
       <a-form-item label="每日试玩次数">
         <a-input-number v-model="form.daily_pay_limit" mode="button" />
       </a-form-item>
@@ -23,7 +23,19 @@
           image-preview
           :custom-request="uploadImg"
           :limit="1"
-        />
+        >
+          <!-- <template #upload-button>
+            <div
+              class="arco-upload-list-picture custom-upload-avatar"
+              v-if="form.illustrate_img"
+            >
+              <img :src="form.illustrate_img" />
+              <div class="arco-upload-list-picture-mask">
+                <IconEdit />
+              </div>
+            </div>
+          </template> -->
+        </a-upload>
       </a-form-item>
       <a-form-item label="说明文字">
         <a-textarea
@@ -43,12 +55,32 @@
         <a-row justify="space-between">
           <a-input-group>
             <selectData
-              v-model:id="form.out_data[index].id"
-              v-model:typeId="form.out_data[index].id_types"
+              v-model:id="out.id"
+              v-model:typeId="out.id_types"
               width="12vw"
             />
-            <a-input :style="{ width: '5vw' }" placeholder="权重" />
-            <a-input :style="{ width: '5vw' }" placeholder="出货数量" />
+            <a-input-number
+              v-model="out.in_progress"
+              :style="{ width: '7vw' }"
+              placeholder="进度条充能数值"
+            />
+            <a-input-number
+              v-model="out.num_compel"
+              :style="{ width: '7vw' }"
+              placeholder="强制要求数量"
+            />
+
+            <a-input-number
+              v-model="out.draw_probability"
+              :style="{ width: '5vw' }"
+              placeholder="权重"
+            />
+            <a-input-number
+              v-model="out.out_num"
+              :style="{ width: '5vw' }"
+              placeholder="出货数量"
+            />
+
             <a-select
               v-model="out.rarity"
               :style="{ width: '5vw' }"
@@ -56,7 +88,7 @@
             >
               <a-option
                 v-for="item of rarityData"
-                :key="item"
+                :key="item.rarity"
                 :value="item.rarity"
                 :label="item.label"
               />
@@ -90,11 +122,14 @@
 </template>
 
 <script lang="ts" setup>
-  import { reactive, ref } from 'vue';
-  import { Box, createBox, updateBox } from '@/api/box';
+  import { reactive, ref, watch } from 'vue';
+  import { Box, createBox, updateBox, fetchBoxDetail } from '@/api/box';
   import { Message, RequestOption } from '@arco-design/web-vue';
   import { arcoUpload } from '@/api/upload';
+  import useLoading from '@/hooks/loading';
   import selectData from '@/views/box/components/selectData.vue';
+
+  const { setLoading } = useLoading(true);
 
   const imgPath = ref<string>('');
   const rarityData = [
@@ -131,7 +166,15 @@
     illustrate_text: '',
     name: '',
     out_data: [
-      { draw_probability: 0, id: 0, id_types: 1, out_num: 0, rarity: 0 },
+      {
+        draw_probability: 0,
+        id: 0,
+        id_types: 1,
+        out_num: 0,
+        rarity: 0,
+        in_progress: 0,
+        num_compel: 0,
+      },
     ],
     price: 0,
     sort: 0,
@@ -171,6 +214,59 @@
     },
   });
 
+  // 查询盲盒详情
+  const queryBoxDetailData = async (id: number) => {
+    console.log(id);
+
+    setLoading(true);
+    try {
+      const res = await fetchBoxDetail(id);
+      const { code, data } = res;
+      if (code === 0) {
+        console.log('res===', data);
+        Object.assign(form, data);
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+  watch(
+    () => props.rid,
+    (newVal, oldVal) => {
+      // 在rid字段变动时执行逻辑
+      console.log('rid 变动了', newVal, oldVal);
+      queryBoxDetailData(newVal);
+    }
+  );
+
+  watch(
+    () => props.title,
+    (newVal, oldVal) => {
+      if (newVal === '创建') {
+        Object.assign(form, {
+          daily_pay_limit: 0,
+          hide: false,
+          illustrate_img: '',
+          illustrate_text: '',
+          name: '',
+          out_data: [
+            {
+              draw_probability: 0,
+              id: 0,
+              id_types: 1,
+              out_num: 0,
+              rarity: 0,
+              in_progress: 0,
+              num_compel: 0,
+            },
+          ],
+          price: 0,
+          sort: 0,
+          valid: false,
+        });
+      }
+    }
+  );
   const handleUpdate = async () => {
     const boxData: Box = {
       id: props.rid,
@@ -199,6 +295,7 @@
       handleUpdate();
     }
   };
+
   const handleModalUpdate = () => {
     emit('updateVisible');
   };
@@ -210,6 +307,8 @@
       id_types: 1,
       out_num: 0,
       rarity: 0,
+      in_progress: 0,
+      num_compel: 0,
     });
   };
 

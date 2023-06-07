@@ -4,8 +4,8 @@ export interface BoxData {
   draw_probability: number; // 产出概率
   id: number; // 数据id 专辑表 or 材料表
   id_types: number; // ID类型 1=材料， 2=专辑 是用来区分id的来源
-  // in_progress: number; // 传入场景使用
-  // num_compel: number; // 强制要求数量 如果没要求传0
+  in_progress: number; // 传入场景使用
+  num_compel: number; // 强制要求数量 如果没要求传0
   out_num: number; // 碎片出货数量
   rarity: number; // 稀有度 0=普通 1=稀有 2=史诗 3=传说 4=神话 5=不朽
 }

@@ -1,9 +1,32 @@
 import axios from 'axios';
 
 /**
+ * types.InDataMenu
+ */
+export interface InDataMenu {
+  /**
+   * 数据id 来源nft表 or 专辑表 or 材料表
+   */
+  id?: number;
+  /**
+   * MaterialIdType 材料
+   * AlbumIdType 专辑
+   */
+  id_types?: number;
+  /**
+   * 单个 进度条充能数值
+   */
+  in_progress?: number;
+  /**
+   * 强制要求数量 必须传
+   */
+  num_compel?: number;
+}
+
+/**
  * types.SourceData
  */
-export interface FusionDetail {
+export interface SourceData {
   /**
    * 输出场景使用
    */
@@ -11,11 +34,11 @@ export interface FusionDetail {
   /**
    * 数据id  专辑表 or 材料表 or 盲盒表
    */
-  id: number;
+  id?: number;
   /**
    * ID类型 1=材料， 2=专辑 3=盲盒  是用来区分id的来源
    */
-  id_types: number;
+  id_types?: number;
   /**
    * 传入场景使用
    */
@@ -35,6 +58,52 @@ export interface FusionDetail {
 }
 
 /**
+ * types.SourceData
+ */
+export interface FusionDetail {
+  /**
+   * 是否隐藏
+   */
+  hide?: boolean;
+  /**
+   * 融合id
+   */
+  id?: number;
+  /**
+   * 说明图片
+   */
+  illustrate_img?: string;
+  /**
+   * 说明文字
+   */
+  illustrate_text?: string;
+  /**
+   * 融合数据 理解为菜谱
+   */
+  in_data?: InDataMenu[];
+  /**
+   * 融合名称
+   */
+  name?: string;
+  /**
+   * 融合结果数据
+   */
+  out_data?: SourceData[];
+  /**
+   * （冗余）进度条数值 部分融合类型 是进度条玩法 进度条冲满100%的时候 送OutData 的奖励
+   */
+  progress?: number;
+  /**
+   * 奖励图片
+   */
+  reward_img?: string;
+  /**
+   * 排序 有些融合活动是阶梯式的 比如1+1容2 那么就会对应下一个融合活动就是2+2容4
+   */
+  sort?: number;
+}
+
+/**
  * types.CreateFusionReq
  */
 export interface Fusion {
@@ -42,6 +111,10 @@ export interface Fusion {
    * 是否隐藏
    */
   hide: boolean;
+    /**
+   * 融合id
+   */
+    id?: number;
   /**
    * 说明图片
    */
@@ -53,7 +126,7 @@ export interface Fusion {
   /**
    * 坑位数据
    */
-  in_data: FusionDetail[];
+  in_data: InDataMenu[];
   /**
    * 融合名称
    */
@@ -61,7 +134,7 @@ export interface Fusion {
   /**
    * 融合结果数据
    */
-  out_data: FusionDetail[];
+  out_data: SourceData[];
   /**
    * （冗余）进度条数值 部分融合类型 是进度条玩法 进度条冲满100%的时候 送OutData 的奖励
    */
@@ -161,5 +234,16 @@ export function createFusion(data: Fusion) {
 
 // 查询融合所有列表
 export function fetchFusionList(data: FusionParam) {
-  return axios.post<FusionResList>('/admin/fusion/list',data);
+  return axios.post<FusionResList>('/admin/fusion/list', data);
+}
+
+// 查询融合详情
+export function fetchFusionDetail(id: number) {
+  return axios.post<FusionRes>('/admin/fusion/detail', { id });
+}
+
+// 更新融合规则
+export function updateFusion(id: number, data: Fusion) {
+  data.id = id;
+  return axios.post<string>(`/admin/fusion/update`, data);
 }

@@ -50,11 +50,11 @@
           </a-table-column>
         </template>
       </a-table>
-      <a-row justify="center">
+      <!-- <a-row justify="center">
         <a-col :span="4">
           <a-button type="primary" long>确认</a-button>
         </a-col>
-      </a-row>
+      </a-row> -->
     </a-card>
     <PromoteModal
       :visible="modalVisible"

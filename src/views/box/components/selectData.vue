@@ -49,24 +49,24 @@
       const typeIdValue1 = ref(props.typeId);
       const selectName = ref('');
       const options = ref([]);
-
       const selectOptions = (id: number, idType: number) => {
+        console.log("selectOptions", id,idType)
         // const selectName = '';
         options.value.forEach((item: any) => {
           if (item.children) {
             item.children.forEach((item2: any) => {
-              console.log(
-                item2.value,
-                item2.value.id === id && item2.value.id_types === idType
-              );
-              console.log(item2.value.id, id, item2.value.id_types, idType);
+              // console.log(
+              //   item2.value,
+              //   item2.value.id === id && item2.value.id_types === idType
+              // );
+              // console.log(item2.value.id, id, item2.value.id_types, idType);
               if (item2.value.id === id && item2.value.id_types === idType) {
                 selectName.value = item2.label; // 名字匹配 则代表选中
               }
             });
           }
         });
-        // console.log(selectName);
+        console.log(selectName);
       };
 
       const change = (name: string) => {
@@ -79,7 +79,7 @@
                 selectName.value = item2.label; // 名字匹配 则代表选中
                 idValue1.value = item2.value.id;
                 typeIdValue1.value = item2.value.id_types;
-                console.log(item2.label, item2.value.id, item2.value.id_types);
+                // console.log(item2.label, item2.value.id, item2.value.id_types);
               }
             });
           }
@@ -118,11 +118,13 @@
       typeIdValue1(newValue) {
         this.$emit('update:typeId', newValue);
       },
-      id(newValue) {
+      id(newValue,oldVal) {
+        console.log('id===', newValue,oldVal);
         this.idValue1 = newValue;
       },
       typeId(newValue) {
         this.typeIdValue1 = newValue;
+        this.selectOptions(newValue, this.typeIdValue1 );
       },
       options(newValue) {
         this.options = newValue;

@@ -78,6 +78,8 @@ export interface PromoteRes {
   name?: string;
 }
 
+
+
 /**
  * types.GetPromotionBonusListResp
  */
@@ -109,4 +111,11 @@ export function createPromote(data: Promote) {
 // 修改推广设置
 export function updatePromote(data: Promote) {
   return axios.post<string>('/admin/promotionBonus/update', data);
+}
+
+// 查询推广详情
+export function fetchPromoteDetail(id: number) {
+  return axios.post<Promote>('/admin/promotionBonus/detail', {
+    id
+  });
 }

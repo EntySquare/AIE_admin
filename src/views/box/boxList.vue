@@ -183,6 +183,7 @@
   const updateVisible = (type: any, index: number) => {
     if (type === 1) {
       modalTitle.value = '创建';
+      rid.value = 0;
     } else if (type === 2) {
       modalTitle.value = '修改';
       rid.value = index;

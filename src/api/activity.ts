@@ -5,6 +5,10 @@ import axios from 'axios';
  */
 export interface Activity {
   /**
+   * 活动id
+   */
+  id?: number;
+  /**
    * 专辑ids
    */
   album_ids?: number[];
@@ -109,4 +113,19 @@ export function fetchActivityList(params: ActivityParam) {
 // 物品选择器
 export function fetchItemSelector() {
   return axios.post<ItemSelectorList>('/admin/tool/selectorData');
+}
+
+// 获取活动详情
+export function fetchActivityDetail(id: number) {
+  return axios.post<Activity>('/admin/activity/detail', { id });
+}
+
+// 更新活动
+export function updateActivity(data: Activity) {
+  return axios.post<string>('/admin/activity/update', data);
+}
+
+// 删除活动
+export function deleteActivity(id: number) {
+  return axios.post<string>('/admin/activity/delete', { id });
 }

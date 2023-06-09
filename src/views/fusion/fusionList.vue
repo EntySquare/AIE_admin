@@ -51,17 +51,20 @@
               <p v-else-if="record.hide === false">否</p>
             </template>
           </a-table-column>
-          <a-table-column title="进度条数值" data-index="progress"></a-table-column>
+          <a-table-column
+            title="进度条数值"
+            data-index="progress"
+          ></a-table-column>
           <a-table-column title="排序" data-index="sort"></a-table-column>
           <a-table-column title="操作">
             <template #cell="{ record }">
               <div style="display: flex">
                 <a-button
-                style="margin-right: 10px;"
-                    type="outline"
-                    @click="edit(record.id)"
-                    >编辑</a-button
-                  >
+                  style="margin-right: 10px"
+                  type="outline"
+                  @click="edit(record.id)"
+                  >编辑</a-button
+                >
                 <a-popover position="left" trigger="click">
                   <a-button
                     type="outline"
@@ -83,7 +86,7 @@
                         :key="j"
                         :label="outDataMap(j)"
                       >
-                        {{ item }}
+                        {{ j === 'rarity' ? rarityData[item] : item }}
                       </a-descriptions-item>
                     </a-descriptions>
                   </template>
@@ -98,87 +101,88 @@
 </template>
 
 <script setup lang="ts">
-  import { onMounted, reactive, ref } from 'vue';
-  import { fetchBoxDetail } from '@/api/box';
-  import useLoading from '@/hooks/loading';
-  import { useRouter, useRoute } from 'vue-router';
-  import { Pagination } from '@/types/global';
-  import { fetchFusionList, FusionParam, FusionRes } from '@/api/fusion';
+import { onMounted, reactive, ref } from 'vue';
+import { fetchBoxDetail } from '@/api/box';
+import useLoading from '@/hooks/loading';
+import { useRouter, useRoute } from 'vue-router';
+import { Pagination } from '@/types/global';
+import { fetchFusionList, FusionParam, FusionRes } from '@/api/fusion';
 
-  const router = useRouter();
-  const { setLoading } = useLoading(true);
-  const tableData = ref<FusionRes[]>([]);
-  const detailData = ref<any>();
-  const basePagination: Pagination = {
-    current: 1,
-    pageSize: 10,
-  };
-  const pagination = reactive({
-    ...basePagination,
+const rarityData = ref(['普通', '稀有', '史诗', '传说', '神话', '不朽']);
+const router = useRouter();
+const { setLoading } = useLoading(true);
+const tableData = ref<FusionRes[]>([]);
+const detailData = ref<any>();
+const basePagination: Pagination = {
+  current: 1,
+  pageSize: 10,
+};
+const pagination = reactive({
+  ...basePagination,
+});
+const condition = ref<string>('');
+
+// 查询融合列表
+const queryFusionListData = async (
+  params: FusionParam = { name: condition.value, pageNum: 1, pageSize: 10 }
+) => {
+  setLoading(true);
+  try {
+    const res = await fetchFusionList(params);
+    tableData.value = res.data.fusion_list;
+    pagination.current = params.pageNum;
+    pagination.total = res.data.total;
+  } finally {
+    setLoading(false);
+  }
+};
+
+// 查询盲盒详情
+const queryBoxDetailData = async (id: number) => {
+  setLoading(true);
+  try {
+    const res = await fetchBoxDetail(id);
+    detailData.value = res.data.out_data;
+  } finally {
+    setLoading(false);
+  }
+};
+const outDataMap = (key: string) => {
+  const outMap: Map<string, string> = new Map();
+  outMap.set('draw_probability', '权重');
+  outMap.set('id', 'id');
+  outMap.set('id_types', '类型');
+  outMap.set('in_progress', '传入进度');
+  outMap.set('num_compel', '强制要求数量');
+  outMap.set('out_num', '出货数量');
+  outMap.set('rarity', '稀有度');
+  return outMap.get(key);
+};
+
+const edit = (id: number) => {
+  router.push({
+    path: '/fusion/edit',
+    query: {
+      id,
+    },
   });
-  const condition = ref<string>('');
+};
 
-  // 查询融合列表
-  const queryFusionListData = async (
-    params: FusionParam = { name: condition.value, pageNum: 1, pageSize: 10 }
-  ) => {
-    setLoading(true);
-    try {
-      const res = await fetchFusionList(params);
-      tableData.value = res.data.fusion_list;
-      pagination.current = params.pageNum;
-      pagination.total = res.data.total;
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // 查询盲盒详情
-  const queryBoxDetailData = async (id: number) => {
-    setLoading(true);
-    try {
-      const res = await fetchBoxDetail(id);
-      detailData.value = res.data.out_data;
-    } finally {
-      setLoading(false);
-    }
-  };
-  const outDataMap = (key: string) => {
-    const outMap: Map<string, string> = new Map();
-    outMap.set('draw_probability', '权重');
-    outMap.set('id', 'id');
-    outMap.set('id_types', '类型');
-    outMap.set('in_progress', '传入进度');
-    outMap.set('num_compel', '强制要求数量');
-    outMap.set('out_num', '出货数量');
-    outMap.set('rarity', '稀有度');
-    return outMap.get(key);
-  };
-
-  const edit=(id:number) => {
-    router.push({
-      path: '/fusion/edit',
-      query: {
-        id,
-      },
-    });
-  };
-
-  onMounted(() => {
-    queryFusionListData();
-  });
+onMounted(() => {
+  queryFusionListData();
+});
 </script>
 
 <style scoped>
-  .container {
-    padding: 16px 20px;
-  }
+.container {
+  padding: 16px 20px;
+}
 
-  .card-div div {
-    margin-top: 5px;
-  }
+.card-div div {
+  margin-top: 5px;
+}
 
-  .row-div div {
-    margin: 10px 0 20px 0;
-  }
+.row-div div {
+  margin: 10px 0 20px 0;
+}
 </style>

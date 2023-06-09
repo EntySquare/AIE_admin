@@ -23,12 +23,7 @@
         </a-col>
       </a-row>
       <a-divider />
-      <a-table
-        :data="tableData"
-        style="margin-top: 20px"
-        :pagination="pagination"
-        @page-change="onPageChange"
-      >
+      <a-table :data="tableData" style="margin-top: 20px" :pagination="false">
         <template #columns>
           <a-table-column title="专辑背景图" data-index="background_img">
             <template #cell="{ record }">
@@ -59,19 +54,27 @@
             title="作品总数"
             data-index="nft_num"
           ></a-table-column>
-<!--          <a-table-column title="简介" data-index="profile"></a-table-column>-->
+          <!--          <a-table-column title="简介" data-index="profile"></a-table-column>-->
           <a-table-column
             title="剩余数量"
             data-index="remaining_quantity"
           ></a-table-column>
         </template>
       </a-table>
+      <a-row justify="center" style="padding-top: 20px">
+        <a-pagination
+          v-model:current="pagination.current"
+          :total="pagination.total!"
+          show-total
+          @change="queryAlbumsListData()"
+        />
+      </a-row>
     </a-card>
   </div>
 </template>
 
 <script setup lang="ts">
-  import { reactive, ref } from 'vue';
+  import { onMounted, reactive, ref } from 'vue';
   import { AlbumsParams, AlbumsRes, fetchAlbumList } from '@/api/album';
   import { Pagination } from '@/types/global';
   import useLoading from '@/hooks/loading';
@@ -79,25 +82,26 @@
   const condition = ref<string>('');
   const { setLoading } = useLoading(true);
   const tableData = ref<AlbumsRes[]>([]);
-  const basePagination: Pagination = {
+  const pagination: Pagination = reactive({
     current: 1,
     pageSize: 10,
-  };
-  const pagination = reactive({
-    ...basePagination,
+    total: 0,
   });
-
   // 查询专辑列表
   const queryAlbumsListData = async (
-    params: AlbumsParams = { name: condition.value, current: 1, pageSize: 10 }
+    params: AlbumsParams = {
+      name: condition.value,
+      pageNum: pagination.current,
+      pageSize: 10,
+    }
   ) => {
     window.console.log('start');
     setLoading(true);
     try {
       const res = await fetchAlbumList(params);
       tableData.value = res.data.album_list;
-      pagination.current = params.current;
-      pagination.total = res.data.length;
+      pagination.current =  res.data.current_page;
+      pagination.total = res.data.total;
     } finally {
       setLoading(false);
     }
@@ -110,6 +114,10 @@
   const onPageChange = (current: number) => {
     queryAlbumsListData({ name: condition.value, current, pageSize: 10 });
   };
+
+  onMounted(() => {
+    queryAlbumsListData();
+  });
 </script>
 
 <style scoped>

@@ -32,16 +32,16 @@ const UI: AppRouteRecordRaw = {
         roles: ['*'],
       },
     },
-    {
-      path: 'nftList',
-      name: 'nftList',
-      component: () => import('@/views/nft/nftList.vue'),
-      meta: {
-        locale: '数字藏品列表',
-        requiresAuth: true,
-        roles: ['*'],
-      },
-    },
+    // {
+    //   path: 'nftList',
+    //   name: 'nftList',
+    //   component: () => import('@/views/nft/nftList.vue'),
+    //   meta: {
+    //     locale: '数字藏品列表',
+    //     requiresAuth: true,
+    //     roles: ['*'],
+    //   },
+    // },
     {
       path: 'albumList',
       name: 'albumList',

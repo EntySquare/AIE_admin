@@ -19,10 +19,16 @@
           ></a-table-column>
           <a-table-column title="详情">
             <template #cell="{ record }">
-              <a-popover position="left" trigger="click">
+              <!-- <a-popover position="left" trigger="click">
                 <a-button style="margin-right: 10px">查看</a-button>
                 <template #content>
                   <div v-html="record.content"></div>
+                </template>
+              </a-popover> -->
+              <a-popover position="left" trigger="click">
+                <a-button style="margin-right: 10px">查看</a-button>
+                <template #content>
+                  <phonePreview :content="record.content" />
                 </template>
               </a-popover>
             </template>
@@ -76,7 +82,14 @@
           </a-space>
         </a-form-item>
         <a-form-item field="post" label="内容">
-          <RichEditor v-model="form.content" @confirm="getContent" />
+          <div style="display: flex">
+            <div>
+              <RichEditor v-model="form.content" @confirm="getContent"
+            /></div>
+            <div style="width: 35%; margin-left: 20px">
+              <phonePreview :content="form.content" />
+            </div>
+          </div>
         </a-form-item>
       </a-form>
     </a-modal>
@@ -93,11 +106,12 @@
     createBulletin,
     BulletinReq,
     fetchBulletinDetail,
-    deleteBulletin
+    deleteBulletin,
   } from '@/api/message';
   import useLoading from '@/hooks/loading';
   import { Pagination } from '@/types/global';
   import { Message } from '@arco-design/web-vue';
+  import phonePreview from '@/views/message/components/phonePreview.vue';
 
   const { setLoading } = useLoading(true);
   const form = reactive({
@@ -120,7 +134,9 @@
   const showModal = () => {
     modalVisible.value = !modalVisible.value;
   };
-
+  const content = ref(
+    '<p>adfasjdfnkjasdnfjkanfkjsadfsafdsafsdadfasjdfnkjasdnfjkanfkjsadfsafdsafsdadfasjdfnkjasdnfjkanfkjsadfsafdsafsd</p><p>adfasjdfnkjasdnfjkanfkjsadfsafdsafsdadfasjdfnkjasdnfjkanfkjsadfsafdsafsdadfasjdfnkjasdnfjkanfkjsadfsafdsafsd</p><p>adfasjdfnkjasdnfjkanfkjsadfsafdsafsdadfasjdfnkjasdnfjkanfkjsadfsafdsafsdadfasjdfnkjasdnfjkanfkjsadfsafdsafsd</p><p>adfasjdfnkjasdnfjkanfkjsadfsafdsafsdadfasjdfnkjasdnfjkanfkjsadfsafdsafsdadfasjdfnkjasdnfjkanfkjsadfsafdsafsd</p><p>adfasjdfnkjasdnfjkanfkjsadfsafdsafsdadfasjdfnkjasdnfjkanfkjsadfsafdsafsdadfasjdfnkjasdnfjkanfkjsadfsafdsafsd</p><p>adfasjdfnkjasdnfjkanfkjsadfsafdsafsdadfasjdfnkjasdnfjkanfkjsadfsafdsafsdadfasjdfnkjasdnfjkanfkjsadfsafdsafsd</p><p>adfasjdfnkjasdnfjkanfkjsadfsafdsafsdadfasjdfnkjasdnfjkanfkjsadfsafdsafsdadfasjdfnkjasdnfjkanfkjsadfsafdsafsd</p><p>adfasjdfnkjasdnfjkanfkjsadfsafdsafsdadfasjdfnkjasdnfjkanfkjsadfsafdsafsdadfasjdfnkjasdnfjkanfkjsadfsafdsafsd</p><p>adfasjdfnkjasdnfjkanfkjsadfsafdsafsdadfasjdfnkjasdnfjkanfkjsadfsafdsafsdadfasjdfnkjasdnfjkanfkjsadfsafdsafsd</p><p>adfasjdfnkjasdnfjkanfkjsadfsafdsafsdadfasjdfnkjasdnfjkanfkjsadfsafdsafsdadfasjdfnkjasdnfjkanfkjsadfsafdsafsd</p><p>adfasjdfnkjasdnfjkanfkjsadfsafdsafsdadfasjdfnkjasdnfjkanfkjsadfsafdsafsdadfasjdfnkjasdnfjkanfkjsadfsafdsafsd</p>'
+  );
   const handleEdit1 = () => {
     showInput1.value = true;
 
@@ -179,7 +195,6 @@
     setLoading(true);
     try {
       const res = await fetchBulletinDetail(id);
-     
     } finally {
       setLoading(false);
     }

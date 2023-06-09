@@ -2,8 +2,8 @@
   <div class="container">
     <a-card>
       <a-typography-title :heading="6"> 材料列表</a-typography-title>
-      <!-- <a-button
-        style="margin-top: 20px"
+      <a-button
+        style="margin-bottom: 20px"
         type="primary"
         @click="updateVisible(1, -1)"
       >
@@ -11,8 +11,7 @@
           <icon-plus />
         </template>
         创建材料
-      </a-button> -->
-      <a-divider />
+      </a-button>
       <a-row :gutter="16">
         <a-col :span="5">
           <a-input v-model="condition" placeholder="输入材料名" />
@@ -33,12 +32,7 @@
         </a-col>
       </a-row>
       <a-divider />
-      <a-table
-        :data="tableData"
-        style="margin-top: 20px"
-        :pagination="pagination"
-        @page-change="onPageChange"
-      >
+      <a-table :data="tableData" style="margin-top: 20px"  :pagination="false">
         <template #columns>
           <a-table-column title="材料图片" data-index="img">
             <template #cell="{ record }">
@@ -62,9 +56,37 @@
             title="发行数量"
             data-index="issued_quantity"
           ></a-table-column>
+          <a-table-column title="操作">
+            <template #cell="{ record }">
+              <div style="display: flex">
+                <a-button
+                  type="outline"
+                  style="margin-right: 10px"
+                  @click="updateVisible(2, record.id)"
+                  >编辑
+                </a-button>
+                </div>
+                </template>
+                </a-table-column>
         </template>
       </a-table>
+      <a-row justify="center" style="padding-top: 20px">
+        <a-pagination
+          v-model:current="pagination.current"
+          :total="pagination.total!"
+          show-total
+          @change="queryMaterialListData()"
+        />
+      </a-row>
     </a-card>
+
+    <MaterialForm
+      :visible="modalVisible"
+      :title="modalTitle"
+      :rid="rid"
+      @update-visible="updateVisible"
+      @refresh="queryMaterialListData"
+    ></MaterialForm>
   </div>
 </template>
 
@@ -77,23 +99,25 @@
     MaterialsParams,
     MaterialsRes,
   } from '@/api/material';
+  import MaterialForm from '@/views/nft/components/materialForm.vue';
 
   const condition = ref<string>('');
   const { setLoading } = useLoading(true);
   const tableData = ref<MaterialsRes[]>([]);
-  const basePagination: Pagination = {
+    const modalVisible = ref<boolean>(false);
+  const modalTitle = ref<string>('');
+  const rid = ref<number>(-1);
+
+  const pagination: Pagination = reactive({
     current: 1,
     pageSize: 10,
-  };
-  const pagination = reactive({
-    ...basePagination,
+    total: 0,
   });
-
   // 查询材料列表
   const queryMaterialListData = async (
     params: MaterialsParams = {
       name: condition.value,
-      current: 1,
+      current:pagination.current,
       pageSize: 10,
     }
   ) => {
@@ -101,8 +125,8 @@
     try {
       const res = await fetchMaterialList(params);
       tableData.value = res.data.material_list;
-      pagination.current = params.current;
-      pagination.total = res.data.length;
+      pagination.current = res.data.current_page ?? 1;
+      pagination.total = res.data.total;
     } finally {
       setLoading(false);
     }
@@ -113,9 +137,16 @@
     condition.value = '';
     await queryMaterialListData();
   };
+  const updateVisible = (type: any, index: number) => {
+    if (type === 1) {
+      modalTitle.value = '创建';
+      rid.value = 0;
+    } else if (type === 2) {
+      modalTitle.value = '修改';
+      rid.value = index;
+    }
+    modalVisible.value = !modalVisible.value;
 
-  const onPageChange = (current: number) => {
-    queryMaterialListData({ name: condition.value, current, pageSize: 10 });
   };
 
   onMounted(() => {

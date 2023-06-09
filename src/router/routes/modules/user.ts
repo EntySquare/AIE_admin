@@ -29,7 +29,7 @@ const USER: AppRouteRecordRaw = {
       meta: {
         locale: '用户详情',
         requiresAuth: true,
-        // hideInMenu: true,
+        hideInMenu: true,
         roles: ['*'],
       },
     },

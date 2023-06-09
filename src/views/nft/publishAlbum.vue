@@ -210,8 +210,8 @@
               <!--              <a-checkbox value="2">发售</a-checkbox>-->
 
               <a-radio-group v-model="sellState">
-                <a-radio value="1">发布</a-radio>
-                <a-radio value="2">发售</a-radio>
+                <a-radio :value="1">发布</a-radio>
+                <a-radio :value="2">发售</a-radio>
               </a-radio-group>
             </a-col>
             <a-col :span="5">
@@ -347,7 +347,7 @@
   const price = ref<number>(0.0);
   const profile = ref<string>();
   const inputPhone = ref<string>('');
-  const sellState = ref<number>(0);
+  const sellState = ref<number>(1);
   const priceLimit = ref<number>(0);
 
   const options = ref<string[]>([]);

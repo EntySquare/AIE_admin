@@ -286,6 +286,7 @@
             }"
             :scrollbar="true"
             style="height: 30vw"
+            :pagination="false"
           >
             <template #columns>
               <a-table-column title="名称" data-index="name"></a-table-column>

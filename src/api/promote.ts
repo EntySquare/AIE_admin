@@ -119,3 +119,10 @@ export function fetchPromoteDetail(id: number) {
     id
   });
 }
+
+// 删除推广
+export function deletePromote(id: number) {
+  return axios.post<string>('/admin/promotionBonus/delete', {
+    id
+  });
+}

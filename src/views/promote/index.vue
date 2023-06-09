@@ -45,6 +45,16 @@
                   @click="updateVisible(2, record.id)"
                   >编辑
                 </a-button>
+
+                <a-popconfirm
+                  :content="'确定删除？'"
+                  type="info"
+                  @ok="deleteFun(record.id)"
+                >
+                  <a-button type="primary" style="margin-right: 10px"
+                    >删除</a-button
+                  >
+                </a-popconfirm>
               </div>
             </template>
           </a-table-column>
@@ -68,11 +78,16 @@
 
 <script setup lang="ts">
   import { onMounted, reactive, ref } from 'vue';
-  import selectData from '@/views/box/components/selectData.vue';
-  import { fetchPromoteList, PromoteParam, PromoteRes } from '@/api/promote';
+  import {
+    fetchPromoteList,
+    PromoteParam,
+    PromoteRes,
+    deletePromote,
+  } from '@/api/promote';
   import useLoading from '@/hooks/loading';
   import { Pagination } from '@/types/global';
-  import PromoteModal from '@/views/promote/components/PromoteModal.vue';
+  import PromoteModal from '@/views/promote/components/promoteModal.vue';
+  import { Message} from '@arco-design/web-vue';
 
   const count = ref<number>();
   const people = ref<number>();
@@ -111,9 +126,21 @@
     modalVisible.value = !modalVisible.value;
     if (type === 1) {
       modalTitle.value = '新建';
+      rid.value = 0;
     } else if (type === 2) {
       modalTitle.value = '修改';
       rid.value = index;
+    }
+  };
+  const deleteFun = async (id: number) => {
+    try {
+      const res = await deletePromote(id);
+      if (res.data === 'success') {
+        Message.success('删除成功');
+        queryPromoteListData();
+      }
+    } catch (error) {
+      console.log(error);
     }
   };
 

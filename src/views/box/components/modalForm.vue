@@ -235,7 +235,9 @@
     (newVal, oldVal) => {
       // 在rid字段变动时执行逻辑
       console.log('rid 变动了', newVal, oldVal);
-      queryBoxDetailData(newVal);
+      if(newVal!==0){
+        queryBoxDetailData(newVal);
+      }
     }
   );
 

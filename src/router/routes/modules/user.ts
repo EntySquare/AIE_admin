@@ -33,6 +33,16 @@ const USER: AppRouteRecordRaw = {
         roles: ['*'],
       },
     },
+    {
+      path: 'create',
+      name: 'create',
+      component: () => import('@/views/user/create.vue'),
+      meta: {
+        locale: '创建账户',
+        requiresAuth: true,
+        roles: ['*'],
+      },
+    },
   ],
 };
 

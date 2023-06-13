@@ -104,7 +104,7 @@
               <p v-else-if="record.status === 3">失败</p>
             </template>
           </a-table-column>
-          <a-table-column title="操作" :width="160" align="center">
+          <a-table-column title="操作" :width="200" align="center">
             <template #cell="{ record }">
               <a-popconfirm
                 :content="'确定通过？'"
@@ -251,6 +251,7 @@
     const res = await auditWithdraw(params);
     if (res.data === 'success') {
       Message.success('操作成功');
+      queryWithdrawListData();  
     } else {
       Message.success('操作失败');
     }

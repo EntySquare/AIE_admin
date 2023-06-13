@@ -347,6 +347,32 @@ export interface UserByIdsList {
 }
 
 
+/**
+ * types.CreateUserReq
+ */
+export interface CreateUser {
+  /**
+   * 头像
+   */
+  avatar?: string;
+  /**
+   * 背景图
+   */
+  background_img?: string;
+  /**
+   * 个人简介
+   */
+  introduction?: string;
+  /**
+   * 昵称
+   */
+  nickname?: string;
+  /**
+   * 手机号
+   */
+  phone?: string;
+}
+
 export function login(data: LoginData) {
   // return axios.post<LoginRes>('/api/user/login', data);
   if (!data.username) {
@@ -403,4 +429,9 @@ export function getUserByAlbumId(id: number) {
 // 根据用户IDs搜索用户所有
 export function getUserByIds(ids: number[]) {
   return axios.post<UserByIdsList>('/admin/user/userByIds', { user_ids: ids });
+}
+
+// 创建用户
+export function createUser(params: CreateUser) {
+  return axios.post('/admin/user/create', params);
 }

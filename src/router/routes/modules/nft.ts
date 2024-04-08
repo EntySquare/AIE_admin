@@ -6,22 +6,22 @@ const UI: AppRouteRecordRaw = {
   name: 'nft',
   component: DEFAULT_LAYOUT,
   meta: {
-    locale: 'NFT',
+    locale: '数字藏品',
     requiresAuth: true,
-    icon: 'icon-list',
-    order: 3,
+    icon: 'icon-fire',
+    order: 2,
   },
   children: [
-    {
-      path: 'publishNFT',
-      name: 'publishNFT',
-      component: () => import('@/views/nft/publishNFT.vue'),
-      meta: {
-        locale: '发布NFT',
-        requiresAuth: true,
-        roles: ['*'],
-      },
-    },
+    // {
+    //   path: 'publishNFT',
+    //   name: 'publishNFT',
+    //   component: () => import('@/views/nft/publishNFT.vue'),
+    //   meta: {
+    //     locale: '发布NFT',
+    //     requiresAuth: true,
+    //     roles: ['*'],
+    //   },
+    // },
     {
       path: 'publishAlbum',
       name: 'publishAlbum',
@@ -32,16 +32,16 @@ const UI: AppRouteRecordRaw = {
         roles: ['*'],
       },
     },
-    {
-      path: 'nftList',
-      name: 'nftList',
-      component: () => import('@/views/nft/nftList.vue'),
-      meta: {
-        locale: 'NFT列表',
-        requiresAuth: true,
-        roles: ['*'],
-      },
-    },
+    // {
+    //   path: 'nftList',
+    //   name: 'nftList',
+    //   component: () => import('@/views/nft/nftList.vue'),
+    //   meta: {
+    //     locale: '数字藏品列表',
+    //     requiresAuth: true,
+    //     roles: ['*'],
+    //   },
+    // },
     {
       path: 'albumList',
       name: 'albumList',
@@ -53,15 +53,25 @@ const UI: AppRouteRecordRaw = {
       },
     },
     {
-      path: 'batchReleaseNFT',
-      name: 'batchReleaseNFT',
-      component: () => import('@/views/nft/batchReleaseNFT.vue'),
+      path: 'materialList',
+      name: 'materialList',
+      component: () => import('@/views/nft/materialList.vue'),
       meta: {
-        locale: '批量发布NFT',
+        locale: '材料列表',
         requiresAuth: true,
         roles: ['*'],
       },
     },
+    // {
+    //   path: 'batchReleaseNFT',
+    //   name: 'batchReleaseNFT',
+    //   component: () => import('@/views/nft/batchReleaseNFT.vue'),
+    //   meta: {
+    //     locale: '批量发布NFT',
+    //     requiresAuth: true,
+    //     roles: ['*'],
+    //   },
+    // },
   ],
 };
 

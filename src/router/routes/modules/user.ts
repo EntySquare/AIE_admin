@@ -8,8 +8,8 @@ const USER: AppRouteRecordRaw = {
   meta: {
     locale: '用户',
     requiresAuth: true,
-    icon: 'icon-list',
-    order: 5,
+    icon: 'icon-user',
+    order: 4,
   },
   children: [
     {
@@ -29,7 +29,17 @@ const USER: AppRouteRecordRaw = {
       meta: {
         locale: '用户详情',
         requiresAuth: true,
-        // hideInMenu: true,
+        hideInMenu: true,
+        roles: ['*'],
+      },
+    },
+    {
+      path: 'create',
+      name: 'create',
+      component: () => import('@/views/user/create.vue'),
+      meta: {
+        locale: '创建账户',
+        requiresAuth: true,
         roles: ['*'],
       },
     },

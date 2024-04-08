@@ -14,7 +14,7 @@
         </template>
         下载案例表格
       </a-button>
-      <a-card :style="{ width: '1426px'}" header-style="background: #F2F3F5" title="NFT所属专辑">
+      <a-card :style="{ width: '1426px'}" :header-style="{background: '#F2F3F5'}" title="NFT所属专辑">
         <template #extra>
           <a-button  type="primary">切换专辑</a-button>
         </template>
@@ -39,7 +39,7 @@
         </template>
         上传数据表格
       </a-button>
-      <a-table :data="data" style="margin-top: 20px">
+      <a-table style="margin-top: 20px">
         <template #columns>
           <a-table-column title="NFT图片" data-index="picture">
             <template #cell="{ record }">

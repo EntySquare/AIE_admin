@@ -106,6 +106,7 @@
         const { redirect, ...othersQuery } = router.currentRoute.value.query;
         await router.push({
           name: (redirect as string) || 'Workplace',
+          // name: (redirect as string) || 'dataAnalysis',
           query: {
             ...othersQuery,
           },

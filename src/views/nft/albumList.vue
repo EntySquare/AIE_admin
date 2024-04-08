@@ -1,107 +1,130 @@
 <template>
   <div class="container">
     <a-card>
-      <a-typography-title :heading="6">
-        专辑列表
-      </a-typography-title>
+      <a-typography-title :heading="6"> 专辑列表 </a-typography-title>
       <a-divider />
-      <a-form :model="form">
-        <a-row :gutter="16">
-          <a-col :span="5">
-            <a-form-item field="value5" label="模糊查询" label-col-flex="80px">
-              <a-input v-model="form.value5" placeholder="nft编号,名字" />
-            </a-form-item>
-          </a-col>
-          <a-col :span="4" >
-            <a-button type="primary" style="margin-right: 10px">
-              <icon-search :size="20"  />
-              查询
-            </a-button>
-            <a-button>
-              <icon-loop :size="20" />
-              重置
-            </a-button>
-          </a-col>
-        </a-row>
-      </a-form>
+      <a-row :gutter="16">
+        <a-col :span="5">
+          <a-input v-model="condition" placeholder="输入专辑名称" />
+        </a-col>
+        <a-col :span="4">
+          <a-button
+            type="primary"
+            style="margin-right: 10px"
+            @click="queryAlbumsListData()"
+          >
+            <icon-search :size="20" />
+            查询
+          </a-button>
+          <a-button @click="queryAlbumsListData()">
+            <icon-loop :size="20" />
+            重置
+          </a-button>
+        </a-col>
+      </a-row>
       <a-divider />
-      <a-table :data="data" style="margin-top: 20px">
+      <a-table :data="tableData" style="margin-top: 20px" :pagination="false">
         <template #columns>
-          <a-table-column title="专辑图" data-index="picture">
+          <a-table-column title="专辑背景图" data-index="background_img">
             <template #cell="{ record }">
-              <a-image :src="record.uiPicture" height="80px" width="120px" >
+              <a-image :src="record.background_img" height="80px" width="120px">
               </a-image>
             </template>
           </a-table-column>
-          <a-table-column title="专辑名" data-index="title"></a-table-column>
-          <a-table-column title="发布者" data-index="content"></a-table-column>
-          <a-table-column title="作品数量/持有人数" data-index="publishTimer"></a-table-column>
-          <a-table-column title="已发布/未发布" data-index="title"></a-table-column>
-          <a-table-column title="当前状态" data-index="content"></a-table-column>
-          <a-table-column title="专辑创建时间" data-index="publishTimer"></a-table-column>
-          <a-table-column title="操作">
+          <a-table-column
+            title="创建时间"
+            data-index="created_at"
+          ></a-table-column>
+          <a-table-column title="专辑头像图片" data-index="face_img">
             <template #cell="{ record }">
-              <a-button style="margin-right: 10px" @click="$modal.info({ title:'Name', content:record.name })">立刻发售</a-button>
-              <a-button @click="$modal.info({ title:'Name', content:record.name })">定时发售</a-button>
-              <a-button style="margin-right: 10px" @click="$modal.info({ title:'Name', content:record.name })">停售</a-button>
-              <a-button @click="$modal.info({ title:'Name', content:record.name })">批量上传NFT</a-button>
+              <a-image :src="record.background_img" height="80px" width="120px">
+              </a-image>
             </template>
           </a-table-column>
+          <a-table-column
+            title="持有人数"
+            data-index="holder_user_count"
+          ></a-table-column>
+          <a-table-column
+            title="市场流通量"
+            data-index="market_circulation_count"
+          ></a-table-column>
+          <a-table-column title="专辑名" data-index="name"></a-table-column>
+          <a-table-column
+            title="作品总数"
+            data-index="nft_num"
+          ></a-table-column>
+          <!--          <a-table-column title="简介" data-index="profile"></a-table-column>-->
+          <a-table-column
+            title="剩余数量"
+            data-index="remaining_quantity"
+          ></a-table-column>
         </template>
       </a-table>
+      <a-row justify="center" style="padding-top: 20px">
+        <a-pagination
+          v-model:current="pagination.current"
+          :total="pagination.total!"
+          show-total
+          @change="queryAlbumsListData()"
+        />
+      </a-row>
     </a-card>
-    <!--    立即发售弹窗-->
-    <a-modal width="auto" v-model:visible="nowSell" @ok="handleOk" @cancel="handleCancel">
-      <template #title>
-        立即发售
-      </template>
-      <div style="margin-top: 20px">1.立即发售后无法撤回,一旦发售,用户可立即购买NFT产品.</div>
-      <div style="margin-top: 20px">2.停售只能停止未出售的NFT产品</div>
-    </a-modal>
   </div>
-  <!--    定时发售弹窗-->
-  <a-modal width="auto" v-model:visible="waitSell" @ok="handleOk" @cancel="handleCancel">
-    <template #title>
-      定时发售
-    </template>
-    <a-space>
-      <div>定时发售</div>
-
-    </a-space>
-    <div style="margin-top: 20px">1.定时发售,将纳入预售模块,用户可提前查看到等待秒杀.</div>
-    <div style="margin-top: 20px">1.时间发出不可修改.</div>
-  </a-modal>
-  <!--    停售弹窗-->
-  <a-modal width="auto" v-model:visible="stopSell" @ok="handleOk" @cancel="handleCancel">
-    <template #title>
-      停售
-    </template>
-    <div style="margin-top: 20px">1.停售将未出售的所有NFT产品.</div>
-    <div style="margin-top: 20px">2.已出售的NFT产品将继续在市场流通.</div>
-  </a-modal>
 </template>
 
 <script setup lang="ts">
-import { reactive, ref } from "vue";
+  import { onMounted, reactive, ref } from 'vue';
+  import { AlbumsParams, AlbumsRes, fetchAlbumList } from '@/api/album';
+  import { Pagination } from '@/types/global';
+  import useLoading from '@/hooks/loading';
 
-const form = reactive({
-  value1: '',
-  value2: '',
-  value3: '',
-  value4: '',
-  value5: '',
-})
-const nowSell = ref<boolean>(false);
-const waitSell = ref<boolean>(false);
-const stopSell = ref<boolean>(false);
+  const condition = ref<string>('');
+  const { setLoading } = useLoading(true);
+  const tableData = ref<AlbumsRes[]>([]);
+  const pagination: Pagination = reactive({
+    current: 1,
+    pageSize: 10,
+    total: 0,
+  });
+  // 查询专辑列表
+  const queryAlbumsListData = async (
+    params: AlbumsParams = {
+      name: condition.value,
+      pageNum: pagination.current,
+      pageSize: 10,
+    }
+  ) => {
+    window.console.log('start');
+    setLoading(true);
+    try {
+      const res = await fetchAlbumList(params);
+      tableData.value = res.data.album_list;
+      pagination.current =  res.data.current_page;
+      pagination.total = res.data.total;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const testClick = () => {
+    window.console.log('start');
+  };
+
+  const onPageChange = (current: number) => {
+    queryAlbumsListData({ name: condition.value, current, pageSize: 10 });
+  };
+
+  onMounted(() => {
+    queryAlbumsListData();
+  });
 </script>
 
 <style scoped>
-.container{
-  padding: 16px 20px;
-}
-.col-div div{
-  margin-top: 5px;
-}
-
+  .container {
+    padding: 16px 20px;
+  }
+  .col-div div {
+    margin-top: 5px;
+  }
 </style>

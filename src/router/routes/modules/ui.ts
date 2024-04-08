@@ -8,8 +8,8 @@ const UI: AppRouteRecordRaw = {
   meta: {
     locale: 'UI界面',
     requiresAuth: true,
-    icon: 'icon-list',
-    order: 2,
+    icon: 'icon-palette',
+    order: 1,
   },
   children: [
     {

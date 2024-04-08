@@ -5,13 +5,13 @@
         管理账户
       </a-typography-title>
       <a-divider />
-      <a-button type="primary" style="margin-top: 10px" :loading="loading" @click="addHomePageChart">
+      <a-button type="primary" style="margin-top: 10px">
         <template #icon>
           <icon-plus />
         </template>
         添加账户
       </a-button>
-      <a-table :data="data" style="margin-top: 20px">
+      <a-table style="margin-top: 20px">
         <template #columns>
           <a-table-column title="账户" data-index="title"></a-table-column>
           <a-table-column title="角色" data-index="content"></a-table-column>

@@ -6,10 +6,10 @@ const MESSAGE: AppRouteRecordRaw = {
   name: 'message',
   component: DEFAULT_LAYOUT,
   meta: {
-    locale: '信息',
+    locale: '公告',
     requiresAuth: true,
-    icon: 'icon-list',
-    order: 6,
+    icon: 'icon-brush',
+    order: 5,
   },
   children: [
     {
@@ -17,7 +17,7 @@ const MESSAGE: AppRouteRecordRaw = {
       name: 'messageList',
       component: () => import('@/views/message/index.vue'),
       meta: {
-        locale: '信息列表',
+        locale: '公告列表',
         requiresAuth: true,
         roles: ['*'],
       },

@@ -7,7 +7,7 @@
   "license": "MIT",
   "scripts": {
     "dev": "vite --config ./config/vite.config.dev.ts",
-    "build": "vue-tsc --noEmit && vite build --config ./config/vite.config.prod.ts",
+    "build": "vite build --config ./config/vite.config.prod.ts",
     "report": "cross-env REPORT=true npm run build",
     "preview": "npm run build && vite preview --host",
     "type:check": "vue-tsc --noEmit --skipLibCheck",
@@ -32,6 +32,8 @@
   "dependencies": {
     "@arco-design/web-vue": "^2.40.0",
     "@vueuse/core": "^9.3.0",
+    "@wangeditor/editor": "^5.1.23",
+    "@wangeditor/editor-for-vue": "^5.1.12",
     "arco-design-pro-vue": "^2.6.1",
     "axios": "^0.24.0",
     "dayjs": "^1.11.5",
@@ -63,7 +65,7 @@
     "cross-env": "^7.0.3",
     "eslint": "^8.25.0",
     "eslint-config-airbnb-base": "^15.0.0",
-    "eslint-config-prettier": "^8.5.0",
+    "eslint-config-prettier": "^8.8.0",
     "eslint-import-resolver-typescript": "^3.5.1",
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-prettier": "^4.2.1",

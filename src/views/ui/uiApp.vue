@@ -1,134 +1,384 @@
 <template>
   <div class="container">
-<!--    首页轮播图-->
+    <!--    首页轮播图-->
     <a-card>
       <a-typography>
-        <a-typography-title :heading="6">
-          首页轮播图
-        </a-typography-title>
+        <a-typography-title :heading="6"> 首页轮播图</a-typography-title>
       </a-typography>
-      <a-button type="primary" style="margin-top: 10px" :loading="loading" @click="addHomePageChart">
+      <a-button
+        type="primary"
+        style="margin-top: 10px"
+        :loading="loading"
+        @click="showModal(-1)"
+      >
         <template #icon>
           <icon-plus />
         </template>
-        增加
+        新增
       </a-button>
-      <a-table :data="data" style="margin-top: 20px">
+      <a-table
+        :data="tableData1"
+        style="margin-top: 20px"
+        :pagination="false"
+        row-selection=""
+      >
         <template #columns>
-          <a-table-column title="图片" data-index="picture">
+          <a-table-column title="图片">
             <template #cell="{ record }">
-              <a-image :src="record.uiPicture" height="80px" width="120px" >
-              </a-image>
+              <a-image :src="record.url" height="80px" width="120px" />
             </template>
           </a-table-column>
           <a-table-column title="标题" data-index="title"></a-table-column>
           <a-table-column title="内容" data-index="content"></a-table-column>
-          <a-table-column title="发布日期" data-index="publishTimer"></a-table-column>
-          <a-table-column title="操作">
+          <a-table-column title="内容图片">
             <template #cell="{ record }">
-              <a-button style="margin-right: 10px" @click="$modal.info({ title:'Name', content:record.name })">编辑</a-button>
-              <a-button @click="$modal.info({ title:'Name', content:record.name })">删除</a-button>
-            </template>
-          </a-table-column>
-        </template>
-      </a-table>
-    </a-card>
-
-<!--    市场页头轮播图-->
-    <a-card style="margin-top: 20px">
-      <a-typography>
-        <a-typography-title :heading="6">
-          市场页头轮播图
-        </a-typography-title>
-      </a-typography>
-      <a-button type="primary" style="margin-top: 10px" :loading="loading" @click="addMarketChart">
-        <template #icon>
-          <icon-plus />
-        </template>
-        增加
-      </a-button>
-      <a-table :data="data" style="margin-top: 20px">
-        <template #columns>
-          <a-table-column title="图片">
-            <template #cell="{ record }">
-              <a-image :src="record.uiPicture" height="80px" width="120px" >
+              <a-image
+                :src="record.content_img_url"
+                height="80px"
+                width="120px"
+              >
               </a-image>
             </template>
           </a-table-column>
-          <a-table-column
-            title="发布日期"
-            data-index="publishTimer"
-          ></a-table-column>
           <a-table-column title="操作">
-            <template #cell="{ record }">
-              <a-button style="margin-right: 10px" @click="$modal.info({ title:'Name', content:record.name })">编辑</a-button>
-              <a-button @click="$modal.info({ title:'Name', content:record.name })">删除</a-button>
+            <template #cell="{ rowIndex }">
+              <a-button style="margin-right: 10px" @click="showModal(rowIndex)"
+                >编辑
+              </a-button>
+              <a-popconfirm content="确定删除吗?" @ok="handleDelete(rowIndex)">
+                <a-button>删除</a-button>
+              </a-popconfirm>
             </template>
           </a-table-column>
         </template>
       </a-table>
     </a-card>
+
+    <!--    市场页头轮播图-->
+    <a-card style="margin-top: 20px">
+      <a-typography>
+        <a-typography-title :heading="6"> 市场页头轮播图</a-typography-title>
+      </a-typography>
+      <a-button
+        type="primary"
+        style="margin-top: 10px"
+        :loading="loading"
+        @click="showMarketModal(-1)"
+      >
+        <template #icon>
+          <icon-plus />
+        </template>
+        新增
+      </a-button>
+      <a-table :data="tableData2" style="margin-top: 20px" :pagination="false">
+        <template #columns>
+          <a-table-column title="图片">
+            <template #cell="{ record }">
+              <a-image :src="record.url" height="80px" width="120px"></a-image>
+            </template>
+          </a-table-column>
+          <a-table-column title="标题" data-index="title"></a-table-column>
+          <a-table-column title="内容" data-index="content"></a-table-column>
+          <a-table-column title="内容图片">
+            <template #cell="{ record }">
+              <a-image
+                :src="record.content_img_url"
+                height="80px"
+                width="120px"
+              >
+              </a-image>
+            </template>
+          </a-table-column>
+          <a-table-column title="操作">
+            <template #cell="{ rowIndex }">
+              <a-button
+                style="margin-right: 10px"
+                @click="showMarketModal(rowIndex)"
+                >编辑
+              </a-button>
+              <a-popconfirm content="确定删除吗?" @ok="handleDelete2(rowIndex)">
+                <a-button>删除</a-button>
+              </a-popconfirm>
+            </template>
+          </a-table-column>
+        </template>
+      </a-table>
+    </a-card>
+
+    <!--  增加首页轮播图弹窗-->
+    <a-modal v-model:visible="visible" title="新增首页轮播图" @ok="handleOk">
+      <a-form :model="carousel">
+        <a-form-item label="图片">
+          <a-upload
+            draggable
+            image-preview
+            :custom-request="uploadImg"
+            :limit="1"
+          />
+        </a-form-item>
+        <a-form-item label="内容图片">
+          <a-upload
+            draggable
+            image-preview
+            :custom-request="uploadContentImg"
+            :limit="1"
+          />
+        </a-form-item>
+        <a-form-item label="标题">
+          <a-input v-model="carousel.title" />
+        </a-form-item>
+        <a-form-item label="内容">
+          <a-input v-model="carousel.content" />
+        </a-form-item>
+      </a-form>
+    </a-modal>
+    <!--  增加市场页头轮播图弹窗-->
+    <a-modal
+      v-model:visible="visibleTwo"
+      title="市场页头轮播图"
+      @ok="handleOk2"
+    >
+      <a-form :model="carousel">
+        <a-form-item label="图片">
+          <a-upload
+            draggable
+            image-preview
+            :custom-request="uploadImg"
+            :limit="1"
+          />
+        </a-form-item>
+        <a-form-item label="内容图片">
+          <a-upload
+            draggable
+            image-preview
+            :custom-request="uploadContentImg"
+            :limit="1"
+          />
+        </a-form-item>
+        <a-form-item label="标题">
+          <a-input v-model="carousel.title" />
+        </a-form-item>
+        <a-form-item label="内容">
+          <a-input v-model="carousel.content" />
+        </a-form-item>
+      </a-form>
+    </a-modal>
+
+    <a-modal
+      v-model:visible="upvisible"
+      title="修改首页轮播图"
+      @ok="handleOkUpdate"
+    >
+      <a-form :model="carousel">
+        <a-form-item label="图片">
+          <a-upload
+            draggable
+            image-preview
+            :custom-request="uploadImg"
+            :limit="1"
+          />
+        </a-form-item>
+        <a-form-item label="内容图片">
+          <a-upload
+            draggable
+            image-preview
+            :custom-request="uploadContentImg"
+            :limit="1"
+          />
+        </a-form-item>
+        <a-form-item label="标题">
+          <a-input v-model="carousel.title" />
+        </a-form-item>
+        <a-form-item label="内容">
+          <a-input v-model="carousel.content" />
+        </a-form-item>
+      </a-form>
+    </a-modal>
+    <!--  修改市场页头轮播图弹窗-->
+    <a-modal
+      v-model:visible="upvisibleTwo"
+      title="修改市场页头轮播图"
+      @ok="handleOkUpdate2"
+    >
+      <a-form :model="carousel">
+        <a-form-item label="图片">
+          <a-upload
+            draggable
+            image-preview
+            :custom-request="uploadImg"
+            :limit="1"
+          />
+        </a-form-item>
+        <a-form-item label="内容图片">
+          <a-upload
+            draggable
+            image-preview
+            :custom-request="uploadContentImg"
+            :limit="1"
+          />
+        </a-form-item>
+        <a-form-item label="标题">
+          <a-input v-model="carousel.title" />
+        </a-form-item>
+        <a-form-item label="内容">
+          <a-input v-model="carousel.content" />
+        </a-form-item>
+      </a-form>
+    </a-modal>
   </div>
-  <!--  增加首页轮播图弹窗-->
-  <a-modal v-model:visible="visible" title="新增首页轮播图">
-    <a-form :model="form">
-      <a-form-item field="name" label="图片">
-          <a-upload action="/" :default-file-list="fileList" />
-      </a-form-item>
-      <a-form-item field="post" label="标题">
-        <a-input v-model="form.name" />
-      </a-form-item>
-      <a-form-item field="post" label="内容">
-        <a-input v-model="form.content" />
-      </a-form-item>
-    </a-form>
-  </a-modal>
-  <!--  增加市场页头轮播图弹窗-->
-  <a-modal v-model:visible="visibleTwo" title="新增市场页头轮播图">
-    <a-form :model="form">
-      <a-form-item field="name" label="图片">
-        <a-upload action="/" :default-file-list="fileList" />
-      </a-form-item>
-    </a-form>
-  </a-modal>
 </template>
 
 <script setup lang="ts">
-import { reactive, ref } from "vue";
-import useLoading from '@/hooks/loading';
-import { tableListData, uiData } from "@/api/ui";
+  import { onMounted, reactive, ref } from 'vue';
+  import useLoading from '@/hooks/loading';
+  import { Carousel, fetchCarouselList, updateCarouselList } from '@/api/ui';
+  import { arcoUpload } from '@/api/upload';
+  import { Message, RequestOption } from '@arco-design/web-vue';
 
-// const { loading, setLoading } = useLoading(true);
-// const tableListData = ref({} as tableListData);
-const  data = [{
-  uiPicture:'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fsafe-img.xhscdn.com%2Fbw%2Febcef4f8-ef7e-49e2-80c4-0a2897e6c3c4%3FimageView2%2F2%2Fw%2F1080%2Fformat%2Fjpg&refer=http%3A%2F%2Fsafe-img.xhscdn.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1680686871&t=191f79a7c818a5d55ed840ab0e87528a',
-  title: '周杰伦',
-  publishTimer: '2022',
-  content: '周杰伦演唱会'
-}];
+  const { loading, setLoading } = useLoading();
+  const tableData1 = ref<Carousel[]>([]);
+  const tableData2 = ref<Carousel[]>([]);
 
-const visible = ref<boolean>(false);
-const visibleTwo = ref<boolean>(false);
-const addHomePageChart = () => {
-  visible.value = true;
-};
-const addMarketChart = () => {
-  visibleTwo.value = true;
-};
+  const visible = ref<boolean>(false);
+  const upvisible = ref<boolean>(false);
+  const visibleTwo = ref<boolean>(false);
+  const upvisibleTwo = ref<boolean>(false);
+  const imgPath = ref<string>('');
+  const imgContentPath = ref<string>('');
+  const updateIndex = ref<number>(0);
+  // 添加首页轮播图
+  const showModal = (index: number) => {
+    if (index === -1) {
+      visible.value = true;
+    } else {
+      upvisible.value = true;
+      updateIndex.value = index;
+    }
+  };
+  const showMarketModal = (index: number) => {
+    if (index === -1) {
+      visibleTwo.value = true;
+    } else {
+      upvisibleTwo.value = true;
+      updateIndex.value = index;
+    }
+  };
 
+  const carousel = reactive({
+    title: '',
+    url: '',
+    content: '',
+    content_img_url: '',
+  });
 
-const form = reactive({
-  name: '',
-  picture: '',
-  content: '',
-});
+  const handleOk = async () => {
+    visible.value = false;
+    tableData1.value.push({
+      content: carousel.content,
+      content_img_url: imgContentPath.value,
+      title: carousel.title,
+      url: imgPath.value,
+    });
 
+    const res = await updateCarouselList(tableData1.value, 'home_house_head');
+    if (res.data === 'success') {
+      Message.success('操作成功');
+    }
+  };
 
+  const handleOkUpdate = async () => {
+    visible.value = false;
+    tableData1.value.splice(updateIndex.value, 1, {
+      content: carousel.content,
+      content_img_url: imgContentPath.value,
+      title: carousel.title,
+      url: imgPath.value,
+    });
+    const res = await updateCarouselList(tableData1.value, 'home_house_head');
+    if (res.data === 'success') {
+      Message.success('操作成功');
+    }
+  };
 
+  const handleOk2 = async () => {
+    visible.value = false;
+    tableData2.value.push({
+      content: carousel.content,
+      content_img_url: imgContentPath.value,
+      title: carousel.title,
+      url: imgPath.value,
+    });
+    const res = await updateCarouselList(tableData2.value, 'market_house_head');
+    if (res.data === 'success') {
+      Message.success('操作成功');
+    }
+  };
+
+  const handleOkUpdate2 = async () => {
+    visible.value = false;
+    tableData2.value.splice(updateIndex.value, 1, {
+      content: carousel.content,
+      content_img_url: imgContentPath.value,
+      title: carousel.title,
+      url: imgPath.value,
+    });
+    const res = await updateCarouselList(tableData2.value, 'market_house_head');
+    if (res.data === 'success') {
+      Message.success('操作成功');
+    }
+  };
+
+  const handleDelete = async (index: number) => {
+    tableData1.value.splice(index, 1);
+    const res = await updateCarouselList(tableData1.value, 'home_house_head');
+    if (res.data === 'success') {
+      Message.success('删除成功');
+    }
+  };
+
+  const handleDelete2 = async (index: number) => {
+    tableData2.value.splice(index, 1);
+    const res = await updateCarouselList(tableData2.value, 'market_house_head');
+    if (res.data === 'success') {
+      Message.success('删除成功');
+    }
+  };
+
+  // 查询专辑列表
+  const queryCarouselData = async (place: string) => {
+    setLoading(true);
+    try {
+      const res = await fetchCarouselList(place);
+      window.console.log(res);
+      if (place === 'home_house_head') {
+        tableData1.value = res.data.carousel_list;
+      } else if (place === 'market_house_head') {
+        tableData2.value = res.data.carousel_list;
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // 上传图片
+  async function uploadImg(option: RequestOption) {
+    imgPath.value = await arcoUpload(option);
+  }
+
+  // 上传内容图片
+  async function uploadContentImg(option: RequestOption) {
+    imgContentPath.value = await arcoUpload(option);
+  }
+
+  onMounted(() => {
+    // hone_house_head=首页头部轮播图数据 market_house_head=市场页面头部轮播图数据
+    queryCarouselData('home_house_head');
+    queryCarouselData('market_house_head');
+  });
 </script>
 
 <style scoped>
-.container{
-  padding: 16px 20px;
-}
+  .container {
+    padding: 16px 20px;
+  }
 </style>

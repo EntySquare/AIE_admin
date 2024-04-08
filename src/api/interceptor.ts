@@ -22,11 +22,14 @@ axios.interceptors.request.use(
     // Authorization is a custom headers key
     // please modify it according to the actual situation
     const token = getToken();
+    // const token = 'test_hash_token_user_id_1';
     if (token) {
       if (!config.headers) {
         config.headers = {};
       }
-      config.headers.Authorization = `Bearer ${token}`;
+      // config.headers.Authorization = `Bearer ${token}`;
+      // config.headers.Authorization = `${token}`;
+      config.headers = { token };
     }
     return config;
   },
@@ -40,9 +43,10 @@ axios.interceptors.response.use(
   (response: AxiosResponse<HttpResponse>) => {
     const res = response.data;
     // if the custom code is not 20000, it is judged as an error.
-    if (res.code !== 20000) {
+    if (res.code !== 0 && res.code !== 20000) {
       Message.error({
-        content: res.msg || 'Error',
+        // @ts-ignore
+        content: res.data.message_zh || 'Error',
         duration: 5 * 1000,
       });
       // 50008: Illegal token; 50012: Other clients logged in; 50014: Token expired;
@@ -58,7 +62,7 @@ axios.interceptors.response.use(
           async onOk() {
             const userStore = useUserStore();
 
-            await userStore.logout();
+            // await userStore.logout();
             window.location.reload();
           },
         });

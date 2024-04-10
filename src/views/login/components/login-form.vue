@@ -1,7 +1,7 @@
 <template>
   <div class="login-form-wrapper">
-    <div class="login-form-title">登录玄武数藏</div>
-    <div class="login-form-sub-title">登录玄武数藏</div>
+    <div class="login-form-title">登录CS</div>
+    <div class="login-form-sub-title">登录CS</div>
     <div class="login-form-error-msg">{{ errorMessage }}</div>
     <a-form
       ref="loginForm"
@@ -82,8 +82,8 @@
 
   const loginConfig = useStorage('login-config', {
     rememberPassword: true,
-    username: 'admin', // 演示默认值
-    password: 'admin', // demo default value
+    username: '', // 演示默认值
+    password: '', // demo default value
   });
   // 输入
   const userInfo = reactive({

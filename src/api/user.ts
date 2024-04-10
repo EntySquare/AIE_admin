@@ -382,16 +382,20 @@ export function login(data: LoginData) {
   if (!data.password) {
     return failResponseWrap(null, '密码不能为空', 50000);
   }
-  return axios.post<LoginRes, any>('/admin/login', data);
+  return axios.post<LoginRes, any>('/web/login', data);
 }
 
 export function getUser(phone: string) {
-  return axios.post<UserPhoneResList>('/admin/user/all', { phone });
+  return axios.post<UserPhoneResList>('/web/user/all', { phone });
 }
 
 // 用户列表
-export function fetchUserList(params: UserParam) {
-  return axios.post<UserList>('/admin/user/list', params);
+export function userInfoListApi(data: string) {
+  return axios.post('/web/accounts/list', {user_address:data});
+}
+
+export function updateFoundApi(data: any) {
+  return axios.post('/web/update/founder', data)
 }
 
 // 用户详情
@@ -404,7 +408,32 @@ export function logout() {
 }
 
 export function getUserInfo() {
-  // return axios.post<UserState>('/api/user/info');
+  return axios.post<UserState>('/api/user/info');
+}
+
+export function getKeyValueMap() {
+  return axios.post('/web/keyValues/get')
+}
+
+export function updateKeyValueMap(keys:string, values: number) {
+  return axios.post('/web/keyValues/update', {key:keys, value:values})
+}
+
+export function getType1InfoApi() {
+  return axios.post('/web/type1Info/get')
+}
+
+export function updateType1InfoApi(data: any) {
+  return axios.post('/web/type1Info/update', data)
+}
+
+
+export function getKeyValuesStringMap() {
+  return axios.post('/web/keyValuesString/get')
+}
+
+export function getOrderList() {
+  return axios.post('/web/orders/list')
 }
 
 export function getMenuList() {

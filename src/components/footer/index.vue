@@ -1,5 +1,5 @@
 <template>
-  <a-layout-footer class="footer">玄武数藏</a-layout-footer>
+  <a-layout-footer class="footer">CX</a-layout-footer>
 </template>
 
 <script lang="ts" setup></script>

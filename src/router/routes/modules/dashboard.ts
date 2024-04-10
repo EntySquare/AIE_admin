@@ -22,6 +22,26 @@ const DASHBOARD: AppRouteRecordRaw = {
         roles: ['*'],
       },
     },
+    {
+      path: 'order',
+      name: 'Order',
+      component: () => import('@/views/dashboard/workplace/order.vue'),
+      meta: {
+        locale: '订单',
+        requiresAuth: true,
+        roles: ['*'],
+      },
+    },
+    {
+      path: 'management',
+      name: 'management',
+      component: () => import('@/views/dashboard/workplace/management.vue'),
+      meta: {
+        locale: '参数管理',
+        requiresAuth: true,
+        roles: ['*'],
+      },
+    },
   ],
 };
 

@@ -398,6 +398,10 @@ export function updateFoundApi(data: any) {
   return axios.post('/web/update/founder', data)
 }
 
+export function updateLevelApi(data: any) {
+  return axios.post('/web/update/level', data)
+}
+
 // 用户详情
 export function fetchUserDetail(id: number) {
   return axios.post<UserDetailInfo>('/admin/user/detail', { id });

@@ -63,9 +63,9 @@
             <a-table-column title="状态" data-index="order_status"  width="80">
               <template #cell="{ record }">
                 <a-space>
-                  <a-tag v-if="record.type === 1" color="green">未激活</a-tag>
-                  <a-tag v-if="record.type === 2" color="blue">已激活</a-tag>
-                  <a-tag v-if="record.type === 3" color="yellow">以过期</a-tag>
+                  <a-tag v-if="record.order_status === 0" color="green">未激活</a-tag>
+                  <a-tag v-if="record.order_status === 1" color="blue">已激活</a-tag>
+                  <a-tag v-if="record.order_status === 2" color="yellow">已过期</a-tag>
 
                 </a-space>
               </template>

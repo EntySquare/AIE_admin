@@ -373,6 +373,17 @@ export interface CreateUser {
   phone?: string;
 }
 
+
+export interface UpdateOrderStatusParam {
+  order_id?:number;
+  status?:number;
+
+}
+
+export interface CalculateOrderListParam{
+  total_product ?: number;
+}
+
 export function login(data: LoginData) {
   // return axios.post<LoginRes>('/api/user/login', data);
   if (!data.username) {
@@ -467,4 +478,19 @@ export function getUserByIds(ids: number[]) {
 // 创建用户
 export function createUser(params: CreateUser) {
   return axios.post('/admin/user/create', params);
+}
+
+
+// 修改订单状态
+export function updateOrderStatus(params: UpdateOrderStatusParam) {
+  return axios.post('/web/order/updateStatus', params);
+}
+
+export function calculateOrderList(params: CalculateOrderListParam) {
+  return axios.post('/web/order/calculateList',params)
+}
+
+
+export function distributeProfitsOrderList(params: CalculateOrderListParam) {
+  return axios.post('/web/order/distributeProfits',params)
 }

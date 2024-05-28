@@ -7,9 +7,22 @@
     <!--    </div>-->
     <div>
       <a-card>
-        <a-typography-title :heading="6"> 订单信息</a-typography-title>
+        <a-typography-title :heading="6"> 分收益</a-typography-title>
         <a-divider />
-        <a-form>
+
+        <div>
+          输入总产出值：
+          <a-input-number :style="{width:'320px'}" placeholder="请输入总产出值" allow-clear  v-model="totalPower" />
+        </div>
+        <div style="margin-top: 20px;">
+          <a-button  type="primary"  status="success" style="margin-right: 50px;" @click="calculateList">计算并显示列表</a-button>
+        
+          <a-popconfirm content="您确定要以当前的总产出值分发收益吗" type="warning" @ok="distributeProfits">
+            <a-button type="primary" status="danger" >分发收益</a-button>
+                         </a-popconfirm>
+                         <span style="float: right;font-size: 24px;">全网算力： {{ formatBalance18(networkPower, 2)}}</span>
+        </div>
+        <!-- <a-form> -->
 <!--          <a-row :gutter="16">-->
 <!--            <a-col :span="6">-->
 <!--              <a-form-item-->
@@ -34,9 +47,9 @@
 <!--              </a-space>-->
 <!--            </a-col>-->
 <!--          </a-row>-->
-        </a-form>
+        <!-- </a-form> -->
 
-        <a-table :data="orderInfo" style="margin-top: 20px" :scroll="scrollPercent" :scrollbar="scrollbar">
+        <a-table :data="orderInfo" style="margin-top: 20px" :scroll="scrollPercent" :scrollbar="scrollbar" :pagination="false">
           <template #columns>
             <a-table-column title="用户地址" data-index="user_address"  width="230"></a-table-column>
             <a-table-column title="金额" data-index="amount"  width="80">
@@ -44,14 +57,21 @@
                 {{ formatBalance18(record.amount, 2)}}
               </template>
             </a-table-column>
-            <a-table-column title="算力" data-index="power"  width="100">
+            <a-table-column title="算力" data-index="power"  width="80">
               <template #cell="{ record }">
                 {{ formatBalance18(record.power, 2)}}
               </template>
             </a-table-column>
-            <a-table-column title="累计收益" data-index="accumulations"  width="80">
+            <a-table-column title="累计收益" data-index="accumulations"  width="100">
               <template #cell="{ record }">
-                {{ formatBalance18(record.accumulations, 2)}}
+                {{ formatBalance18(record.accumulations, 6)}}
+              </template>
+            </a-table-column>
+            <a-table-column title="计算收益" data-index="profit"  width="100">
+              <template #cell="{ record }" >
+                <a-space>
+                  <a-tag  color="#168cff"> {{ formatBalance18(record.profit,6)}}</a-tag>
+              </a-space>
               </template>
             </a-table-column>
             <a-table-column title="类型" data-index="type"  width="80">
@@ -76,7 +96,6 @@
               </template>
             </a-table-column>
             <a-table-column title="支付时间" data-index="pay_time"  width="150"></a-table-column>
-            <a-table-column title="结束时间" data-index="end_time"  width="150"></a-table-column>
 
 
 
@@ -110,20 +129,7 @@
             <!--              >-->
             <!--            </template>-->
             <!--          </a-table-column>-->
-                       <a-table-column title="操作"  width="160">
-                      <template #cell="{ record }">
-                           <span v-if="record.order_status == 0" style="margin-right: 10px;">
-                         <a-popconfirm content="您确定要激活吗" type="warning" @ok="updateOrderStatusHandle(1,record.id)">
-                           <a-button  status="danger" >激活</a-button>
-                         </a-popconfirm>
-                       </span>
-                       <span v-if="record.order_status != 2">
-                         <a-popconfirm content="您确定要结束吗" type="warning" @ok="updateOrderStatusHandle(2,record.id)" >
-                           <a-button  >结束</a-button>
-                         </a-popconfirm>
-                       </span>
-                     </template>
-                   </a-table-column>
+                
           </template>
         </a-table>
       </a-card>
@@ -135,9 +141,10 @@
 
 <script lang="ts" setup>
 import { onMounted, reactive, ref } from "vue";
-import { getOrderList,updateOrderStatus,UpdateOrderStatusParam} from "@/api/user";
+import { calculateOrderList,distributeProfitsOrderList} from "@/api/user";
 import Web3 from 'web3';
 import { Message } from '@arco-design/web-vue';
+import { number } from "echarts/core";
 
 const scroll = {
   x: 2000,
@@ -148,33 +155,36 @@ const scrollPercent = {
   y: '100%'
 };
 
+const totalPower = ref("");
 const orderInfo = ref([] as any);
-
-const inputAddress = reactive({
-  address: ""
-});
-
+const networkPower =ref("0");
 const getOrderInfo = async () => {
-  const res = await getOrderList()
-  orderInfo.value = res.json;
+  const res = await calculateOrderList({
+    total_produce:totalPower.value.toString()
+  })
+  orderInfo.value = res.json.calculate_order_list;
+  networkPower.value = res.json.network_power;
 }
 
-const updateOrderStatusHandle = async (orderStatus:any,id:number) => {
-  console.log("update order status", orderStatus, id)
-  const param : UpdateOrderStatusParam={
-    order_id:id,
-    status:orderStatus
-  };
-  const res = await updateOrderStatus(param)
-  console.log("res",res)
-  // if (res.json=='success'){
-    Message.success('修改成功');
-    getOrderInfo();
-  // }else{
-  //   Message.error(res.json.message_zh);
-  // }
-  
-}
+const calculateList =async () => {
+  if(Number(totalPower.value) <=0){
+    Message.error("请输入总产值")
+    return ;
+  }
+  getOrderInfo();
+};
+
+const distributeProfits =async () => {
+  if(Number(totalPower.value) <=0){
+    Message.error("请输入总产值")
+    return ;
+  }
+  const res = await distributeProfitsOrderList({
+    total_produce:totalPower.value.toString()
+  })
+  Message.success("收益分发成功")
+  getOrderInfo();
+};
 
 const  formatBalance18 =  (balance: string | number | null, decimal: string | number): number => {
   if (balance == null || balance.toString() == null) {
@@ -187,7 +197,6 @@ const  formatBalance18 =  (balance: string | number | null, decimal: string | nu
 }
 
 onMounted(() => {
-  getOrderInfo();
 });
 
 </script>

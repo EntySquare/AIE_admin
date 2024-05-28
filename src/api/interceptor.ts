@@ -9,6 +9,7 @@ export interface HttpResponse<T = unknown> {
   msg: string;
   code: number;
   data: T;
+  json:T;
 }
 
 if (import.meta.env.VITE_API_BASE_URL) {
@@ -46,7 +47,7 @@ axios.interceptors.response.use(
     if (res.code !== 0 && res.code !== 20000) {
       Message.error({
         // @ts-ignore
-        content: res.data.message_zh || 'Error',
+        content: res.json.message_zh || 'Error',
         duration: 5 * 1000,
       });
       // 50008: Illegal token; 50012: Other clients logged in; 50014: Token expired;

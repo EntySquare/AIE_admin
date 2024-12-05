@@ -1,7 +1,7 @@
 <template>
   <div class="login-form-wrapper">
-    <div class="login-form-title">登录GNS</div>
-    <div class="login-form-sub-title">登录GNS</div>
+    <div class="login-form-title">登录AIE</div>
+    <div class="login-form-sub-title">登录AIE</div>
     <div class="login-form-error-msg">{{ errorMessage }}</div>
     <a-form
       ref="loginForm"

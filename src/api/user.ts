@@ -1,4 +1,6 @@
 import axios from 'axios';
+// @ts-ignore
+import md5 from 'md5';
 
 import { failResponseWrap } from '@/utils/setup-mock';
 
@@ -28,7 +30,9 @@ export function login(data: LoginData) {
   if (!data.password) {
     return failResponseWrap(null, '密码不能为空', 50000);
   }
-  return axios.post<LoginRes, any>('/login', data);
+
+  data.password = md5(data.password);
+  return axios.post<LoginRes, any>('/admin/login', data);
 }
 
 // 查询用户信息

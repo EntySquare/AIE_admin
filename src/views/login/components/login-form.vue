@@ -105,7 +105,7 @@
         await userStore.login(values as LoginData);
         const { redirect, ...othersQuery } = router.currentRoute.value.query;
         await router.push({
-          name: (redirect as string) || 'userInfo',
+          name: (redirect as string) || 'phoneControl',
           // name: (redirect as string) || 'dataAnalysis',
           query: {
             ...othersQuery,

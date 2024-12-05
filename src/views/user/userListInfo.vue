@@ -3,124 +3,114 @@
     <a-card>
       <a-typography-title :heading="6"> 用户详情 </a-typography-title>
       <a-divider />
-      <a-typography-title :heading="6"> 头像 </a-typography-title>
-      <a-row justify="space-between">
-        <a-col :span="4">
-          <a-image
-            :src="tableData.user_detail.avatar"
-            width="110px"
-            height="110px"
-          ></a-image>
-        </a-col>
-        <a-col :span="16">
-          <a-descriptions :data="data" bordered style="margin-top: 20px" />
-        </a-col>
-      </a-row>
+      <a-form :model="form" style="padding-right: 120px">
+        <a-row :gutter="16">
+          <a-col :span="12">
+            <a-form-item field="value3" label="用户地址" label-col-flex="">
+              <a-input v-model="form.value3" placeholder="please enter..." />
+            </a-form-item>
+          </a-col>
+          <a-col :span="12">
+            <a-form-item field="value3" label="上级ID" label-col-flex="">
+              <a-input v-model="form.value3" placeholder="please enter..." />
+            </a-form-item>
+          </a-col>
+          <a-col :span="12">
+            <a-form-item field="value2" label="邀请码" label-col-flex="">
+              <a-input v-model="form.value2" placeholder="please enter..." />
+            </a-form-item>
+          </a-col>
+
+          <a-col :span="12">
+            <a-button type="primary">重置筛选</a-button>
+          </a-col>
+        </a-row>
+      </a-form>
 
       <a-grid :cols="24" :col-gap="16" :row-gap="16" style="margin-top: 16px">
         <a-grid-item
-          :span="{ xs: 24, sm: 24, md: 24, lg: 12, xl: 12, xxl: 12 }"
+          :span="{ xs: 24, sm: 24, md: 24, lg: 24, xl: 24, xxl: 24 }"
         >
-          <a-typography-title :heading="6"> 数字藏品交易 </a-typography-title>
-          <a-table
-            :data="tableData.nft_transaction_logs"
-            style="margin-top: 20px"
-          >
+          <a-table :data="userList" style="margin-top: 20px">
             <template #columns>
               <a-table-column
-                title="发送方"
+                title="用户ID"
                 data-index="from_phone"
               ></a-table-column>
-              <a-table-column title="藏品图片" data-index="nft_img">
-                <template #cell="{ record }">
-                  <a-image :src="record.nft_img" height="50px" width="50px">
-                  </a-image>
-                </template>
+
+              <a-table-column title="钱包地址" data-index="nft_img">
               </a-table-column>
+
               <a-table-column
-                title="藏品名字"
+                title="激活状态"
                 data-index="nft_name"
               ></a-table-column>
+
               <a-table-column
-                title="接收方"
+                title="邀请码"
                 data-index="to_phone"
               ></a-table-column>
+
               <a-table-column
-                title="交易金额"
+                title="上级ID"
                 data-index="price"
               ></a-table-column>
+
               <a-table-column
-                title="交易时间"
+                title="推荐人数"
                 data-index="time"
               ></a-table-column>
-            </template>
-          </a-table>
-        </a-grid-item>
-        <!--        钱包交易记录-->
-        <a-grid-item
-          :span="{ xs: 24, sm: 24, md: 24, lg: 12, xl: 12, xxl: 12 }"
-        >
-          <a-typography-title :heading="6"> 钱包交易记录 </a-typography-title>
-          <a-table
-            :data="tableData.wallet_transaction_logs"
-            style="margin-top: 20px"
-          >
-            <template #columns>
+
               <a-table-column
-                title="类型"
-                data-index="trading_type"
+                title="团队人数"
+                data-index="time"
               ></a-table-column>
-              <a-table-column title="金额" data-index="price"></a-table-column>
+
               <a-table-column
-                title="交易方式"
-                data-index="trading_mode"
+                title="可用USDT"
+                data-index="time"
               ></a-table-column>
+
               <a-table-column
-                title="信息源"
-                data-index="info_json"
+                title="可用Gns"
+                data-index="time"
               ></a-table-column>
+
               <a-table-column
-                title="交易时间"
-                data-index="created_at"
+                title="剩余产值"
+                data-index="time"
               ></a-table-column>
-            </template>
-          </a-table>
-        </a-grid-item>
-        <!--        持有数字藏品-->
-        <a-grid-item
-          :span="{ xs: 24, sm: 24, md: 24, lg: 12, xl: 12, xxl: 12 }"
-        >
-          <a-typography-title :heading="6"> 持有数字藏品 </a-typography-title>
-          <a-table :data="tableData.holder_nft_list" style="margin-top: 20px">
-            <template #columns>
-              <a-table-column title="藏品图片" data-index="nft_img">
-                <template #cell="{ record }">
-                  <a-image :src="record.nft_img" height="50px" width="50px">
-                  </a-image>
+
+              <a-table-column
+                title="注册时间"
+                data-index="time"
+              ></a-table-column>
+
+              <a-table-column title="操作">
+                <template #cell>
+                  <div>
+                    <a-button type="primary">修改</a-button>
+                    <a-button type="primary">禁止收益</a-button>
+                    <a-button type="primary">禁止提现</a-button>
+                    <a-button type="primary">添加订单</a-button>
+                  </div>
                 </template>
               </a-table-column>
-              <a-table-column
-                title="专辑名"
-                data-index="album_name"
-              ></a-table-column>
-              <a-table-column
-                title="专辑ID"
-                data-index="album_id"
-              ></a-table-column>
-              <a-table-column
-                title="藏品ID"
-                data-index="nft_id"
-              ></a-table-column>
-              <a-table-column
-                title="寄售价"
-                data-index="price"
-              ></a-table-column>
-              <a-table-column
-                title="创建时间"
-                data-index="created_at"
-              ></a-table-column>
             </template>
           </a-table>
+          <div style="display: flex; justify-content: flex-end">
+            <a-pagination
+              :total="totalUserInfos"
+              :current="form.page + 1"
+              :page-size="20"
+              show-total
+              @change="
+                (current) => {
+                  handlePageChange(current);
+                }
+              "
+            ></a-pagination>
+          </div>
         </a-grid-item>
       </a-grid>
     </a-card>
@@ -129,70 +119,43 @@
 
 <script setup lang="ts">
   import { onMounted, reactive, ref } from 'vue';
-  import { useRoute } from 'vue-router';
-  import { fetchUserDetail, UserDetailInfo } from '@/api/user';
-  import useLoading from '@/hooks/loading';
+  import { getUserInfoApi } from '@/api/user';
 
-  const userId = ref();
-  const { setLoading } = useLoading(true);
-  const tableData = reactive<UserDetailInfo>({
-    holder_nft_list: [],
-    nft_transaction_logs: [],
-    user_detail: {},
-    wallet_transaction_logs: [],
+  const totalUserInfos = ref(0);
+  const userList = ref([]);
+
+  const form = reactive({
+    value1: '',
+    value2: '',
+    value3: '',
+    value4: '',
+    page: 0,
   });
-  const data = ref();
+
+  const handlePageChange = (current: number) => {
+    if (current - 1 !== form.page) {
+      form.page = current - 1;
+      // queryUserListData()
+    }
+  };
 
   // 查询用户列表
-  const queryUserListData = async (id: number) => {
-    setLoading(true);
+  const queryUserListData = async () => {
     try {
-      const res = await fetchUserDetail(id);
-      tableData.holder_nft_list = res.data.holder_nft_list;
-      tableData.wallet_transaction_logs = res.data.wallet_transaction_logs;
-      tableData.nft_transaction_logs = res.data.nft_transaction_logs;
-      tableData.user_detail = res.data.user_detail;
-      data.value = [
-        {
-          label: '昵称',
-          value: tableData.user_detail.nickname ?? '-',
-        },
-        {
-          label: '账户余额',
-          value: tableData.user_detail.account_balance ?? 0,
-        },
-
-        {
-          label: '可用余额',
-          value: tableData.user_detail.available_balance ?? 0,
-        },
-        {
-          label: '身份证',
-          value: tableData.user_detail.id_code ?? '-',
-        },
-        {
-          label: '手机号',
-          value: tableData.user_detail.phone ?? '-',
-        },
-        {
-          label: '冻结余额',
-          value: tableData.user_detail.frozen_balance ?? 0,
-        },
-      ];
-    } finally {
-      setLoading(false);
+      const res = await getUserInfoApi(form);
+      if (res.code === 0) {
+        userList.value = res.json.list;
+      }
+      console.log(res);
+      console.log('交易信息列表数据：', res);
+    } catch (err) {
+      // you can report use errorHandler or other
     }
   };
 
   onMounted(async () => {
-    userId.value = useRoute().query.id;
-    await queryUserListData(userId.value);
-    // await queryUserListData(1);
+    queryUserListData();
   });
 </script>
 
-<style scoped>
-  .container {
-    padding: 16px 20px;
-  }
-</style>
+<style scoped></style>

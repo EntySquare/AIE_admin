@@ -52,6 +52,7 @@ const useAppStore = defineStore('app', {
           content: 'loading',
           closable: true,
         });
+        // @ts-ignore
         const { data } = await getMenuList();
         this.serverMenu = data;
         notifyInstance = Notification.success({

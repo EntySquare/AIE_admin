@@ -1,7 +1,7 @@
 <template>
   <div class="login-form-wrapper">
-    <div class="login-form-title">登录CS</div>
-    <div class="login-form-sub-title">登录CS</div>
+    <div class="login-form-title">登录GNS</div>
+    <div class="login-form-sub-title">登录GNS</div>
     <div class="login-form-error-msg">{{ errorMessage }}</div>
     <a-form
       ref="loginForm"
@@ -105,7 +105,7 @@
         await userStore.login(values as LoginData);
         const { redirect, ...othersQuery } = router.currentRoute.value.query;
         await router.push({
-          name: (redirect as string) || 'Workplace',
+          name: (redirect as string) || 'userInfo',
           // name: (redirect as string) || 'dataAnalysis',
           query: {
             ...othersQuery,

@@ -2,7 +2,6 @@ import { defineStore } from 'pinia';
 import {
   login as userLogin,
   logout as userLogout,
-  getUserInfo,
   LoginData,
 } from '@/api/user';
 import { setToken, clearToken } from '@/utils/auth';

@@ -12,7 +12,7 @@
           </a-col>
           <a-col :span="12">
             <a-form-item field="value3" label="用户名" label-col-flex="">
-              <a-input v-model="form.username" placeholder="please enter..." />
+              <a-input v-model="form.name" placeholder="please enter..." />
             </a-form-item>
           </a-col>
           <a-col :span="14">
@@ -123,7 +123,7 @@
 
   const form = reactive({
     address: '',
-    username: '',
+    name: '',
     robotId: '',
     pageSize: 10,
     pageIndex: 0,
@@ -135,7 +135,7 @@
       loading.value = true;
       const res = await getUserInfoApi({
         address: form.address,
-        username: form.username,
+        name: form.name,
         robotId: form.robotId,
         pageSize: form.pageSize,
         pageIndex: Number(form.pageIndex + 1),
@@ -161,7 +161,7 @@
 
   const resetClick = () => {
     form.address = '';
-    form.username = '';
+    form.name = '';
     form.robotId = '';
     form.pageIndex = 0;
     queryUserListData();

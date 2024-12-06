@@ -114,13 +114,13 @@
         <a-form :model="followUserForm" auto-label-width>
           <a-form-item field="tweets_user_name" label="需要关注的用户">
             <a-input
-              v-model="followUserForm.tweets_user_name"
+              v-model.trim="followUserForm.tweets_user_name"
               placeholder="请输入需要关注的用户"
             />
           </a-form-item>
           <a-form-item field="count" label="输入需要推送的推特数">
             <a-input-number
-              v-model="followUserForm.count"
+              v-model.trim="followUserForm.count"
               placeholder="请输入数量"
               allow-clear
             />
@@ -135,7 +135,7 @@
         <a-form :model="forwardTweetForm" auto-label-width>
           <a-form-item field="tweets_user_name" label="需要转发的推文链接">
             <a-input
-              v-model="forwardTweetForm.twitter_url"
+              v-model.trim="forwardTweetForm.twitter_url"
               placeholder="请输入需要转发的推文链接"
             />
           </a-form-item>
@@ -148,7 +148,7 @@
           </a-form-item>
           <a-form-item field="count" label="输入转发推特数">
             <a-input-number
-              v-model="forwardTweetForm.count"
+              v-model.trim="forwardTweetForm.count"
               placeholder="请输入数量"
               allow-clear
             />
@@ -163,7 +163,7 @@
         <a-form :model="commentForm" auto-label-width>
           <a-form-item field="tweets_user_name" label="需要评论的推文url">
             <a-input
-              v-model="commentForm.twitter_url"
+              v-model.trim="commentForm.twitter_url"
               placeholder="请输入需要评论的推文url"
             />
           </a-form-item>
@@ -176,7 +176,7 @@
           </a-form-item>
           <a-form-item field="count" label="输入需要推送的推特数">
             <a-input-number
-              v-model="commentForm.count"
+              v-model.trim="commentForm.count"
               placeholder="请输入数量"
               allow-clear
             />
@@ -198,14 +198,14 @@
           </a-form-item>
           <a-form-item field="img_url" label="发布推文图片">
             <a-input
-              v-model="postTweetForm.img_url"
+              v-model.trim="postTweetForm.img_url"
               placeholder="请输入推文图片url"
               allow-clear
             />
           </a-form-item>
           <a-form-item field="count" label="输入需要推送的推特数">
             <a-input-number
-              v-model="postTweetForm.count"
+              v-model.trim="postTweetForm.count"
               placeholder="请输入数量"
               allow-clear
             />
@@ -217,191 +217,191 @@
 </template>
 
 <script setup lang="ts">
-  import { onMounted, ref, reactive } from 'vue';
-  import {
-    commentTweetApi,
-    followUserApi,
-    forwardTweetApi,
-    getPhoneControlApi,
-    getTwitterUserListApi,
-    postTweetApi,
-  } from '@/api/phone';
+import { onMounted, ref, reactive } from 'vue';
+import {
+  commentTweetApi,
+  followUserApi,
+  forwardTweetApi,
+  getPhoneControlApi,
+  getTwitterUserListApi,
+  postTweetApi,
+} from '@/api/phone';
 
-  const tableList = ref([]);
-  const followUserVisible = ref(false); // 关注用户弹窗
-  const commentVisible = ref(false); // 评论弹窗
-  const postTweetVisible = ref(false); // 发布弹窗
-  const forwardTweetVisible = ref(false); // 转发弹窗
-  // 关注用户表单
-  const followUserForm = reactive({
-    tweets_user_name: '',
-    count: 0,
-    tweets_user_name_list: [],
-  });
-  // 评论表单
-  const commentForm = reactive({
-    count: 0,
-    content: '',
-    twitter_url: '',
-    tweets_user_name_list: [],
-  });
-  // 发布表单
-  const postTweetForm = reactive({
-    content: '',
-    img_url: '',
-    count: 0,
-    tweets_user_name_list: [],
-  });
-  // 转发表单
-  const forwardTweetForm = reactive({
-    twitter_url: '',
-    count: 0,
-    tweets_user_name_list: [],
-    content: '',
-  });
+const tableList = ref([]);
+const followUserVisible = ref(false); // 关注用户弹窗
+const commentVisible = ref(false); // 评论弹窗
+const postTweetVisible = ref(false); // 发布弹窗
+const forwardTweetVisible = ref(false); // 转发弹窗
+// 关注用户表单
+const followUserForm = reactive({
+  tweets_user_name: '',
+  count: 0,
+  tweets_user_name_list: [],
+});
+// 评论表单
+const commentForm = reactive({
+  count: 0,
+  content: '',
+  twitter_url: '',
+  tweets_user_name_list: [],
+});
+// 发布表单
+const postTweetForm = reactive({
+  content: '',
+  img_url: '',
+  count: 0,
+  tweets_user_name_list: [],
+});
+// 转发表单
+const forwardTweetForm = reactive({
+  twitter_url: '',
+  count: 0,
+  tweets_user_name_list: [],
+  content: '',
+});
 
-  // 时间格式化
-  const formatDate = (timestamp: any) => {
-    const date = new Date(timestamp * 1000);
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    const hours = String(date.getHours()).padStart(2, '0');
-    const minutes = String(date.getMinutes()).padStart(2, '0');
-    const seconds = String(date.getSeconds()).padStart(2, '0');
+// 时间格式化
+const formatDate = (timestamp: any) => {
+  const date = new Date(timestamp * 1000);
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  const hours = String(date.getHours()).padStart(2, '0');
+  const minutes = String(date.getMinutes()).padStart(2, '0');
+  const seconds = String(date.getSeconds()).padStart(2, '0');
 
-    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
-  };
-  // 状态样式
-  const statusStyle = (status: any) => {
-    switch (status) {
-      case 0:
-        return 'status-gray'; // 初始化
-      case 1:
-        return 'status-blue'; // 已下达
-      case 2:
-        return 'status-green'; // 完成
-      case -1:
-        return 'status-red'; // 执行失败
-      default:
-        return 'status-black'; // 未知状态
+  return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+};
+// 状态样式
+const statusStyle = (status: any) => {
+  switch (status) {
+    case 0:
+      return 'status-gray'; // 初始化
+    case 1:
+      return 'status-blue'; // 已下达
+    case 2:
+      return 'status-green'; // 完成
+    case -1:
+      return 'status-red'; // 执行失败
+    default:
+      return 'status-black'; // 未知状态
+  }
+};
+
+// 查询列表
+const queryListData = async () => {
+  try {
+    const res = await getPhoneControlApi();
+    if (res.code === 0) {
+      tableList.value = res.data.device_list;
     }
-  };
+    console.log('手机控制列表数据：', res);
+  } catch (err) {
+    // you can report use errorHandler or other
+  }
+};
 
-  // 查询列表
-  const queryListData = async () => {
-    try {
-      const res = await getPhoneControlApi();
-      if (res.code === 0) {
-        tableList.value = res.data.device_list;
-      }
-      console.log('手机控制列表数据：', res);
-    } catch (err) {
-      // you can report use errorHandler or other
+// 查询当前推特账号列表
+const queryTweetList = async () => {
+  try {
+    const res = await getTwitterUserListApi();
+    // if (res.code === 0) {
+    //   userList.value = res.data.list;
+    // }
+    console.log('Tweet列表数据：', res);
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+// 关注用户
+const followUser = async () => {
+  try {
+    const res = await followUserApi(followUserForm);
+    if (res.code === 0) {
+      followUserVisible.value = false;
+      followUserForm.tweets_user_name = '';
+      followUserForm.count = '';
     }
-  };
-
-  // 查询当前推特账号列表
-  const queryTweetList = async () => {
-    try {
-      const res = await getTwitterUserListApi();
-      // if (res.code === 0) {
-      //   userList.value = res.data.list;
-      // }
-      console.log('Tweet列表数据：', res);
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  // 关注用户
-  const followUser = async () => {
-    try {
-      const res = await followUserApi(followUserForm);
-      if (res.code === 0) {
-        followUserVisible.value = false;
-        followUserForm.tweets_user_name = '';
-        followUserForm.count = '';
-      }
-      queryListData();
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  // 转发推文
-  const forwardTweet = async () => {
-    try {
-      const res = await forwardTweetApi(forwardTweetForm);
-      if (res.code === 0) {
-        forwardTweetVisible.value = false;
-        forwardTweetForm.count = '';
-        forwardTweetForm.content = '';
-        forwardTweetForm.twitter_url = '';
-      }
-      queryListData();
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  // 评论推文
-  const commentTweet = async () => {
-    try {
-      const res = await commentTweetApi(commentForm);
-      if (res.code === 0) {
-        commentVisible.value = false;
-        commentForm.content = '';
-        commentForm.count = '';
-        commentForm.twitter_url = '';
-      }
-      queryListData();
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  // 发布推文
-  const postTweet = async () => {
-    try {
-      const res = await postTweetApi(postTweetForm);
-      if (res.code === 0) {
-        postTweetVisible.value = false;
-        postTweetForm.content = '';
-        postTweetForm.img_url = '';
-        postTweetForm.count = '';
-      }
-      queryListData();
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  onMounted(async () => {
     queryListData();
-    // queryTweetList();
-  });
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+// 转发推文
+const forwardTweet = async () => {
+  try {
+    const res = await forwardTweetApi(forwardTweetForm);
+    if (res.code === 0) {
+      forwardTweetVisible.value = false;
+      forwardTweetForm.count = '';
+      forwardTweetForm.content = '';
+      forwardTweetForm.twitter_url = '';
+    }
+    queryListData();
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+// 评论推文
+const commentTweet = async () => {
+  try {
+    const res = await commentTweetApi(commentForm);
+    if (res.code === 0) {
+      commentVisible.value = false;
+      commentForm.content = '';
+      commentForm.count = '';
+      commentForm.twitter_url = '';
+    }
+    queryListData();
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+// 发布推文
+const postTweet = async () => {
+  try {
+    const res = await postTweetApi(postTweetForm);
+    if (res.code === 0) {
+      postTweetVisible.value = false;
+      postTweetForm.content = '';
+      postTweetForm.img_url = '';
+      postTweetForm.count = '';
+    }
+    queryListData();
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+onMounted(async () => {
+  queryListData();
+  // queryTweetList();
+});
 </script>
 
 <style scoped>
-  .actions {
-    margin-bottom: 16px;
-    display: flex;
-    gap: 10px;
-  }
-  .status-gray {
-    color: gray;
-  }
-  .status-blue {
-    color: blue;
-  }
-  .status-green {
-    color: green;
-  }
-  .status-red {
-    color: red;
-  }
-  .status-black {
-    color: black;
-  }
+.actions {
+  margin-bottom: 16px;
+  display: flex;
+  gap: 10px;
+}
+.status-gray {
+  color: gray;
+}
+.status-blue {
+  color: blue;
+}
+.status-green {
+  color: green;
+}
+.status-red {
+  color: red;
+}
+.status-black {
+  color: black;
+}
 </style>

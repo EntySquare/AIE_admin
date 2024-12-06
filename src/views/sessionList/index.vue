@@ -14,7 +14,7 @@
                 label-col-flex=""
               >
                 <a-input
-                  v-model="form.robotId"
+                  v-model.trim="form.robotId"
                   placeholder="please enter..."
                   allow-clear
                 />
@@ -23,7 +23,7 @@
             <a-col :span="12">
               <a-form-item field="value3" label="用户ID" label-col-flex="">
                 <a-input
-                  v-model="form.userId"
+                  v-model.trim="form.userId"
                   placeholder="please enter..."
                   allow-clear
                 />

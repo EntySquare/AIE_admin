@@ -7,9 +7,9 @@
         <a-form :model="form" style="padding-right: 120px">
           <a-row :gutter="16">
             <a-col :span="12">
-              <a-form-item field="value3" label="用户id" label-col-flex="">
+              <a-form-item field="value3" label="机器人id" label-col-flex="">
                 <a-input
-                  v-model="form.id"
+                  v-model.trim="form.id"
                   placeholder="please enter..."
                   allow-clear
                 />
@@ -18,7 +18,7 @@
             <a-col :span="12">
               <a-form-item field="value3" label="字名" label-col-flex="">
                 <a-input
-                  v-model="form.name"
+                  v-model.trim="form.name"
                   placeholder="please enter..."
                   allow-clear
                 />
@@ -27,7 +27,7 @@
             <a-col :span="12">
               <a-form-item field="value3" label="部落" label-col-flex="">
                 <a-input
-                  v-model="form.tribeName"
+                  v-model.trim="form.tribeName"
                   placeholder="please enter..."
                   allow-clear
                 />
@@ -48,7 +48,10 @@
           >
             <a-table :data="List" style="margin-top: 20px" :pagination="false">
               <template #columns>
-                <a-table-column title="用户id" data-index="id"></a-table-column>
+                <a-table-column
+                  title="机器人id"
+                  data-index="id"
+                ></a-table-column>
                 <a-table-column
                   title="创建者钱包地址"
                   data-index="created_address"
@@ -88,7 +91,7 @@
                 <a-table-column title="状态" data-index="status">
                   <template #cell="{ record }">
                     {{
-                      record.isRecommend === 1 ? '推荐到首页' : '屏蔽'
+                      record.isRecommend === 1 ? '推荐到首页' : '取消推荐'
                     }}</template
                   ></a-table-column
                 >
@@ -100,7 +103,7 @@
                         >推荐到首页</a-button
                       >
                       <a-button type="primary" @click="Operation(0, record)"
-                        >屏蔽</a-button
+                        >取消推荐</a-button
                       >
                     </a-space>
                   </template>
@@ -256,7 +259,7 @@ const Operation = (type: number, record: any) => {
     text.value = '确认推荐到首页？';
   } else {
     // 屏蔽
-    text.value = '确认屏蔽？（只能在部落看到，不推荐，搜索也搜索不到）';
+    text.value = '确认取消推荐';
   }
 };
 

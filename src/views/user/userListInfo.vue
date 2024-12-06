@@ -7,27 +7,40 @@
         <a-row :gutter="16">
           <a-col :span="12">
             <a-form-item field="value3" label="用户地址" label-col-flex="">
-              <a-input v-model="form.address" placeholder="please enter..." />
+              <a-input
+                v-model.trim="form.address"
+                placeholder="please enter..."
+                allow-clear
+              />
             </a-form-item>
           </a-col>
           <a-col :span="12">
             <a-form-item field="value3" label="用户名" label-col-flex="">
-              <a-input v-model="form.name" placeholder="please enter..." />
+              <a-input
+                v-model.trim="form.name"
+                placeholder="please enter..."
+                allow-clear
+              />
             </a-form-item>
           </a-col>
           <a-col :span="14">
             <a-form-item field="value2" label="相关机器人ID" label-col-flex="">
-              <a-input v-model="form.robotId" placeholder="please enter..." />
+              <a-input
+                v-model.trim="form.robotId"
+                placeholder="please enter..."
+                allow-clear
+              />
             </a-form-item>
           </a-col>
 
           <a-col :span="8">
             <a-space>
-              <a-button type="primary" @click="queryUserListData()">查询</a-button>
+              <a-button type="primary" @click="queryUserListData()"
+                >查询</a-button
+              >
 
               <a-button type="primary" @click="resetClick()">重置筛选</a-button>
             </a-space>
-
           </a-col>
         </a-row>
       </a-form>
@@ -114,62 +127,62 @@
 </template>
 
 <script setup lang="ts">
-  import { onMounted, reactive, ref } from 'vue';
-  import { getUserInfoApi } from '@/api/user';
+import { onMounted, reactive, ref } from 'vue';
+import { getUserInfoApi } from '@/api/user';
 
-  const userList = ref([]);
-  const total = ref(0);
-  const loading = ref(false);
+const userList = ref([]);
+const total = ref(0);
+const loading = ref(false);
 
-  const form = reactive({
-    address: '',
-    name: '',
-    robotId: '',
-    pageSize: 10,
-    pageIndex: 0,
-  });
+const form = reactive({
+  address: '',
+  name: '',
+  robotId: '',
+  pageSize: 10,
+  pageIndex: 0,
+});
 
-  // 查询用户列表
-  const queryUserListData = async () => {
-    try {
-      loading.value = true;
-      const res = await getUserInfoApi({
-        address: form.address,
-        name: form.name,
-        robotId: form.robotId,
-        pageSize: form.pageSize,
-        pageIndex: Number(form.pageIndex + 1),
-      });
-      if (res.code === 0) {
-        userList.value = res.data.users;
-        total.value = res.data.total;
-      }
-      console.log('查询用户列表数据：', res);
-    } catch (err) {
-      // you can report use errorHandler or other
-    } finally {
-      loading.value = false;
+// 查询用户列表
+const queryUserListData = async () => {
+  try {
+    loading.value = true;
+    const res = await getUserInfoApi({
+      address: form.address,
+      name: form.name,
+      robotId: form.robotId,
+      pageSize: form.pageSize,
+      pageIndex: Number(form.pageIndex + 1),
+    });
+    if (res.code === 0) {
+      userList.value = res.data.users;
+      total.value = res.data.total;
     }
-  };
+    console.log('查询用户列表数据：', res);
+  } catch (err) {
+    // you can report use errorHandler or other
+  } finally {
+    loading.value = false;
+  }
+};
 
-  const handlePageChange = (current: number) => {
-    if (current - 1 !== form.pageIndex) {
-      form.pageIndex = current - 1;
-      queryUserListData();
-    }
-  };
-
-  const resetClick = () => {
-    form.address = '';
-    form.name = '';
-    form.robotId = '';
-    form.pageIndex = 0;
+const handlePageChange = (current: number) => {
+  if (current - 1 !== form.pageIndex) {
+    form.pageIndex = current - 1;
     queryUserListData();
   }
+};
 
-  onMounted(async () => {
-    queryUserListData();
-  });
+const resetClick = () => {
+  form.address = '';
+  form.name = '';
+  form.robotId = '';
+  form.pageIndex = 0;
+  queryUserListData();
+};
+
+onMounted(async () => {
+  queryUserListData();
+});
 </script>
 
 <style scoped></style>

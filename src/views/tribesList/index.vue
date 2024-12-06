@@ -14,7 +14,7 @@
                 label-col-flex=""
               >
                 <a-input
-                  v-model="form.id"
+                  v-model.trim="form.id"
                   placeholder="please enter..."
                   allow-clear
                 />
@@ -23,7 +23,7 @@
             <a-col :span="12">
               <a-form-item field="value3" label="部落名称" label-col-flex="">
                 <a-input
-                  v-model="form.name"
+                  v-model.trim="form.name"
                   placeholder="please enter..."
                   allow-clear
                 />
@@ -36,7 +36,7 @@
                 label-col-flex=""
               >
                 <a-input
-                  v-model="form.userId"
+                  v-model.trim="form.userId"
                   placeholder="please enter..."
                   allow-clear
                 />
@@ -94,7 +94,7 @@
                 <a-table-column title="状态" data-index="isRecommend">
                   <template #cell="{ record }">
                     {{
-                      record.isRecommend === 1 ? '推荐到首页' : '屏蔽'
+                      record.isRecommend === 1 ? '推荐到首页' : '取消推荐'
                     }}</template
                   ></a-table-column
                 >
@@ -106,7 +106,7 @@
                         >推荐到首页</a-button
                       >
                       <a-button type="primary" @click="Operation(0, record)"
-                        >屏蔽</a-button
+                        >取消推荐</a-button
                       >
                     </a-space>
                   </template>
@@ -247,8 +247,8 @@ const handleEdit = async () => {
     // 推荐到首页
     text.value = '确认推荐到首页？';
   } else {
-    // 屏蔽
-    text.value = '确认屏蔽？（只能在部落看到，不推荐，搜索也搜索不到）';
+    // 取消推荐
+    text.value = '确认取消推荐？';
   }
   const res = await updateTribe(data);
   if (res.code === 0) {

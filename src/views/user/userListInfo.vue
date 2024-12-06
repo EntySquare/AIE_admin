@@ -22,7 +22,7 @@
           </a-col>
 
           <a-col :span="8">
-            <a-button type="primary">重置筛选</a-button>
+            <a-button type="primary" @click="resetClick()">重置筛选</a-button>
           </a-col>
         </a-row>
       </a-form>
@@ -31,7 +31,11 @@
         <a-grid-item
           :span="{ xs: 24, sm: 24, md: 24, lg: 24, xl: 24, xxl: 24 }"
         >
-          <a-table :data="userList" style="margin-top: 20px" >
+          <a-table
+            :data="userList"
+            style="margin-top: 20px"
+            :pagination="false"
+          >
             <template #columns>
               <a-table-column title="用户ID" data-index="id"></a-table-column>
 
@@ -85,6 +89,19 @@
               <!--              </a-table-column>-->
             </template>
           </a-table>
+          <div style="display: flex; justify-content: flex-end">
+            <a-pagination
+              :total="total"
+              :current="form.pageIndex + 1"
+              :page-size="10"
+              show-total
+              @change="
+                (current) => {
+                  handlePageChange(current);
+                }
+              "
+            ></a-pagination>
+          </div>
         </a-grid-item>
       </a-grid>
     </a-card>
@@ -96,27 +113,54 @@
   import { getUserInfoApi } from '@/api/user';
 
   const userList = ref([]);
+  const total = ref(0);
 
   const form = reactive({
     address: '',
     username: '',
     robotId: '',
     pageSize: 10,
-    page: 1,
+    pageIndex: 0,
   });
 
   // 查询用户列表
   const queryUserListData = async () => {
+    console.log(form.pageSize, form.pageIndex)
     try {
-      const res = await getUserInfoApi(form);
+      const res = await getUserInfoApi({
+        address: form.address,
+        username: form.username,
+        robotId: form.robotId,
+        pageSize: form.pageSize,
+        pageIndex: Number(form.pageIndex + 1),
+      });
       if (res.code === 0) {
         userList.value = res.data.users;
+        total.value = res.data.total;
       }
       console.log('查询用户列表数据：', res);
     } catch (err) {
       // you can report use errorHandler or other
     }
   };
+
+  const handlePageChange = (current: number) => {
+    if (current - 1 !== form.pageIndex) {
+      form.pageIndex = current - 1;
+      console.log(form.pageIndex, 'form.pageIndex')
+      console.log(current, 'current')
+
+      queryUserListData();
+    }
+  };
+
+  const resetClick = () => {
+    form.address = '';
+    form.username = '';
+    form.robotId = '';
+    form.pageIndex = 1;
+    queryUserListData();
+  }
 
   onMounted(async () => {
     queryUserListData();

@@ -107,7 +107,7 @@
               <a-pagination
                 :total="totalUserInfos"
                 :current="form.pageIndex + 1"
-                :page-size="20"
+                :page-size="10"
                 show-total
                 @change="
                   (current) => {
@@ -172,108 +172,114 @@
 </template>
 
 <script setup lang="ts">
-import { getRobotList, updateRobot } from '@/api/robots';
-import { Message } from '@arco-design/web-vue';
-import { onMounted, ref } from 'vue';
+  import { getRobotList, updateRobot } from '@/api/robots';
+  import { Message } from '@arco-design/web-vue';
+  import { onMounted, ref } from 'vue';
 
-const List = ref([]);
-const loading = ref(false);
-const form = ref({
-  pageIndex: 0,
-  pageSize: 10,
-  id: '',
-  name: '',
-  tribeName: '',
-});
-
-const updateRobotVlaue = ref();
-const totalUserInfos = ref(0);
-const getlList = async () => {
-  try {
-    loading.value = true;
-    const res = await getRobotList({
-      pageIndex: form.value.pageIndex + 1,
-      pageSize: form.value.pageSize,
-      name: form.value.name,
-      tribeName: form.value.tribeName,
-      id: form.value.id,
-    });
-    if (res.code === 0) {
-      List.value = res.data.data;
-      totalUserInfos.value = res.data.total;
-    }
-  } catch (err) {
-    // 1
-  } finally {
-    loading.value = false;
-  }
-};
-
-const handlePageChange = (current: number) => {
-  if (current - 1 !== form.value.pageIndex) {
-    form.value.pageIndex = current;
-    getlList();
-  }
-};
-const resetForm = () => {
-  form.value = { pageIndex: 0, pageSize: 10, id: '', name: '', tribeName: '' };
-  getlList();
-};
-const visible = ref(false);
-const visible2 = ref(false);
-const status = ref(1);
-const text = ref('');
-const handleEdit = async () => {
-  const dataList = ref({
-    avatarUrl: updateRobotVlaue.value.avatar,
-    characterIntroduction: updateRobotVlaue.value.characterIntroduction,
-    configurationTips: updateRobotVlaue.value.configurationTips,
-    id: Number(updateRobotVlaue.value.id),
-    isRecommend: status.value,
-    name: updateRobotVlaue.value.name,
-    sex: updateRobotVlaue.value.sex,
-    tag: updateRobotVlaue.value.tag,
+  const List = ref([]);
+  const loading = ref(false);
+  const form = ref({
+    pageIndex: 0,
+    pageSize: 10,
+    id: '',
+    name: '',
+    tribeName: '',
   });
 
-  const res = await updateRobot(dataList.value);
-  if (res.code === 0) {
-    console.log(res);
-    Message.success('操作成功');
-    visible.value = false;
+  const updateRobotVlaue = ref();
+  const totalUserInfos = ref(0);
+  const getlList = async () => {
+    try {
+      loading.value = true;
+      const res = await getRobotList({
+        pageIndex: form.value.pageIndex + 1,
+        pageSize: form.value.pageSize,
+        name: form.value.name,
+        tribeName: form.value.tribeName,
+        id: form.value.id,
+      });
+      if (res.code === 0) {
+        List.value = res.data.data;
+        totalUserInfos.value = res.data.total;
+      }
+    } catch (err) {
+      // 1
+    } finally {
+      loading.value = false;
+    }
+  };
+
+  const handlePageChange = (current: number) => {
+    if (current - 1 !== form.value.pageIndex) {
+      form.value.pageIndex = current - 1;
+      getlList();
+    }
+  };
+  const resetForm = () => {
+    form.value = {
+      pageIndex: 0,
+      pageSize: 10,
+      id: '',
+      name: '',
+      tribeName: '',
+    };
     getlList();
-  }
-};
-const Operation = (type: number, record: any) => {
-  visible.value = true;
-  status.value = type;
-  updateRobotVlaue.value = record;
-  if (type === 1) {
-    // 推荐到首页
-    text.value = '确认推荐到首页？';
-  } else {
-    // 屏蔽
-    text.value = '确认屏蔽？（只能在部落看到，不推荐，搜索也搜索不到）';
-  }
-};
+  };
+  const visible = ref(false);
+  const visible2 = ref(false);
+  const status = ref(1);
+  const text = ref('');
+  const handleEdit = async () => {
+    const dataList = ref({
+      avatarUrl: updateRobotVlaue.value.avatar,
+      characterIntroduction: updateRobotVlaue.value.characterIntroduction,
+      configurationTips: updateRobotVlaue.value.configurationTips,
+      id: Number(updateRobotVlaue.value.id),
+      isRecommend: status.value,
+      name: updateRobotVlaue.value.name,
+      sex: updateRobotVlaue.value.sex,
+      tag: updateRobotVlaue.value.tag,
+    });
 
-const visible1 = ref(false);
-const nameList = ref<any>({});
-const handleEdit1 = async (record: any) => {
-  nameList.value = record;
-  console.log('11111');
+    const res = await updateRobot(dataList.value);
+    if (res.code === 0) {
+      console.log(res);
+      Message.success('操作成功');
+      visible.value = false;
+      getlList();
+    }
+  };
+  const Operation = (type: number, record: any) => {
+    visible.value = true;
+    status.value = type;
+    updateRobotVlaue.value = record;
+    if (type === 1) {
+      // 推荐到首页
+      text.value = '确认推荐到首页？';
+    } else {
+      // 屏蔽
+      text.value = '确认屏蔽？（只能在部落看到，不推荐，搜索也搜索不到）';
+    }
+  };
 
-  if (nameList.value) {
-    visible1.value = true;
-    console.log('22222222');
-  }
-};
+  const visible1 = ref(false);
+  const nameList = ref<any>({});
+  const handleEdit1 = async (record: any) => {
+    nameList.value = record;
+    console.log('11111');
 
-const FeedingRecord = () => {
-  visible2.value = true;
-};
-onMounted(async () => {
-  getlList();
-});
+    if (nameList.value) {
+      visible1.value = true;
+      console.log('22222222');
+    }
+  };
+
+  const FeedingRecord = () => {
+    visible2.value = true;
+  };
+  onMounted(async () => {
+    getlList();
+  });
 </script>
 
 <style scoped></style>

@@ -77,7 +77,7 @@
               <a-pagination
                 :total="totalUserInfos"
                 :current="form.pageIndex + 1"
-                :page-size="20"
+                :page-size="10"
                 show-total
                 @change="
                   (current) => {
@@ -107,6 +107,7 @@ const form = ref({
 });
 const totalUserInfos = ref(0);
 const getlList = async () => {
+  console.log(form.value.pageIndex)
   try {
     loading.value = true;
     const res = await getChatList({
@@ -128,7 +129,7 @@ const getlList = async () => {
 
 const handlePageChange = (current: number) => {
   if (current - 1 !== form.value.pageIndex) {
-    form.value.pageIndex = current;
+    form.value.pageIndex = current - 1;
     getlList();
   }
 };

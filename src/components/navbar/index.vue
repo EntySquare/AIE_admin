@@ -207,7 +207,7 @@
     refBtn.value.dispatchEvent(event);
   };
   const handleLogout = () => {
-    // logout();
+    logout();
   };
   const setDropDownVisible = () => {
     const event = new MouseEvent('click', {

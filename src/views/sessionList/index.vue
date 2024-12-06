@@ -128,12 +128,12 @@ const getlList = async () => {
 
 const handlePageChange = (current: number) => {
   if (current - 1 !== form.value.pageIndex) {
-    form.value.pageIndex = current;
+    form.value.pageIndex = current - 1;
     getlList();
   }
 };
 const resetForm = () => {
-  form.value = { pageIndex: 1, pageSize: 10, robotId: '', userId: '' };
+  form.value = { pageIndex: 0, pageSize: 10, robotId: '', userId: '' };
   getlList();
 };
 

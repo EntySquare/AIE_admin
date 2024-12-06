@@ -4,79 +4,52 @@
       <a-card>
         <a-typography-title :heading="6"> 统计数据 </a-typography-title>
         <a-divider />
-
-        <a-grid :cols="24" :col-gap="16" :row-gap="16" style="margin-top: 16px">
-          <a-grid-item
-            :span="{ xs: 24, sm: 24, md: 24, lg: 24, xl: 24, xxl: 24 }"
-          >
-            <a-table
-              :data-source="List"
-              style="margin-top: 20px"
-              :pagination="false"
-            >
-              <template #columns>
-                <a-table-column
-                  title="授权用户数量"
-                  data-index="user_count"
-                ></a-table-column>
-                <a-table-column title="机器人数量" data-index="robot_count">
-                </a-table-column>
-                <a-table-column
-                  title="部落数量"
-                  data-index="tribe_count"
-                ></a-table-column>
-                <a-table-column
-                  title="总聊天收益"
-                  data-index="chat_reward_count"
-                ></a-table-column>
-                <a-table-column
-                  title="聊天数量"
-                  data-index="chat_count"
-                ></a-table-column>
-
-                <a-table-column
-                  title="人机聊天人数"
-                  data-index="robot_chat_count"
-                >
-                </a-table-column>
-
-                <a-table-column title="操作">
-                  <!-- <template #cell="{ record }">
-                    <a-space>
-                      <a-button type="primary" @click="Operation(1, record)"
-                        >推荐到首页</a-button
-                      >
-                      <a-button type="primary" @click="Operation(0, record)"
-                        >屏蔽</a-button
-                      >
-                    </a-space>
-                  </template> -->
-                </a-table-column>
-              </template>
-            </a-table>
-            <!-- <div style="display: flex; justify-content: flex-end">
-              <a-pagination
-                :total="totalUserInfos"
-                :current="form.pageIndex + 1"
-                :page-size="20"
-                show-total
-                @change="
-                  (current) => {
-                    handlePageChange(current);
-                  }
-                "
-              ></a-pagination>
-            </div> -->
-          </a-grid-item>
-        </a-grid>
-        <a-modal
-          :visible="visible"
-          :mask-closable="false"
-          @ok="handleEdit"
-          @cancel="visible = false"
+        <div v-if="dataLoaded">
+          <a-space>
+            <a-typography-text>授权用户数量:</a-typography-text>
+            <a-typography-text>{{ List.user_count }}</a-typography-text>
+          </a-space>
+          <a-divider />
+          <a-space>
+            <a-typography-text>机器人数量:</a-typography-text>
+            <a-typography-text>{{ List.robot_count }}</a-typography-text>
+          </a-space>
+          <a-divider />
+          <a-space>
+            <a-typography-text>部落数量:</a-typography-text>
+            <a-typography-text>{{ List.tribe_count }}</a-typography-text>
+          </a-space>
+          <a-divider />
+          <a-space>
+            <a-typography-text>总聊天收益:</a-typography-text>
+            <a-typography-text>{{ List.chat_reward_count }}</a-typography-text>
+          </a-space>
+          <a-divider />
+          <a-space>
+            <a-typography-text>聊天数量:</a-typography-text>
+            <a-typography-text>{{ List.chat_count }}</a-typography-text>
+          </a-space>
+          <a-divider />
+          <a-space>
+            <a-typography-text>人机聊天人数:</a-typography-text>
+            <a-typography-text>{{ List.robot_chat_count }}</a-typography-text>
+          </a-space></div
         >
-          {{ text }}
-        </a-modal>
+        <div
+          v-else
+          style="
+            width: 100%;
+            height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+          "
+        >
+          <a-typography-text style="font-size: 18px; text-align: center"
+            >暂无数据</a-typography-text
+          >
+        </div>
+
       </a-card>
     </a-spin>
   </div>
@@ -84,9 +57,9 @@
 
 <script setup lang="ts">
 import { statistics } from '@/api/statistics';
-import { onMounted, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 
-const List = ref();
+const List = ref<Record<string, any>>({});
 const loading = ref(false);
 
 const getlList = async () => {
@@ -103,6 +76,9 @@ const getlList = async () => {
     loading.value = false;
   }
 };
+const dataLoaded = computed(
+  () => List.value && Object.keys(List.value).length > 0
+);
 
 onMounted(async () => {
   getlList();

@@ -68,6 +68,13 @@
                   data-index="name"
                 ></a-table-column>
                 <a-table-column title="部落头像" data-index="avatar">
+                  <template #cell="{ record }">
+                    <img
+                      style="width: 30px; height: 30px; border-radius: 50%"
+                      :src="record.avatar"
+                      alt=""
+                    />
+                  </template>
                 </a-table-column>
                 <a-table-column
                   title="创建机器人id"
@@ -215,7 +222,7 @@ const getlList = async () => {
 
 const handlePageChange = (current: number) => {
   if (current - 1 !== form.value.pageIndex) {
-    form.value.pageIndex = current;
+    form.value.pageIndex = current - 1;
     getlList();
   }
 };

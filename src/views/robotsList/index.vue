@@ -57,6 +57,13 @@
                   data-index="created_address"
                 ></a-table-column>
                 <a-table-column title="头像" data-index="avatar">
+                  <template #cell="{ record }">
+                    <img
+                      style="width: 30px; height: 30px; border-radius: 50%"
+                      :src="record.avatar"
+                      alt=""
+                    />
+                  </template>
                 </a-table-column>
                 <a-table-column title="用户id" data-index="name">
                   <template #cell="{ record }">
@@ -211,7 +218,7 @@ const getlList = async () => {
 
 const handlePageChange = (current: number) => {
   if (current - 1 !== form.value.pageIndex) {
-    form.value.pageIndex = current;
+    form.value.pageIndex = current - 1;
     getlList();
   }
 };

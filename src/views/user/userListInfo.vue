@@ -125,7 +125,6 @@
 
   // 查询用户列表
   const queryUserListData = async () => {
-    console.log(form.pageSize, form.pageIndex)
     try {
       const res = await getUserInfoApi({
         address: form.address,
@@ -147,9 +146,6 @@
   const handlePageChange = (current: number) => {
     if (current - 1 !== form.pageIndex) {
       form.pageIndex = current - 1;
-      console.log(form.pageIndex, 'form.pageIndex')
-      console.log(current, 'current')
-
       queryUserListData();
     }
   };
@@ -158,7 +154,7 @@
     form.address = '';
     form.username = '';
     form.robotId = '';
-    form.pageIndex = 1;
+    form.pageIndex = 0;
     queryUserListData();
   }
 

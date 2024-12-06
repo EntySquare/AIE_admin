@@ -36,6 +36,6 @@ export function login(data: LoginData) {
 }
 
 // 查询用户信息
-export function getUserInfoApi(data: any) {
-  return axios.get<any>('/admin/getUserList', {data});
+export function getUserInfoApi(params: any) {
+  return axios.get<any>('/admin/getUserList', { params });
 }

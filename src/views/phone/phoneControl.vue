@@ -167,10 +167,10 @@
               placeholder="请输入需要评论的推文url"
             />
           </a-form-item>
-          <a-form-item field="content" label="内容">
+          <a-form-item field="content" label="推文内容">
             <a-textarea
               v-model="commentForm.content"
-              placeholder="请输入内容"
+              placeholder="请输入推文内容"
               allow-clear
             />
           </a-form-item>

@@ -22,7 +22,12 @@
           </a-col>
 
           <a-col :span="8">
-            <a-button type="primary" @click="resetClick()">重置筛选</a-button>
+            <a-space>
+              <a-button type="primary" @click="queryUserListData()">查询</a-button>
+
+              <a-button type="primary" @click="resetClick()">重置筛选</a-button>
+            </a-space>
+
           </a-col>
         </a-row>
       </a-form>

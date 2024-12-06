@@ -137,7 +137,7 @@
               <a-pagination
                 :total="totalUserInfos"
                 :current="form.pageIndex + 1"
-                :page-size="20"
+                :page-size="10"
                 show-total
                 @change="
                   (current) => {

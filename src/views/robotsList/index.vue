@@ -114,7 +114,7 @@
               <a-pagination
                 :total="totalUserInfos"
                 :current="form.pageIndex + 1"
-                :page-size="20"
+                :page-size="10"
                 show-total
                 @change="
                   (current) => {
@@ -179,42 +179,42 @@
 </template>
 
 <script setup lang="ts">
-import { getRobotList, updateRobot } from '@/api/robots';
-import { Message } from '@arco-design/web-vue';
-import { onMounted, ref } from 'vue';
+  import { getRobotList, updateRobot } from '@/api/robots';
+  import { Message } from '@arco-design/web-vue';
+  import { onMounted, ref } from 'vue';
 
-const List = ref([]);
-const loading = ref(false);
-const form = ref({
-  pageIndex: 0,
-  pageSize: 10,
-  id: '',
-  name: '',
-  tribeName: '',
-});
+  const List = ref([]);
+  const loading = ref(false);
+  const form = ref({
+    pageIndex: 0,
+    pageSize: 10,
+    id: '',
+    name: '',
+    tribeName: '',
+  });
 
-const updateRobotVlaue = ref();
-const totalUserInfos = ref(0);
-const getlList = async () => {
-  try {
-    loading.value = true;
-    const res = await getRobotList({
-      pageIndex: form.value.pageIndex + 1,
-      pageSize: form.value.pageSize,
-      name: form.value.name,
-      tribeName: form.value.tribeName,
-      id: form.value.id,
-    });
-    if (res.code === 0) {
-      List.value = res.data.data;
-      totalUserInfos.value = res.data.total;
+  const updateRobotVlaue = ref();
+  const totalUserInfos = ref(0);
+  const getlList = async () => {
+    try {
+      loading.value = true;
+      const res = await getRobotList({
+        pageIndex: form.value.pageIndex + 1,
+        pageSize: form.value.pageSize,
+        name: form.value.name,
+        tribeName: form.value.tribeName,
+        id: form.value.id,
+      });
+      if (res.code === 0) {
+        List.value = res.data.data;
+        totalUserInfos.value = res.data.total;
+      }
+    } catch (err) {
+      // 1
+    } finally {
+      loading.value = false;
     }
-  } catch (err) {
-    // 1
-  } finally {
-    loading.value = false;
-  }
-};
+  };
 
 const handlePageChange = (current: number) => {
   if (current - 1 !== form.value.pageIndex) {
@@ -242,45 +242,45 @@ const handleEdit = async () => {
     tag: updateRobotVlaue.value.tag,
   });
 
-  const res = await updateRobot(dataList.value);
-  if (res.code === 0) {
-    console.log(res);
-    Message.success('操作成功');
-    visible.value = false;
+    const res = await updateRobot(dataList.value);
+    if (res.code === 0) {
+      console.log(res);
+      Message.success('操作成功');
+      visible.value = false;
+      getlList();
+    }
+  };
+  const Operation = (type: number, record: any) => {
+    visible.value = true;
+    status.value = type;
+    updateRobotVlaue.value = record;
+    if (type === 1) {
+      // 推荐到首页
+      text.value = '确认推荐到首页？';
+    } else {
+      // 屏蔽
+      text.value = '确认屏蔽？（只能在部落看到，不推荐，搜索也搜索不到）';
+    }
+  };
+
+  const visible1 = ref(false);
+  const nameList = ref<any>({});
+  const handleEdit1 = async (record: any) => {
+    nameList.value = record;
+    console.log('11111');
+
+    if (nameList.value) {
+      visible1.value = true;
+      console.log('22222222');
+    }
+  };
+
+  const FeedingRecord = () => {
+    visible2.value = true;
+  };
+  onMounted(async () => {
     getlList();
-  }
-};
-const Operation = (type: number, record: any) => {
-  visible.value = true;
-  status.value = type;
-  updateRobotVlaue.value = record;
-  if (type === 1) {
-    // 推荐到首页
-    text.value = '确认推荐到首页？';
-  } else {
-    // 屏蔽
-    text.value = '确认屏蔽？（只能在部落看到，不推荐，搜索也搜索不到）';
-  }
-};
-
-const visible1 = ref(false);
-const nameList = ref<any>({});
-const handleEdit1 = async (record: any) => {
-  nameList.value = record;
-  console.log('11111');
-
-  if (nameList.value) {
-    visible1.value = true;
-    console.log('22222222');
-  }
-};
-
-const FeedingRecord = () => {
-  visible2.value = true;
-};
-onMounted(async () => {
-  getlList();
-});
+  });
 </script>
 
 <style scoped></style>

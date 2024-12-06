@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <a-card>
+    <a-card :loading="loading">
       <a-typography-title :heading="6"> 用户详情 </a-typography-title>
       <a-divider />
       <a-form :model="form" style="padding-right: 120px">
@@ -114,6 +114,7 @@
 
   const userList = ref([]);
   const total = ref(0);
+  const loading = ref(false);
 
   const form = reactive({
     address: '',
@@ -126,6 +127,7 @@
   // 查询用户列表
   const queryUserListData = async () => {
     try {
+      loading.value = true;
       const res = await getUserInfoApi({
         address: form.address,
         username: form.username,
@@ -140,6 +142,8 @@
       console.log('查询用户列表数据：', res);
     } catch (err) {
       // you can report use errorHandler or other
+    } finally {
+      loading.value = false;
     }
   };
 

@@ -23,9 +23,9 @@
       </div>
     </a-card>
 
-    <a-grid :cols="24" :col-gap="16" :row-gap="16" style="margin-top: 16px">
+    <a-grid :cols="24" :col-gap="16" :row-gap="16">
       <a-grid-item :span="{ xs: 24, sm: 24, md: 24, lg: 24, xl: 24, xxl: 24 }">
-        <a-table :data="tableList" style="margin-top: 20px">
+        <a-table :data="tableList">
           <template #columns>
             <a-table-column
               title="设备ID"

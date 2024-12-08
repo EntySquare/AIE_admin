@@ -8,3 +8,4 @@ export function getRobotList(params: any) {
 export function updateRobot(data: any) {
     return axios.post<any>('/admin/updateRobot', data);
 }
+

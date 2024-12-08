@@ -21,6 +21,8 @@
 
                 <a-table-column title="值" data-index="value"></a-table-column>
 
+                <a-table-column title="描述" data-index="comment"></a-table-column>
+
                 <a-table-column title="操作">
                   <template #cell="{ record }">
                     <div>
@@ -59,6 +61,13 @@
               allow-clear
             />
           </a-form-item>
+          <a-form-item field="comment" label="描述">
+            <a-input
+                v-model="updateForm.comment"
+                placeholder="请输入描述"
+                allow-clear
+            />
+          </a-form-item>
         </a-form>
       </div>
     </a-modal>
@@ -76,11 +85,13 @@
   const updateForm = reactive({
     value: '',
     id: 0,
+    comment: '',
   });
   // 打开修改弹窗
   const handleUpdate = (item: any) => {
     updateForm.value = item.value;
     updateForm.id = item.id;
+    updateForm.comment = item.comment;
     updateVisible.value = true;
   };
 

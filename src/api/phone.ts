@@ -13,33 +13,39 @@ export function getTwitterUserListApi() {
 export function followUserApi(data: any) {
   return axios.post<any>('/admin/followTwitterUser', data);
 }
+// 指定账号 关注用户
+export function followUserApi2(data: any) {
+  return axios.post<any>('/admin/followTwitterUserByAccount', data);
+}
 
 // 评论推文
 export function commentTweetApi(data: any) {
   return axios.post<any>('/admin/commentTwitter', data);
+}
+// 指定账号 评论推文
+export function commentTweetApi2(data: any) {
+  return axios.post<any>('/admin/commentTwitterByAccount', data);
 }
 
 // 转发+引用推文
 export function forwardTweetApi(data: any) {
   return axios.post<any>('/admin/forwardAndQuoteTwitter', data);
 }
-
-// 转发推文
-export function retweetApi(data: any) {
-  return axios.post<any>('/admin/forwardTwitter', data);
-}
-
-// 搜索推文
-export function searchTweetApi(data: any) {
-  return axios.post<any>('/admin/searchTwitter', data);
+// 指定账号 转发+引用推文
+export function forwardTweetApi2(data: any) {
+  return axios.post<any>('/admin/forwardAndQuoteTwitterByAccount', data);
 }
 
 // 发布推文
 export function postTweetApi(data: any) {
   return axios.post<any>('/admin/sendTwitter', data);
 }
+// 指定账号 发布推文
+export function postTweetApi2(data: any) {
+  return axios.post<any>('/admin/sendTwitterByAccount', data);
+}
 
-// 点赞推文
-export function likeTweetApi(data: any) {
-  return axios.post<any>('/admin/supportTwitter', data);
+// 修改备注
+export function updateDeviceCommentApi(data: any) {
+  return axios.post<any>('/admin/updateDeviceComment', data);
 }

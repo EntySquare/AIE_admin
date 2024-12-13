@@ -8,7 +8,7 @@
         <a-divider />
         <a-form :model="form" style="padding-right: 120px">
           <a-row :gutter="16">
-            <a-col :span="12">
+            <a-col :span="6">
               <a-form-item field="value3" label="机器人名字" label-col-flex="">
                 <a-input
                   v-model.trim="form.robotName"
@@ -17,8 +17,8 @@
                 />
               </a-form-item>
             </a-col>
-            <a-col :span="12">
-              <a-form-item field="value3" label="用户Id" label-col-flex="">
+            <a-col :span="5">
+              <a-form-item field="value3" label="用户ID" label-col-flex="">
                 <a-input
                   v-model.trim="form.userId"
                   placeholder="please enter..."
@@ -53,6 +53,22 @@
                 <a-table-column
                     title="推特账号"
                     data-index="TwitterAccount"
+                ></a-table-column>
+                <a-table-column
+                    title="AccessToken"
+                    data-index="AccessToken"
+                ></a-table-column>
+                <a-table-column
+                    title="AccessTokenSec"
+                    data-index="AccessTokenSec"
+                ></a-table-column>
+                <a-table-column
+                    title="ConsumerKey"
+                    data-index="ConsumerKey"
+                ></a-table-column>
+                <a-table-column
+                    title="ConsumerSecret"
+                    data-index="ConsumerSecret"
                 ></a-table-column>
               </template>
             </a-table>

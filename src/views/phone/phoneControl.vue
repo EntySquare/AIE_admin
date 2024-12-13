@@ -35,6 +35,10 @@
         <a-button type="primary" @click="postTweetVisible2 = true"
           >指定账号发布推文</a-button
         >
+
+        <a-button type="primary" @click="twitterTweetVisible = true"
+          >Twitter API发推</a-button
+        >
       </div>
     </a-card>
 
@@ -473,6 +477,35 @@
       </div>
     </a-modal>
 
+    <a-modal v-model:visible="twitterTweetVisible" @ok="postTweet3">
+      <template #title> twitter API 发布推文 </template>
+      <div>
+        <a-form :model="postTwitterTweetForm" auto-label-width>
+          <a-form-item field="content" label="内容">
+            <a-textarea
+              v-model="postTwitterTweetForm.content"
+              placeholder="请输入内容"
+              allow-clear
+            />
+          </a-form-item>
+          <a-form-item field="img_url" label="发布推文图片">
+            <a-input
+              v-model.trim="postTwitterTweetForm.imageUrl"
+              placeholder="请输入推文图片url"
+              allow-clear
+            />
+          </a-form-item>
+          <a-form-item field="count" label="输入机器人名字">
+            <a-input
+              v-model.trim="postTwitterTweetForm.robotName"
+              placeholder="请输入机器人名字"
+              allow-clear
+            />
+          </a-form-item>
+        </a-form>
+      </div>
+    </a-modal>
+
     <a-modal v-model:visible="updateComment" @ok="getUpdateComment">
       <template #title> 修改备注 </template>
       <div>
@@ -501,8 +534,10 @@
     forwardTweetApi2,
     getPhoneControlApi,
     getTwitterUserListApi,
+    postTweetAp3,
     postTweetApi,
-    postTweetApi2, updateDeviceCommentApi,
+    postTweetApi2,
+    updateDeviceCommentApi,
   } from '@/api/phone';
 
   const tableList = ref([]);
@@ -515,6 +550,7 @@
   const commentVisible2 = ref(false); // 指定账号评论弹窗
   const postTweetVisible2 = ref(false); // 指定账号发布弹窗
   const forwardTweetVisible2 = ref(false); // 指定账号转发弹窗
+  const twitterTweetVisible = ref(false); // twitterTweetVisible
 
   const updateComment = ref(false); // 修改备注弹窗
 
@@ -578,6 +614,12 @@
   const updateCommentForm = reactive({
     comment: '',
     deviceId: '',
+  });
+  // Twitter发布表单
+  const postTwitterTweetForm = reactive({
+    content: '',
+    imageUrl: '',
+    robotName: '',
   });
 
   // 时间格式化
@@ -785,6 +827,24 @@
         postTweetForm2.content = '';
         postTweetForm2.img_url = '';
         postTweetForm2.tweets_user_name_list = [];
+        Message.success('发布成功');
+      }
+      queryListData();
+    } catch (err) {
+      console.log(err);
+      Message.error('发布失败');
+    }
+  };
+
+  // twitterAPI发推
+  const postTweet3 = async () => {
+    try {
+      const res = await postTweetAp3(postTwitterTweetForm);
+      if (res.code === 0) {
+        twitterTweetVisible.value = false;
+        postTwitterTweetForm.content = '';
+        postTwitterTweetForm.imageUrl = '';
+        postTwitterTweetForm.robotName = '';
         Message.success('发布成功');
       }
       queryListData();

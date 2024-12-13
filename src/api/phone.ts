@@ -49,3 +49,8 @@ export function postTweetApi2(data: any) {
 export function updateDeviceCommentApi(data: any) {
   return axios.post<any>('/admin/updateDeviceComment', data);
 }
+
+// 推特API发推
+export function postTweetAp3(data: any) {
+  return axios.post<any>('/admin/twitterStart', data);
+}

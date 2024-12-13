@@ -22,6 +22,16 @@ const USER: AppRouteRecordRaw = {
         roles: ['*'],
       },
     },
+    {
+      path: 'robotsBind',
+      name: 'robotsBind',
+      component: () => import('@/views/robotsList/bindList.vue'),
+      meta: {
+        locale: '机器人twitter绑定列表',
+        requiresAuth: true,
+        roles: ['*'],
+      },
+    },
   ],
 };
 

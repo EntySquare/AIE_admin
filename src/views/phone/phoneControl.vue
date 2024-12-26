@@ -152,10 +152,10 @@
       <template #title> 关注用户 </template>
       <div>
         <a-form :model="followUserForm" auto-label-width>
-          <a-form-item field="tweets_user_name" label="需要关注的用户">
+          <a-form-item field="tweets_user_name" label="需要关注的用户url">
             <a-input
               v-model.trim="followUserForm.tweets_user_name"
-              placeholder="请输入需要关注的用户"
+              placeholder="请输入需要关注的用户url"
             />
           </a-form-item>
         </a-form>
@@ -166,10 +166,10 @@
       <template #title> 指定账号关注用户 </template>
       <div>
         <a-form :model="followUserForm2" auto-label-width>
-          <a-form-item field="" label="需要关注的用户">
+          <a-form-item field="" label="需要关注的用户url">
             <a-input
               v-model.trim="followUserForm2.tweets_user_name"
-              placeholder="请输入需要关注的用户"
+              placeholder="请输入需要关注的用户url"
             />
           </a-form-item>
           <div style="margin-bottom: 10px">
@@ -208,10 +208,10 @@
       <template #title> 转发和引用推文 </template>
       <div>
         <a-form :model="forwardTweetForm" auto-label-width>
-          <a-form-item field="twitter_url" label="需要转发的推文链接">
+          <a-form-item field="twitter_url" label="当前推文链接">
             <a-input
               v-model.trim="forwardTweetForm.twitter_url"
-              placeholder="请输入需要转发的推文链接"
+              placeholder="请输入当前推文链接"
             />
           </a-form-item>
           <a-form-item field="username" label="推文用户名">
@@ -220,10 +220,10 @@
               placeholder="请输入推文用户名"
             />
           </a-form-item>
-          <a-form-item field="twitterQuote" label="推特引用">
+          <a-form-item field="twitterQuote" label="当前推文引用正文">
             <a-input
               v-model.trim="forwardTweetForm.twitterQuote"
-              placeholder="请输入推特引用"
+              placeholder="请输入当前推文引用正文"
             />
           </a-form-item>
           <a-form-item field="target" label="目的">
@@ -233,10 +233,10 @@
               allow-clear
             />
           </a-form-item>
-          <a-form-item field="content" label="引用评论内容">
+          <a-form-item field="content" label="当前推文正文">
             <a-textarea
               v-model="forwardTweetForm.content"
-              placeholder="请输入内容"
+              placeholder="请输入当前推文正文"
               allow-clear
             />
           </a-form-item>
@@ -285,10 +285,10 @@
               >
             </div>
           </div>
-          <a-form-item field="twitter_url" label="需要转发的推文链接">
+          <a-form-item field="twitter_url" label="当前推文链接">
             <a-input
               v-model.trim="forwardTweetForm2.twitter_url"
-              placeholder="请输入需要转发的推文链接"
+              placeholder="请输入当前推文链接"
             />
           </a-form-item>
           <a-form-item field="username" label="推文用户名">
@@ -297,10 +297,10 @@
               placeholder="请输入推文用户名"
             />
           </a-form-item>
-          <a-form-item field="twitterQuote" label="推特引用">
+          <a-form-item field="twitterQuote" label="当前推文引用正文">
             <a-input
               v-model.trim="forwardTweetForm2.twitterQuote"
-              placeholder="请输入推特引用"
+              placeholder="请输入当前推文引用正文"
             />
           </a-form-item>
           <a-form-item field="target" label="目的">
@@ -310,10 +310,10 @@
               allow-clear
             />
           </a-form-item>
-          <a-form-item field="content" label="引用评论内容">
+          <a-form-item field="content" label="当前推文正文">
             <a-textarea
               v-model="forwardTweetForm2.content"
-              placeholder="请输入内容"
+              placeholder="请输入当前推文正文"
               allow-clear
             />
           </a-form-item>
@@ -325,16 +325,16 @@
       <template #title> 评论推文 </template>
       <div>
         <a-form :model="commentForm" auto-label-width>
-          <a-form-item field="tweets_user_name" label="需要评论的推文url">
+          <a-form-item field="tweets_user_name" label="点赞的推文链接">
             <a-input
               v-model.trim="commentForm.twitter_url"
-              placeholder="请输入需要评论的推文url"
+              placeholder="请输入点赞的推文链接"
             />
           </a-form-item>
-          <a-form-item field="content" label="推文内容">
+          <a-form-item field="content" label="评价内容">
             <a-textarea
               v-model="commentForm.content"
-              placeholder="请输入推文内容"
+              placeholder="请输入评价内容"
               allow-clear
             />
           </a-form-item>
@@ -381,16 +381,16 @@
               >
             </div>
           </div>
-          <a-form-item field="tweets_user_name" label="需要评论的推文url">
+          <a-form-item field="tweets_user_name" label="当前推文链接">
             <a-input
               v-model.trim="commentForm2.twitter_url"
-              placeholder="请输入需要评论的推文url"
+              placeholder="请输入当前推文链接"
             />
           </a-form-item>
-          <a-form-item field="content" label="推文内容">
+          <a-form-item field="content" label="评价内容">
             <a-textarea
               v-model="commentForm2.content"
-              placeholder="请输入推文内容"
+              placeholder="请输入评价内容"
               allow-clear
             />
           </a-form-item>
@@ -412,7 +412,7 @@
           <a-form-item field="img_url" label="发布推文图片">
             <a-input
               v-model.trim="postTweetForm.img_url"
-              placeholder="请输入推文图片url"
+              placeholder="请输入发布推文图片url"
               allow-clear
             />
           </a-form-item>
@@ -495,10 +495,10 @@
               allow-clear
             />
           </a-form-item>
-          <a-form-item field="count" label="输入机器人名字">
+          <a-form-item field="count" label="机器人名称">
             <a-input
               v-model.trim="postTwitterTweetForm.robotName"
-              placeholder="请输入机器人名字"
+              placeholder="请输入机器人名称"
               allow-clear
             />
           </a-form-item>

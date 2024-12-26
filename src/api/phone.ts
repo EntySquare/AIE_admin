@@ -54,3 +54,8 @@ export function updateDeviceCommentApi(data: any) {
 export function postTweetAp3(data: any) {
   return axios.post<any>('/admin/twitterStart', data);
 }
+
+// 获取转发回复统计列表
+export function getDailyOperatesApi(params: any) {
+  return axios.get<any>('/admin/getDailyOperates', { params });
+}

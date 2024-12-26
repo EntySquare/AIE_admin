@@ -22,6 +22,16 @@ const PHONE: AppRouteRecordRaw = {
         roles: ['*'],
       },
     },
+    {
+      path: 'dailyOperates',
+      name: 'dailyOperates',
+      component: () => import('@/views/phone/dailyOperates.vue'),
+      meta: {
+        locale: '转发回复统计列表',
+        requiresAuth: true,
+        roles: ['*'],
+      },
+    },
   ],
 };
 

@@ -22,6 +22,16 @@ const USER: AppRouteRecordRaw = {
         roles: ['*'],
       },
     },
+    {
+      path: 'twitterStatistic',
+      name: 'twitterStatistic',
+      component: () => import('@/views/statisticsList/twitterStatistic.vue'),
+      meta: {
+        locale: '推特统计列表',
+        requiresAuth: true,
+        roles: ['*'],
+      },
+    },
   ],
 };
 

@@ -1,8 +1,10 @@
-import axios from "axios";
+import axios from 'axios';
 
 export function statistics() {
-    return axios.get<any>('/admin/statistics');
+  return axios.get<any>('/admin/statistics');
 }
-export function updateTribe() {
 
+// 获取推特统计
+export function getTwitterListApi(params: any) {
+  return axios.get<any>('/admin/twitterStatistic', { params });
 }

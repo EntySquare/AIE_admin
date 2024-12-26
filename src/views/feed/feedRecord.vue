@@ -49,11 +49,11 @@
               :pagination="false"
             >
               <template #columns>
-                <a-table-column title="ID" data-index="id"></a-table-column>
+                <a-table-column title="ID" data-index="Id"></a-table-column>
 
                 <a-table-column
                   title="喂养内容"
-                  data-index="content"
+                  data-index="Content"
                 ></a-table-column>
 
                 <a-table-column
@@ -67,16 +67,16 @@
 
                 <a-table-column
                   title="喂养类型"
-                  data-index="feedTypeID"
+                  data-index="FeedTypeID"
                 ></a-table-column>
 
                 <a-table-column
                   title="机器人ID"
-                  data-index="robotID"
+                  data-index="RobotID"
                 ></a-table-column>
                 <a-table-column
                   title="用户ID"
-                  data-index="userID"
+                  data-index="UserID"
                 ></a-table-column>
               </template>
             </a-table>

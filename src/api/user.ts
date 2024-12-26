@@ -39,3 +39,13 @@ export function login(data: LoginData) {
 export function getUserInfoApi(params: any) {
   return axios.get<any>('/admin/getUserList', { params });
 }
+
+// 资产记录列表
+export function getAssetRecordListApi(params: any) {
+  return axios.get<any>('/admin/GetAssetRecord', { params });
+}
+
+// 支付记录列表
+export function getPayRecordListApi(params: any) {
+  return axios.get<any>('/admin/GetUserPayment', { params });
+}

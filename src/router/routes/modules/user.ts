@@ -22,6 +22,26 @@ const USER: AppRouteRecordRaw = {
         roles: ['*'],
       },
     },
+    {
+      path: 'assetRecord',
+      name: 'assetRecord',
+      component: () => import('@/views/user/assetRecord.vue'),
+      meta: {
+        locale: '资产记录',
+        requiresAuth: true,
+        roles: ['*'],
+      },
+    },
+    {
+      path: 'payRecord',
+      name: 'payRecord',
+      component: () => import('@/views/user/payRecord.vue'),
+      meta: {
+        locale: '支付记录',
+        requiresAuth: true,
+        roles: ['*'],
+      },
+    },
   ],
 };
 

@@ -52,19 +52,19 @@
                 </a-table-column>
               </template>
             </a-table>
-<!--            <div style="display: flex; justify-content: flex-end">-->
-<!--              <a-pagination-->
-<!--                :total="total"-->
-<!--                :current="form.pageIndex + 1"-->
-<!--                :page-size="10"-->
-<!--                show-total-->
-<!--                @change="-->
-<!--                  (current) => {-->
-<!--                    handlePageChange(current);-->
-<!--                  }-->
-<!--                "-->
-<!--              ></a-pagination>-->
-<!--            </div>-->
+            <div style="display: flex; justify-content: flex-end">
+              <a-pagination
+                :total="total"
+                :current="form.pageIndex + 1"
+                :page-size="10"
+                show-total
+                @change="
+                  (current) => {
+                    handlePageChange(current);
+                  }
+                "
+              ></a-pagination>
+            </div>
           </a-grid-item>
         </a-grid>
 
@@ -85,11 +85,6 @@
           <a-space>
             <a-typography-text>今日总发推数 :</a-typography-text>
             <a-typography-text>{{ List.today_total }}</a-typography-text>
-          </a-space>
-          <a-divider />
-          <a-space>
-            <a-typography-text>总条数 :</a-typography-text>
-            <a-typography-text>{{ List.total }}</a-typography-text>
           </a-space>
           <a-divider />
           <a-space>
@@ -131,12 +126,17 @@ import {getTwitterListApi} from '@/api/statistics';
     pageSize: 10,
   });
 
-  const getlList = async () => {
+  const getList = async () => {
     try {
       loading.value = true;
-      const res = await getTwitterListApi(form);
+      const res = await getTwitterListApi({
+        pageIndex: form.pageIndex + 1,
+        pageSize: form.pageSize,
+        account: form.account,
+      });
       if (res.code === 0) {
         List.value = res.data;
+        total.value = res.data.total;
         console.log('List', res.data);
       }
     } catch (err) {
@@ -148,13 +148,13 @@ import {getTwitterListApi} from '@/api/statistics';
 
   const resetClick = () => {
     form.account = '';
-    getlList();
+    getList();
   };
 
   const handlePageChange = (current: number) => {
     if (current - 1 !== form.pageIndex) {
       form.pageIndex = current - 1;
-      getlList();
+      getList();
     }
   };
 
@@ -163,7 +163,7 @@ import {getTwitterListApi} from '@/api/statistics';
   );
 
   onMounted(async () => {
-    getlList();
+    getList();
   });
 </script>
 

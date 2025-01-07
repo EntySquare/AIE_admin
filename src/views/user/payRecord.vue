@@ -141,7 +141,7 @@
 
                 <a-table-column title="同步时间" data-index="sync_time">
                   <template #cell="{ record }">
-                    {{ changeTime(record.sync_time) }}
+                    {{ formatDate(record.sync_time) }}
                   </template>
                 </a-table-column>
 
@@ -212,8 +212,24 @@
     pageIndex: 0,
   });
 
-  const changeTime = (time: string) => {
-    return time.replace('T', ' ').split('+')[0];
+  // const changeTime = (time: string) => {
+  //   return time.replace('T', ' ').split('+')[0];
+  // };
+
+  // 时间格式化
+  const formatDate = (timestamp: any) => {
+    if (timestamp === "0001-01-01T00:00:00Z") {
+      return '';
+    }
+    const date = new Date(timestamp);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    const seconds = String(date.getSeconds()).padStart(2, '0');
+
+    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
   };
 
   // 查询用户列表

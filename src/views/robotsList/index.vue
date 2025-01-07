@@ -118,19 +118,19 @@
                         >绑定推特账号</a-button
                       >
 
-                      <a-button type="primary" @click="Operation(1, record)"
+                      <a-button v-if="record.isRecommend === 0" type="primary" @click="Operation(1, record)"
                         >推荐到首页</a-button
                       >
-                      <a-button type="primary" @click="Operation(0, record)"
+                      <a-button v-if="record.isRecommend === 1" type="primary" @click="Operation(0, record)"
                         >取消推荐</a-button
                       >
-                      <a-button type="primary" @click="Operation1(1, record)"
+                      <a-button v-if="record.lottery_status === 0" type="primary" @click="Operation1(1, record)"
                       >开启抽奖</a-button
                       >
-                      <a-button type="primary" @click="Operation1(0, record)"
+                      <a-button v-if="record.lottery_status === 1"  type="primary" @click="Operation1(0, record)"
                       >关闭抽奖</a-button
                       >
-                      <a-button type="primary" @click="openModal1(record)"
+                      <a-button v-if="record.lottery_status === 1"  type="primary" @click="openModal1(record)"
                       >修改抽奖比例</a-button
                       >
                     </a-space>

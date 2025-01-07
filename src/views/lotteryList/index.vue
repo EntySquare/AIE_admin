@@ -120,11 +120,18 @@
                 <a-table-column
                   title="中奖时间"
                   data-index="lottery_time"
-                ></a-table-column>
+                >
+                  <template #cell="{ record }">
+                    {{ formatDate(record.lottery_time) }}
+                  </template>
+                </a-table-column>
                 <a-table-column
                   title="创建时间"
                   data-index="created_at"
-                ></a-table-column>
+                >
+                  <template #cell="{ record }">
+                    {{ formatDate(record.created_at) }}
+                  </template></a-table-column>
               </template>
             </a-table>
             <div style="display: flex; justify-content: flex-end">
@@ -174,6 +181,19 @@
     endTime: '',
     startTime: '',
   });
+
+  // 时间格式化
+  const formatDate = (timestamp: any) => {
+    const date = new Date(timestamp);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    const seconds = String(date.getSeconds()).padStart(2, '0');
+
+    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+  };
 
   const totalLottery = ref(0);
   const getlList = async () => {

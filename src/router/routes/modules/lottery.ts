@@ -9,7 +9,7 @@ const LOTTERY: AppRouteRecordRaw = {
     locale: '抽奖列表',
     requiresAuth: true,
     icon: 'icon-user',
-    order: 0,
+    order: 9,
   },
   children: [
     {

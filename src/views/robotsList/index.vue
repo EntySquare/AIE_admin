@@ -100,7 +100,17 @@
                     }}</template
                   ></a-table-column
                 >
-
+                <a-table-column title="抽奖状态" data-index="lottery_status">
+                  <template #cell="{ record }">
+                    {{
+                      record.lottery_status === 0 ? '关闭' : '开启'
+                    }}</template
+                  ></a-table-column
+                >
+                <a-table-column
+                  title="抽奖比例"
+                  data-index="lottery_rate"
+                ></a-table-column>
                 <a-table-column title="操作">
                   <template #cell="{ record }">
                     <a-space>
@@ -113,6 +123,15 @@
                       >
                       <a-button type="primary" @click="Operation(0, record)"
                         >取消推荐</a-button
+                      >
+                      <a-button type="primary" @click="Operation1(1, record)"
+                      >开启抽奖</a-button
+                      >
+                      <a-button type="primary" @click="Operation1(0, record)"
+                      >关闭抽奖</a-button
+                      >
+                      <a-button type="primary" @click="openModal1(record)"
+                      >修改抽奖比例</a-button
                       >
                     </a-space>
                   </template>
@@ -199,6 +218,20 @@
         </a-form>
       </div>
     </a-modal>
+    <a-modal v-model:visible="bindVisible1" @ok="okBind">
+      <template #title> 修改抽奖比例 </template>
+      <div>
+        <a-form :model="bindForm1" auto-label-width>
+          <a-form-item field="img_url" label="抽奖比例">
+            <a-input
+              v-model="bindForm1.rate"
+              placeholder="请输入抽奖比例"
+              allow-clear
+            />
+          </a-form-item>
+        </a-form>
+      </div>
+    </a-modal>
   </div>
 </template>
 
@@ -210,8 +243,12 @@
   const List = ref([]);
   const loading = ref(false);
   const bindVisible = ref(false);
+  const bindVisible1 = ref(false);
   const bindForm = reactive({
     account: '',
+  });
+  const bindForm1 = reactive({
+    rate: '',
   });
 
   const form = ref({
@@ -249,6 +286,10 @@
     bindVisible.value = true;
     updateRobotVlaue.value = record;
   };
+  const openModal1 = (record: any) => {
+    bindVisible1.value = true;
+    updateRobotVlaue.value = record;
+  };
   const okBind = async () => {
     try {
       const dataList = ref({
@@ -261,12 +302,15 @@
         sex: updateRobotVlaue.value.sex,
         tag: updateRobotVlaue.value.tag,
         twitterAccount: bindForm.account,
+        lottery_status: updateRobotVlaue.value.lottery_status,
+        lottery_rate: bindForm1.rate,
       });
 
       const res = await updateRobot(dataList.value);
       if (res.code === 0) {
         bindVisible.value = false;
-        bindForm.account = '';
+        bindForm.account = ''
+        bindForm1.rate = '';
         Message.success('绑定成功');
       }
       getlList();
@@ -295,6 +339,7 @@
   const visible = ref(false);
   const visible2 = ref(false);
   const status = ref(1);
+  const status1 = ref(1);
   const text = ref('');
   const handleEdit = async () => {
     const dataList = ref({
@@ -306,6 +351,7 @@
       name: updateRobotVlaue.value.name,
       sex: updateRobotVlaue.value.sex,
       tag: updateRobotVlaue.value.tag,
+      lottery_status: status1.value,
     });
 
     const res = await updateRobot(dataList.value);
@@ -326,6 +372,18 @@
     } else {
       // 屏蔽
       text.value = '确认取消推荐';
+    }
+  };
+  const Operation1 = (type: number, record: any) => {
+    visible.value = true;
+    status1.value = type;
+    updateRobotVlaue.value = record;
+    if (type === 1) {
+      // 推荐到首页
+      text.value = '确认开启抽奖？';
+    } else {
+      // 屏蔽
+      text.value = '确认关闭抽奖？';
     }
   };
 

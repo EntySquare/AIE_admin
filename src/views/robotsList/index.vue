@@ -381,6 +381,8 @@
   const Operation = (type: number, record: any) => {
     visible.value = true;
     status.value = type;
+    status1.value = record.lottery_status;
+    searchStatus.value = record.isSearch;
     updateRobotVlaue.value = record;
     if (type === 1) {
       // 推荐到首页
@@ -392,7 +394,9 @@
   };
   const Operation1 = (type: number, record: any) => {
     visible.value = true;
+    status.value = record.isRecommend;
     status1.value = type;
+    searchStatus.value = record.isSearch;
     updateRobotVlaue.value = record;
     if (type === 1) {
       // 推荐到首页
@@ -404,6 +408,8 @@
   };
   const SearchOperation = (type: number, record: any) => {
     visible.value = true;
+    status.value = record.isRecommend;
+    status1.value = record.lottery_status;
     searchStatus.value = type;
     updateRobotVlaue.value = record;
     if (type === 1) {

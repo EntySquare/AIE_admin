@@ -111,6 +111,13 @@
                   title="抽奖比例"
                   data-index="lottery_rate"
                 ></a-table-column>
+                <a-table-column title="隐身状态" data-index="lottery_status">
+                  <template #cell="{ record }">
+                    {{
+                      record.isSearch === 0 ? '开启' : '关闭'
+                    }}</template
+                  ></a-table-column
+                >
                 <a-table-column title="操作">
                   <template #cell="{ record }">
                     <a-space>
@@ -129,6 +136,12 @@
                       >
                       <a-button v-if="record.lottery_status === 1"  type="primary" @click="Operation1(0, record)"
                       >关闭抽奖</a-button
+                      >
+                      <a-button v-if="record.isSearch === 1" type="primary" @click="SearchOperation(0, record)"
+                      >开启隐身</a-button
+                      >
+                      <a-button v-if="record.isSearch === 0"  type="primary" @click="SearchOperation(1, record)"
+                      >关闭隐身</a-button
                       >
                       <a-button v-if="record.lottery_status === 1"  type="primary" @click="openModal1(record)"
                       >修改抽奖比例</a-button
@@ -303,6 +316,7 @@
         tag: updateRobotVlaue.value.tag,
         twitterAccount: bindForm.account,
         lottery_status: updateRobotVlaue.value.lottery_status,
+        isSearch: updateRobotVlaue.value.is_search,
         lottery_rate: bindForm1.rate,
       });
 
@@ -340,6 +354,7 @@
   const visible2 = ref(false);
   const status = ref(1);
   const status1 = ref(1);
+  const searchStatus = ref(1);
   const text = ref('');
   const handleEdit = async () => {
     const dataList = ref({
@@ -352,6 +367,7 @@
       sex: updateRobotVlaue.value.sex,
       tag: updateRobotVlaue.value.tag,
       lottery_status: status1.value,
+      isSearch: searchStatus.value,
     });
 
     const res = await updateRobot(dataList.value);
@@ -384,6 +400,18 @@
     } else {
       // 屏蔽
       text.value = '确认关闭抽奖？';
+    }
+  };
+  const SearchOperation = (type: number, record: any) => {
+    visible.value = true;
+    searchStatus.value = type;
+    updateRobotVlaue.value = record;
+    if (type === 1) {
+      // 可搜索
+      text.value = '确认开启机器人搜索？';
+    } else {
+      // 屏蔽
+      text.value = '确认关闭机器人搜索？';
     }
   };
 

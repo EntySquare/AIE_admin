@@ -414,10 +414,10 @@
     updateRobotVlaue.value = record;
     if (type === 1) {
       // 可搜索
-      text.value = '确认开启机器人搜索？';
+      text.value = '确认开启机器人隐身？';
     } else {
       // 屏蔽
-      text.value = '确认关闭机器人搜索？';
+      text.value = '确认关闭机器人隐身？';
     }
   };
 

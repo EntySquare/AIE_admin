@@ -118,6 +118,18 @@
                     }}</template
                   ></a-table-column
                 >
+                <a-table-column
+                  title="自动发推目的"
+                  data-index="sendTarget"
+                ></a-table-column>
+                <a-table-column
+                  title="关注广场采集回复目的"
+                  data-index="attentionTarget"
+                ></a-table-column>
+                <a-table-column
+                  title="每日关注广场采集回复目的"
+                  data-index="dailyAttentionTarget"
+                ></a-table-column>
                 <a-table-column title="操作">
                   <template #cell="{ record }">
                     <a-space>
@@ -145,6 +157,9 @@
                       >
                       <a-button v-if="record.lottery_status === 1"  type="primary" @click="openModal1(record)"
                       >修改抽奖比例</a-button
+                      >
+                      <a-button type="primary" @click="targetModel(record)"
+                      >修改目的</a-button
                       >
                     </a-space>
                   </template>
@@ -231,7 +246,7 @@
         </a-form>
       </div>
     </a-modal>
-    <a-modal v-model:visible="bindVisible1" @ok="okBind">
+    <a-modal v-model:visible="bindVisible1" @ok="okBind1">
       <template #title> 修改抽奖比例 </template>
       <div>
         <a-form :model="bindForm1" auto-label-width>
@@ -245,6 +260,38 @@
         </a-form>
       </div>
     </a-modal>
+    <a-modal v-model:visible="targetVisible" @ok="okBind2">
+      <template #title> 修改目的 </template>
+      <div>
+        <a-form :model="targetform" auto-label-width>
+          <a-form-item field="img_url" label="自动发推目的">
+            <a-input
+              v-model="targetform.sendTarget"
+              placeholder="请输入自动发推目的"
+              allow-clear
+            />
+          </a-form-item>
+        </a-form>
+        <a-form :model="targetform" auto-label-width>
+          <a-form-item field="img_url" label="关注广场采集回复目的">
+            <a-input
+              v-model="targetform.attentionTarget"
+              placeholder="请输入关注广场采集回复目的"
+              allow-clear
+            />
+          </a-form-item>
+        </a-form>
+        <a-form :model="targetform" auto-label-width>
+          <a-form-item field="img_url" label="每日关注广场采集回复目的">
+            <a-input
+              v-model="targetform.dailyAttentionTarget"
+              placeholder="请输入每日关注广场采集回复目的"
+              allow-clear
+            />
+          </a-form-item>
+        </a-form>
+      </div>
+    </a-modal>
   </div>
 </template>
 
@@ -252,16 +299,23 @@
   import { getRobotList, updateRobot } from '@/api/robots';
   import { Message } from '@arco-design/web-vue';
   import { onMounted, reactive, ref } from 'vue';
+  import { stringify } from "query-string/base";
 
   const List = ref([]);
   const loading = ref(false);
   const bindVisible = ref(false);
   const bindVisible1 = ref(false);
+  const targetVisible = ref(false);
   const bindForm = reactive({
     account: '',
   });
   const bindForm1 = reactive({
     rate: '',
+  });
+  const targetform = reactive({
+    sendTarget: '',
+    attentionTarget: '',
+    dailyAttentionTarget: '',
   });
 
   const form = ref({
@@ -297,12 +351,24 @@
 
   const openModal = (record: any) => {
     bindVisible.value = true;
-    updateRobotVlaue.value = record;
+    updateRobotVlaue.value = JSON.parse(JSON.stringify(record));
+    bindForm.account = updateRobotVlaue.value.twitterAccount;
   };
   const openModal1 = (record: any) => {
     bindVisible1.value = true;
-    updateRobotVlaue.value = record;
+    updateRobotVlaue.value = JSON.parse(JSON.stringify(record));
+    bindForm1.rate = updateRobotVlaue.value.lottery_rate;
   };
+  const targetModel = (record: any) => {
+    targetVisible.value = true;
+    updateRobotVlaue.value = JSON.parse(JSON.stringify(record));
+    targetform.sendTarget = updateRobotVlaue.value.sendTarget;
+    targetform.attentionTarget = updateRobotVlaue.value.attentionTarget;
+    targetform.dailyAttentionTarget = updateRobotVlaue.value.dailyAttentionTarget;
+    // updateRobotVlaue.value.sendTarget = targetform.sendTarget;
+    // updateRobotVlaue.value.attentionTarget = targetform.attentionTarget;
+    // updateRobotVlaue.value.dailyAttentionTarget = targetform.dailyAttentionTarget;
+  }
   const okBind = async () => {
     try {
       const dataList = ref({
@@ -316,8 +382,11 @@
         tag: updateRobotVlaue.value.tag,
         twitterAccount: bindForm.account,
         lottery_status: updateRobotVlaue.value.lottery_status,
-        isSearch: updateRobotVlaue.value.is_search,
-        lottery_rate: bindForm1.rate,
+        isSearch: updateRobotVlaue.value.isSearch,
+        lottery_rate: updateRobotVlaue.value.lottery_rate.toString(),
+        sendTarget: updateRobotVlaue.value.sendTarget,
+        attentionTarget: updateRobotVlaue.value.attentionTarget,
+        dailyAttentionTarget: updateRobotVlaue.value.dailyAttentionTarget,
       });
 
       const res = await updateRobot(dataList.value);
@@ -325,6 +394,82 @@
         bindVisible.value = false;
         bindForm.account = ''
         bindForm1.rate = '';
+        targetform.sendTarget = '';
+        targetform.attentionTarget = '';
+        targetform.dailyAttentionTarget = '';
+        Message.success('绑定成功');
+      }
+      getlList();
+    } catch (err) {
+      console.log(err);
+      Message.error('绑定失败');
+    }
+  };
+  const okBind1 = async () => {
+    try {
+      const dataList = ref({
+        avatarUrl: updateRobotVlaue.value.avatar,
+        characterIntroduction: updateRobotVlaue.value.characterIntroduction,
+        configurationTips: updateRobotVlaue.value.configurationTips,
+        id: Number(updateRobotVlaue.value.id),
+        isRecommend: updateRobotVlaue.value.isRecommend,
+        name: updateRobotVlaue.value.name,
+        sex: updateRobotVlaue.value.sex,
+        tag: updateRobotVlaue.value.tag,
+        twitterAccount: updateRobotVlaue.value.twitterAccount,
+        lottery_status: updateRobotVlaue.value.lottery_status,
+        isSearch: updateRobotVlaue.value.is_search,
+        lottery_rate: bindForm1.rate,
+        sendTarget: updateRobotVlaue.value.sendTarget,
+        attentionTarget: updateRobotVlaue.value.attentionTarget,
+        dailyAttentionTarget: updateRobotVlaue.value.dailyAttentionTarget,
+      });
+
+      const res = await updateRobot(dataList.value);
+      if (res.code === 0) {
+        bindVisible.value = false;
+        bindForm.account = ''
+        bindForm1.rate = '';
+        targetform.sendTarget = '';
+        targetform.attentionTarget = '';
+        targetform.dailyAttentionTarget = '';
+        Message.success('绑定成功');
+      }
+      getlList();
+    } catch (err) {
+      console.log(err);
+      Message.error('绑定失败');
+    }
+  };
+
+  const okBind2 = async () => {
+    try {
+      const dataList = ref({
+        avatarUrl: updateRobotVlaue.value.avatar,
+        characterIntroduction: updateRobotVlaue.value.characterIntroduction,
+        configurationTips: updateRobotVlaue.value.configurationTips,
+        id: Number(updateRobotVlaue.value.id),
+        isRecommend: updateRobotVlaue.value.isRecommend,
+        name: updateRobotVlaue.value.name,
+        sex: updateRobotVlaue.value.sex,
+        tag: updateRobotVlaue.value.tag,
+        twitterAccount: updateRobotVlaue.value.twitterAccount,
+        lottery_status: updateRobotVlaue.value.lottery_status,
+        isSearch: updateRobotVlaue.value.isSearch,
+        lottery_rate: updateRobotVlaue.value.lottery_rate.toString(),
+        sendTarget: targetform.sendTarget,
+        attentionTarget: targetform.attentionTarget,
+        dailyAttentionTarget: targetform.dailyAttentionTarget,
+      });
+
+      const res = await updateRobot(dataList.value);
+      if (res.code === 0) {
+        bindVisible.value = false;
+        bindForm.account = ''
+        bindForm1.rate = '';
+        targetform.sendTarget = '';
+        targetform.attentionTarget = '';
+        targetform.dailyAttentionTarget = '';
         Message.success('绑定成功');
       }
       getlList();
@@ -362,14 +507,19 @@
       characterIntroduction: updateRobotVlaue.value.characterIntroduction,
       configurationTips: updateRobotVlaue.value.configurationTips,
       id: Number(updateRobotVlaue.value.id),
-      isRecommend: status.value,
+      isRecommend: updateRobotVlaue.value.isRecommend,
       name: updateRobotVlaue.value.name,
       sex: updateRobotVlaue.value.sex,
       tag: updateRobotVlaue.value.tag,
-      lottery_status: status1.value,
-      isSearch: searchStatus.value,
+      lottery_status: updateRobotVlaue.value.lottery_status,
+      isSearch: updateRobotVlaue.value.isSearch,
+      sendTarget: updateRobotVlaue.value.sendTarget,
+      attentionTarget: updateRobotVlaue.value.attentionTarget,
+      dailyAttentionTarget: updateRobotVlaue.value.dailyAttentionTarget,
+      twitterAccount: updateRobotVlaue.value.twitterAccount,
+      lottery_rate: updateRobotVlaue.value.lottery_rate.toString(),
     });
-
+  console.log(dataList.value);
     const res = await updateRobot(dataList.value);
     if (res.code === 0) {
       console.log(res);
@@ -380,10 +530,8 @@
   };
   const Operation = (type: number, record: any) => {
     visible.value = true;
-    status.value = type;
-    status1.value = record.lottery_status;
-    searchStatus.value = record.isSearch;
-    updateRobotVlaue.value = record;
+    updateRobotVlaue.value = JSON.parse(JSON.stringify(record));
+    updateRobotVlaue.value.isRecommend = type;
     if (type === 1) {
       // 推荐到首页
       text.value = '确认推荐到首页？';
@@ -394,10 +542,9 @@
   };
   const Operation1 = (type: number, record: any) => {
     visible.value = true;
-    status.value = record.isRecommend;
-    status1.value = type;
     searchStatus.value = record.isSearch;
-    updateRobotVlaue.value = record;
+    updateRobotVlaue.value = JSON.parse(JSON.stringify(record));
+    updateRobotVlaue.value.lottery_status = type;
     if (type === 1) {
       // 推荐到首页
       text.value = '确认开启抽奖？';
@@ -408,10 +555,8 @@
   };
   const SearchOperation = (type: number, record: any) => {
     visible.value = true;
-    status.value = record.isRecommend;
-    status1.value = record.lottery_status;
-    searchStatus.value = type;
-    updateRobotVlaue.value = record;
+    updateRobotVlaue.value = JSON.parse(JSON.stringify(record));
+    updateRobotVlaue.value.isSearch = type;
     if (type === 1) {
       // 可搜索
       text.value = '确认开启机器人隐身？';

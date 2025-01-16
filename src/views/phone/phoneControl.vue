@@ -134,6 +134,20 @@
             <!--                </div>-->
             <!--              </template>-->
             <!--            </a-table-column>-->
+
+            <a-table-column
+              title="硬件配置(推特,ins,TruthSocial)"
+               data-index="platform"
+            >
+              <template #cell="{ record }">
+                <a-select
+                  v-model="record.platform"
+                  style="width: 120px"
+                  :options="platform"
+                  @change="handleChangeplatform"
+                ></a-select>
+              </template>
+            </a-table-column>
             <a-table-column title="操作">
               <template #cell="{ record }">
                 <a-space>
@@ -523,383 +537,419 @@
 </template>
 
 <script setup lang="ts">
-  import { onMounted, ref, reactive } from 'vue';
-  import { Message } from '@arco-design/web-vue';
-  import {
-    commentTweetApi,
-    commentTweetApi2,
-    followUserApi,
-    followUserApi2,
-    forwardTweetApi,
-    forwardTweetApi2,
-    getPhoneControlApi,
-    getTwitterUserListApi,
-    postTweetAp3,
-    postTweetApi,
-    postTweetApi2,
-    updateDeviceCommentApi,
-  } from '@/api/phone';
+import { onMounted, ref, reactive } from 'vue';
+import { Message ,SelectProps} from '@arco-design/web-vue';
+import {
+  commentTweetApi,
+  commentTweetApi2,
+  followUserApi,
+  followUserApi2,
+  forwardTweetApi,
+  forwardTweetApi2,
+  getPhoneControlApi,
+  getTwitterUserListApi,
+  postTweetAp3,
+  postTweetApi,
+  postTweetApi2,
+  updateDeviceCommentApi,
+  getConfigByName,
+} from '@/api/phone';
 
-  const tableList = ref([]);
-  const followUserVisible = ref(false); // 关注用户弹窗
-  const commentVisible = ref(false); // 评论弹窗
-  const postTweetVisible = ref(false); // 发布弹窗
-  const forwardTweetVisible = ref(false); // 转发弹窗
+const tableList = ref([]);
+const followUserVisible = ref(false); // 关注用户弹窗
+const commentVisible = ref(false); // 评论弹窗
+const postTweetVisible = ref(false); // 发布弹窗
+const forwardTweetVisible = ref(false); // 转发弹窗
 
-  const followUserVisible2 = ref(false); // 指定账号关注用户弹窗
-  const commentVisible2 = ref(false); // 指定账号评论弹窗
-  const postTweetVisible2 = ref(false); // 指定账号发布弹窗
-  const forwardTweetVisible2 = ref(false); // 指定账号转发弹窗
-  const twitterTweetVisible = ref(false); // twitterTweetVisible
+const followUserVisible2 = ref(false); // 指定账号关注用户弹窗
+const commentVisible2 = ref(false); // 指定账号评论弹窗
+const postTweetVisible2 = ref(false); // 指定账号发布弹窗
+const forwardTweetVisible2 = ref(false); // 指定账号转发弹窗
+const twitterTweetVisible = ref(false); // twitterTweetVisible
 
-  const updateComment = ref(false); // 修改备注弹窗
+const updateComment = ref(false); // 修改备注弹窗
 
-  // 关注用户表单
-  const followUserForm = reactive({
-    tweets_user_name: '',
-    tweets_user_name_list: [],
-  });
-  // 评论表单
-  const commentForm = reactive({
-    count: 0,
-    content: '',
-    twitter_url: '',
-    tweets_user_name_list: [],
-  });
-  // 发布表单
-  const postTweetForm = reactive({
-    content: '',
-    img_url: '',
-    count: 0,
-    tweets_user_name_list: [],
-  });
-  // 转发表单
-  const forwardTweetForm = reactive({
-    twitter_url: '',
-    count: 0,
-    tweets_user_name_list: [],
-    content: '',
-    username: '',
-    twitterQuote: '',
-    target: '',
-  });
+// 关注用户表单
+const followUserForm = reactive({
+  tweets_user_name: '',
+  tweets_user_name_list: [],
+});
+// 评论表单
+const commentForm = reactive({
+  count: 0,
+  content: '',
+  twitter_url: '',
+  tweets_user_name_list: [],
+});
+// 发布表单
+const postTweetForm = reactive({
+  content: '',
+  img_url: '',
+  count: 0,
+  tweets_user_name_list: [],
+});
+// 转发表单
+const forwardTweetForm = reactive({
+  twitter_url: '',
+  count: 0,
+  tweets_user_name_list: [],
+  content: '',
+  username: '',
+  twitterQuote: '',
+  target: '',
+});
 
-  // 关注用户表单
-  const followUserForm2 = reactive({
-    tweets_user_name: '',
-    tweets_user_name_list: [] as any,
-  });
-  // 评论表单
-  const commentForm2 = reactive({
-    content: '',
-    twitter_url: '',
-    tweets_user_name_list: [] as any,
-  });
-  // 发布表单
-  const postTweetForm2 = reactive({
-    content: '',
-    img_url: '',
-    tweets_user_name_list: [] as any,
-  });
-  // 转发表单
-  const forwardTweetForm2 = reactive({
-    twitter_url: '',
-    tweets_user_name_list: [] as any,
-    content: '',
-    username: '',
-    twitterQuote: '',
-    target: '',
-  });
-  // 修改备注表单
-  const updateCommentForm = reactive({
-    comment: '',
-    deviceId: '',
-  });
-  // Twitter发布表单
-  const postTwitterTweetForm = reactive({
-    content: '',
-    imageUrl: '',
-    robotName: '',
-  });
+// 关注用户表单
+const followUserForm2 = reactive({
+  tweets_user_name: '',
+  tweets_user_name_list: [] as any,
+});
+// 评论表单
+const commentForm2 = reactive({
+  content: '',
+  twitter_url: '',
+  tweets_user_name_list: [] as any,
+});
+// 发布表单
+const postTweetForm2 = reactive({
+  content: '',
+  img_url: '',
+  tweets_user_name_list: [] as any,
+});
+// 转发表单
+const forwardTweetForm2 = reactive({
+  twitter_url: '',
+  tweets_user_name_list: [] as any,
+  content: '',
+  username: '',
+  twitterQuote: '',
+  target: '',
+});
+// 修改备注表单
+const updateCommentForm = reactive({
+  comment: '',
+  deviceId: '',
+  platform:0
+});
+// Twitter发布表单
+const postTwitterTweetForm = reactive({
+  content: '',
+  imageUrl: '',
+  robotName: '',
+});
 
-  // 时间格式化
-  const formatDate = (timestamp: any) => {
-    if (timestamp === "0001-01-01T00:00:00Z") {
-      return '';
+// 时间格式化
+const formatDate = (timestamp: any) => {
+  if (timestamp === '0001-01-01T00:00:00Z') {
+    return '';
+  }
+  const date = new Date(timestamp * 1000);
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  const hours = String(date.getHours()).padStart(2, '0');
+  const minutes = String(date.getMinutes()).padStart(2, '0');
+  const seconds = String(date.getSeconds()).padStart(2, '0');
+
+  return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+};
+// 状态样式
+const statusStyle = (status: any) => {
+  switch (status) {
+    case 0:
+      return 'status-gray'; // 初始化
+    case 1:
+      return 'status-blue'; // 已下达
+    case 2:
+      return 'status-green'; // 完成
+    case -1:
+      return 'status-red'; // 执行失败
+    default:
+      return 'status-black'; // 未知状态
+  }
+};
+
+const addAccount = (form: any) => {
+  // 点击 + 号时添加一行
+  form.tweets_user_name_list.push('');
+};
+const removeAccount = (form: any, index: any) => {
+  // 点击 - 号时移除对应的输入框
+  form.tweets_user_name_list.splice(index, 1);
+};
+
+// 查询列表
+const queryListData = async () => {
+  try {
+    const res = await getPhoneControlApi();
+    if (res.code === 0) {
+      tableList.value = res.data.device_list;
     }
-    const date = new Date(timestamp * 1000);
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    const hours = String(date.getHours()).padStart(2, '0');
-    const minutes = String(date.getMinutes()).padStart(2, '0');
-    const seconds = String(date.getSeconds()).padStart(2, '0');
+    console.log('手机控制列表数据：', res);
+  } catch (err) {
+    // you can report use errorHandler or other
+  }
+};
 
-    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
-  };
-  // 状态样式
-  const statusStyle = (status: any) => {
-    switch (status) {
-      case 0:
-        return 'status-gray'; // 初始化
-      case 1:
-        return 'status-blue'; // 已下达
-      case 2:
-        return 'status-green'; // 完成
-      case -1:
-        return 'status-red'; // 执行失败
-      default:
-        return 'status-black'; // 未知状态
-    }
-  };
+// 查询当前推特账号列表
+const queryTweetList = async () => {
+  try {
+    const res = await getTwitterUserListApi();
+    // if (res.code === 0) {
+    //   userList.value = res.data.list;
+    // }
+    console.log('Tweet列表数据：', res);
+  } catch (err) {
+    console.log(err);
+  }
+};
 
-  const addAccount = (form: any) => {
-    // 点击 + 号时添加一行
-    form.tweets_user_name_list.push('');
-  };
-  const removeAccount = (form: any, index: any) => {
-    // 点击 - 号时移除对应的输入框
-    form.tweets_user_name_list.splice(index, 1);
-  };
+// 打开修改备注弹窗
+const openModal = (record: any) => {
+  updateCommentForm.comment = record.comment;
+  updateCommentForm.deviceId = record.device_id;
+  updateComment.value = true;
+};
 
-  // 查询列表
-  const queryListData = async () => {
-    try {
-      const res = await getPhoneControlApi();
-      if (res.code === 0) {
-        tableList.value = res.data.device_list;
-      }
-      console.log('手机控制列表数据：', res);
-    } catch (err) {
-      // you can report use errorHandler or other
+// 关注用户
+const followUser = async () => {
+  try {
+    const res = await followUserApi(followUserForm);
+    if (res.code === 0) {
+      followUserVisible.value = false;
+      followUserForm.tweets_user_name = '';
+      Message.success('关注成功');
     }
-  };
-
-  // 查询当前推特账号列表
-  const queryTweetList = async () => {
-    try {
-      const res = await getTwitterUserListApi();
-      // if (res.code === 0) {
-      //   userList.value = res.data.list;
-      // }
-      console.log('Tweet列表数据：', res);
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  // 打开修改备注弹窗
-  const openModal = (record: any) => {
-    updateCommentForm.comment = record.comment;
-    updateCommentForm.deviceId = record.device_id;
-    updateComment.value = true;
-  };
-
-  // 关注用户
-  const followUser = async () => {
-    try {
-      const res = await followUserApi(followUserForm);
-      if (res.code === 0) {
-        followUserVisible.value = false;
-        followUserForm.tweets_user_name = '';
-        Message.success('关注成功');
-      }
-      queryListData();
-    } catch (err) {
-      Message.error('关注失败');
-      console.log(err);
-    }
-  };
-
-  // 指定账号关注用户
-  const followUser2 = async () => {
-    try {
-      const res = await followUserApi2(followUserForm2);
-      if (res.code === 0) {
-        followUserVisible2.value = false;
-        followUserForm2.tweets_user_name = '';
-        followUserForm2.tweets_user_name_list = [];
-        Message.success('关注成功');
-      }
-      queryListData();
-    } catch (err) {
-      Message.error('关注失败');
-      console.log(err);
-    }
-  };
-
-  // 转发引用推文
-  const forwardTweet = async () => {
-    try {
-      const res = await forwardTweetApi(forwardTweetForm);
-      if (res.code === 0) {
-        forwardTweetVisible.value = false;
-        forwardTweetForm.count = 0;
-        forwardTweetForm.content = '';
-        forwardTweetForm.twitter_url = '';
-        forwardTweetForm.username = '';
-        forwardTweetForm.target = '';
-        forwardTweetForm.twitterQuote = '';
-        Message.success('转发成功');
-      }
-      queryListData();
-    } catch (err) {
-      console.log(err);
-      Message.error('转发失败');
-    }
-  };
-  // 指定账号转发引用推文
-  const forwardTweet2 = async () => {
-    try {
-      const res = await forwardTweetApi2(forwardTweetForm2);
-      if (res.code === 0) {
-        forwardTweetVisible2.value = false;
-        forwardTweetForm2.tweets_user_name_list = [];
-        forwardTweetForm2.content = '';
-        forwardTweetForm2.twitter_url = '';
-        forwardTweetForm2.username = '';
-        forwardTweetForm2.target = '';
-        forwardTweetForm2.twitterQuote = '';
-        Message.success('转发成功');
-      }
-      queryListData();
-    } catch (err) {
-      console.log(err);
-      Message.error('转发失败');
-    }
-  };
-
-  // 评论推文
-  const commentTweet = async () => {
-    try {
-      const res = await commentTweetApi(commentForm);
-      if (res.code === 0) {
-        commentVisible.value = false;
-        commentForm.content = '';
-        commentForm.count = 0;
-        commentForm.twitter_url = '';
-        Message.success('评论成功');
-      }
-      queryListData();
-    } catch (err) {
-      console.log(err);
-      Message.error('评论失败');
-    }
-  };
-  // 指定账号评论推文
-  const commentTweet2 = async () => {
-    try {
-      const res = await commentTweetApi2(commentForm2);
-      if (res.code === 0) {
-        commentVisible2.value = false;
-        commentForm2.content = '';
-        commentForm2.tweets_user_name_list = [];
-        commentForm2.twitter_url = '';
-        Message.success('评论成功');
-      }
-      queryListData();
-    } catch (err) {
-      console.log(err);
-      Message.error('评论失败');
-    }
-  };
-
-  // 发布推文
-  const postTweet = async () => {
-    try {
-      const res = await postTweetApi(postTweetForm);
-      if (res.code === 0) {
-        postTweetVisible.value = false;
-        postTweetForm.content = '';
-        postTweetForm.img_url = '';
-        postTweetForm.count = 0;
-        Message.success('发布成功');
-      }
-      queryListData();
-    } catch (err) {
-      console.log(err);
-      Message.error('发布失败');
-    }
-  };
-  // 指定账号发布推文
-  const postTweet2 = async () => {
-    try {
-      const res = await postTweetApi2(postTweetForm2);
-      if (res.code === 0) {
-        postTweetVisible2.value = false;
-        postTweetForm2.content = '';
-        postTweetForm2.img_url = '';
-        postTweetForm2.tweets_user_name_list = [];
-        Message.success('发布成功');
-      }
-      queryListData();
-    } catch (err) {
-      console.log(err);
-      Message.error('发布失败');
-    }
-  };
-
-  // twitterAPI发推
-  const postTweet3 = async () => {
-    try {
-      const res = await postTweetAp3(postTwitterTweetForm);
-      if (res.code === 0) {
-        twitterTweetVisible.value = false;
-        postTwitterTweetForm.content = '';
-        postTwitterTweetForm.imageUrl = '';
-        postTwitterTweetForm.robotName = '';
-        Message.success('发布成功');
-      }
-      queryListData();
-    } catch (err) {
-      console.log(err);
-      Message.error('发布失败');
-    }
-  };
-
-  // 修改备注
-  const getUpdateComment = async () => {
-    try {
-      const res = await updateDeviceCommentApi(updateCommentForm);
-      if (res.code === 0) {
-        Message.success('修改成功');
-        updateComment.value = false;
-      }
-      queryListData();
-    } catch (err) {
-      Message.error('修改失败');
-    }
-  };
-
-  onMounted(async () => {
     queryListData();
-    // 每10秒查询一次列表数据
-    setInterval(() => {
-      // queryListData();
-    }, 100000);
-    // queryTweetList();
-  });
+  } catch (err) {
+    Message.error('关注失败');
+    console.log(err);
+  }
+};
+
+// 指定账号关注用户
+const followUser2 = async () => {
+  try {
+    const res = await followUserApi2(followUserForm2);
+    if (res.code === 0) {
+      followUserVisible2.value = false;
+      followUserForm2.tweets_user_name = '';
+      followUserForm2.tweets_user_name_list = [];
+      Message.success('关注成功');
+    }
+    queryListData();
+  } catch (err) {
+    Message.error('关注失败');
+    console.log(err);
+  }
+};
+
+// 转发引用推文
+const forwardTweet = async () => {
+  try {
+    const res = await forwardTweetApi(forwardTweetForm);
+    if (res.code === 0) {
+      forwardTweetVisible.value = false;
+      forwardTweetForm.count = 0;
+      forwardTweetForm.content = '';
+      forwardTweetForm.twitter_url = '';
+      forwardTweetForm.username = '';
+      forwardTweetForm.target = '';
+      forwardTweetForm.twitterQuote = '';
+      Message.success('转发成功');
+    }
+    queryListData();
+  } catch (err) {
+    console.log(err);
+    Message.error('转发失败');
+  }
+};
+// 指定账号转发引用推文
+const forwardTweet2 = async () => {
+  try {
+    const res = await forwardTweetApi2(forwardTweetForm2);
+    if (res.code === 0) {
+      forwardTweetVisible2.value = false;
+      forwardTweetForm2.tweets_user_name_list = [];
+      forwardTweetForm2.content = '';
+      forwardTweetForm2.twitter_url = '';
+      forwardTweetForm2.username = '';
+      forwardTweetForm2.target = '';
+      forwardTweetForm2.twitterQuote = '';
+      Message.success('转发成功');
+    }
+    queryListData();
+  } catch (err) {
+    console.log(err);
+    Message.error('转发失败');
+  }
+};
+
+// 评论推文
+const commentTweet = async () => {
+  try {
+    const res = await commentTweetApi(commentForm);
+    if (res.code === 0) {
+      commentVisible.value = false;
+      commentForm.content = '';
+      commentForm.count = 0;
+      commentForm.twitter_url = '';
+      Message.success('评论成功');
+    }
+    queryListData();
+  } catch (err) {
+    console.log(err);
+    Message.error('评论失败');
+  }
+};
+// 指定账号评论推文
+const commentTweet2 = async () => {
+  try {
+    const res = await commentTweetApi2(commentForm2);
+    if (res.code === 0) {
+      commentVisible2.value = false;
+      commentForm2.content = '';
+      commentForm2.tweets_user_name_list = [];
+      commentForm2.twitter_url = '';
+      Message.success('评论成功');
+    }
+    queryListData();
+  } catch (err) {
+    console.log(err);
+    Message.error('评论失败');
+  }
+};
+
+// 发布推文
+const postTweet = async () => {
+  try {
+    const res = await postTweetApi(postTweetForm);
+    if (res.code === 0) {
+      postTweetVisible.value = false;
+      postTweetForm.content = '';
+      postTweetForm.img_url = '';
+      postTweetForm.count = 0;
+      Message.success('发布成功');
+    }
+    queryListData();
+  } catch (err) {
+    console.log(err);
+    Message.error('发布失败');
+  }
+};
+// 指定账号发布推文
+const postTweet2 = async () => {
+  try {
+    const res = await postTweetApi2(postTweetForm2);
+    if (res.code === 0) {
+      postTweetVisible2.value = false;
+      postTweetForm2.content = '';
+      postTweetForm2.img_url = '';
+      postTweetForm2.tweets_user_name_list = [];
+      Message.success('发布成功');
+    }
+    queryListData();
+  } catch (err) {
+    console.log(err);
+    Message.error('发布失败');
+  }
+};
+
+// twitterAPI发推
+const postTweet3 = async () => {
+  try {
+    const res = await postTweetAp3(postTwitterTweetForm);
+    if (res.code === 0) {
+      twitterTweetVisible.value = false;
+      postTwitterTweetForm.content = '';
+      postTwitterTweetForm.imageUrl = '';
+      postTwitterTweetForm.robotName = '';
+      Message.success('发布成功');
+    }
+    queryListData();
+  } catch (err) {
+    console.log(err);
+    Message.error('发布失败');
+  }
+};
+
+// 修改备注
+const getUpdateComment = async () => {
+  try {
+    const res = await updateDeviceCommentApi(updateCommentForm);
+    if (res.code === 0) {
+      Message.success('修改成功');
+      updateComment.value = false;
+    }
+    queryListData();
+  } catch (err) {
+    Message.error('修改失败');
+  }
+};
+const platform = ref([
+      { label: 'ins', value: 3 },
+      { label: 'truth', value: 2 },
+      { label: 'x', value: 1 },
+      { label: '小红书', value: 4 },
+    ],);
+// const abc = ref(0)
+const getdisposition = async () => {
+  try {
+    const res = await getConfigByName({ name: 'platform_config' });
+    if (res.code === 0) {
+      // platform.value = res.data.data;
+      const a = Object.entries(res.data).map(([key, value]) => ({
+        label: key,
+        value:Number(value),
+      }));
+      console.log(a);
+      
+      platform.value = a;
+    }
+  } catch (err) {
+    console.log(err);
+
+    Message.error('获取失败');
+  }
+};
+const handleChangeplatform = (value:any) => {
+  // console.log(value); // { key: "lucy", label: "Lucy (101)" }
+  // console.log(platform.value[value]);
+  const selctPlatform = platform.value[value];
+  updateCommentForm.platform = Number(selctPlatform.value);
+  
+};
+const num = ref('1')
+onMounted(async () => {
+  await getdisposition();
+  await queryListData();
+  // 每10秒查询一次列表数据
+  setInterval(() => {
+    // queryListData();
+  }, 100000);
+  // queryTweetList();
+});
 </script>
 
 <style scoped>
-  .actions {
-    margin-bottom: 16px;
-    display: flex;
-    gap: 10px;
-  }
-  .status-gray {
-    color: gray;
-  }
-  .status-blue {
-    color: blue;
-  }
-  .status-green {
-    color: green;
-  }
-  .status-red {
-    color: red;
-  }
-  .status-black {
-    color: black;
-  }
+.actions {
+  margin-bottom: 16px;
+  display: flex;
+  gap: 10px;
+}
+.status-gray {
+  color: gray;
+}
+.status-blue {
+  color: blue;
+}
+.status-green {
+  color: green;
+}
+.status-red {
+  color: red;
+}
+.status-black {
+  color: black;
+}
 </style>

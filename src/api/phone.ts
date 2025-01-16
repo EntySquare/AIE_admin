@@ -59,3 +59,8 @@ export function postTweetAp3(data: any) {
 export function getDailyOperatesApi(params: any) {
   return axios.get<any>('/admin/getDailyOperates', { params });
 }
+
+// 修改系统配置 
+export function getConfigByName(params: any) {
+  return axios.get<any>('/admin/getConfigByName', { params });
+}

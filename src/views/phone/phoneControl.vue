@@ -144,7 +144,7 @@
                   v-model="record.platform"
                   style="width: 120px"
                   :options="platform"
-                  @change="handleChangeplatform"
+                  @change="handleChangeplatform(record)"
                 ></a-select>
               </template>
             </a-table-column>
@@ -886,12 +886,7 @@ const getUpdateComment = async () => {
     Message.error('修改失败');
   }
 };
-const platform = ref([
-      { label: 'ins', value: 3 },
-      { label: 'truth', value: 2 },
-      { label: 'x', value: 1 },
-      { label: '小红书', value: 4 },
-    ],);
+const platform = ref([],);
 // const abc = ref(0)
 const getdisposition = async () => {
   try {
@@ -912,11 +907,21 @@ const getdisposition = async () => {
     Message.error('获取失败');
   }
 };
-const handleChangeplatform = (value:any) => {
-  // console.log(value); // { key: "lucy", label: "Lucy (101)" }
-  // console.log(platform.value[value]);
-  const selctPlatform = platform.value[value];
-  updateCommentForm.platform = Number(selctPlatform.value);
+const handleChangeplatform = async (record:any) => {
+  updateCommentForm.comment = record.comment;
+  updateCommentForm.deviceId = record.device_id;
+
+  updateCommentForm.platform = record.platform;
+  try {
+    const res = await updateDeviceCommentApi(updateCommentForm);
+    if (res.code === 0) {
+      Message.success('修改成功');
+      updateComment.value = false;
+    }
+    queryListData();
+  } catch (err) {
+    Message.error('修改失败');
+  }
   
 };
 const num = ref('1')

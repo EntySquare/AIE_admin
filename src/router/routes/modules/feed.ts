@@ -25,4 +25,4 @@ const SYSTEM: AppRouteRecordRaw = {
   ],
 };
 
-export default SYSTEM;
+// export default SYSTEM;

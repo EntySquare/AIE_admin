@@ -25,4 +25,4 @@ const LOTTERY: AppRouteRecordRaw = {
   ],
 };
 
-export default LOTTERY;
+// export default LOTTERY;

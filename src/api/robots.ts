@@ -11,3 +11,7 @@ export function updateRobot(data: any) {
 export function getRobotBindList(params: any) {
   return axios.get<any>('/admin/getTwitterBinds', { params });
 }
+
+export const addCreateRobot = (data: any) => {
+  return axios.post<any>('/admin/createRobot', data);
+}

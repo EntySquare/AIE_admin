@@ -1,5 +1,6 @@
 <template>
   <div class="container">
+    <!-- <a-table :dataSource="dataSource" :columns="columnss" /> -->
     <a-spin :loading="loading" style="width: 100%">
       <a-card>
         <a-typography-title :heading="6"> 机器人列表 </a-typography-title>
@@ -41,22 +42,27 @@
             </a-col>
           </a-row>
         </a-form>
-
+        <a-space>
+          <a-button type="primary" @click="createRobot">创建机器人</a-button>
+        </a-space>
         <a-grid :cols="24" :col-gap="16" :row-gap="16" style="margin-top: 16px">
           <a-grid-item
             :span="{ xs: 24, sm: 24, md: 24, lg: 24, xl: 24, xxl: 24 }"
           >
-            <a-table :data="List" style="margin-top: 20px" :pagination="false">
+            <a-table :data="List" style="margin-top: 20px"  :bordered="{cell:true}" :pagination="false">
               <template #columns>
                 <a-table-column
                   title="机器人id"
                   data-index="id"
+                  :width=90
+                  :minWidth='100'
                 ></a-table-column>
                 <a-table-column
                   title="创建者钱包地址"
                   data-index="created_address"
+                   :width=380
                 ></a-table-column>
-                <a-table-column title="头像" data-index="avatar">
+                <a-table-column title="头像" data-index="avatar" >
                   <template #cell="{ record }">
                     <img
                       style="width: 30px; height: 30px; border-radius: 50%"
@@ -65,16 +71,17 @@
                     />
                   </template>
                 </a-table-column>
-                <a-table-column title="机器人名字" data-index="name">
+                <a-table-column title="机器人名字" data-index="name"  minwidth=350>
                   <template #cell="{ record }">
                     <a-button type="text" @click="handleEdit1(record)">{{
                       record.name
                     }}</a-button></template
                   >
                 </a-table-column>
-                <a-table-column
+                <!-- <a-table-column
                   title="所在部落"
                   data-index="tribe"
+                  :width=250
                 ></a-table-column>
                 <a-table-column
                   title="受欢迎度"
@@ -83,24 +90,25 @@
                 <a-table-column
                   title="使用人数"
                   data-index="use_count"
-                ></a-table-column>
+                ></a-table-column> -->
 
                 <a-table-column
                   title="已绑定推特账号"
                   data-index="twitterAccount"
+                   :width=150
                 ></a-table-column>
                 <!-- <a-table-column
                   title="聊天收益"
                   data-index="reward"
                 ></a-table-column> -->
-                <a-table-column title="状态" data-index="status">
+                <!-- <a-table-column title="状态" data-index="status"  :width=130>
                   <template #cell="{ record }">
                     {{
                       record.isRecommend === 1 ? '推荐到首页' : '取消推荐'
                     }}</template
                   ></a-table-column
                 >
-                <a-table-column title="抽奖状态" data-index="lottery_status">
+                <a-table-column title="抽奖状态" data-index="lottery_status"   :width=130>
                   <template #cell="{ record }">
                     {{
                       record.lottery_status === 0 ? '关闭' : '开启'
@@ -111,33 +119,50 @@
                   title="抽奖比例"
                   data-index="lottery_rate"
                 ></a-table-column>
-                <a-table-column title="隐身状态" data-index="lottery_status">
+                <a-table-column title="隐身状态" data-index="lottery_status"  >
                   <template #cell="{ record }">
                     {{
                       record.isSearch === 0 ? '开启' : '关闭'
                     }}</template
                   ></a-table-column
-                >
+                > -->
                 <a-table-column
                   title="自动发推目的"
                   data-index="sendTarget"
-                ></a-table-column>
+                   :width=450
+                >
+                  <template #cell="{ record }">
+                   {{ record.sendTarget.length > 150 ? record.sendTarget.substring(0, 150) + '...' : record.sendTarget }}
+                    </template>
+                </a-table-column>
                 <a-table-column
                   title="关注广场采集回复目的"
                   data-index="attentionTarget"
-                ></a-table-column>
+                  :width=450
+                >
+                <template #cell="{ record }">
+                   {{ record.attentionTarget.length > 150 ? record.attentionTarget.substring(0, 150) + '...' : record.attentionTarget }}
+                    </template>
+              </a-table-column>
                 <a-table-column
                   title="每日关注广场采集回复目的"
                   data-index="dailyAttentionTarget"
-                ></a-table-column>
+                 :width=450
+                >
+                <template #cell="{ record }">
+                   {{ record.dailyAttentionTarget.length > 150 ? record.dailyAttentionTarget.substring(0, 150) + '...' : record.dailyAttentionTarget }}
+                    </template>
+              </a-table-column>
                 <a-table-column title="操作">
                   <template #cell="{ record }">
                     <a-space>
                       <a-button type="primary" @click="openModal(record)"
                         >绑定推特账号</a-button
                       >
-
-                      <a-button v-if="record.isRecommend === 0" type="primary" @click="Operation(1, record)"
+                      <a-button type="primary" @click="OperRobotModal(record)"
+                        >修改信息</a-button
+                      >
+                      <!-- <a-button v-if="record.isRecommend === 0" type="primary" @click="Operation(1, record)"
                         >推荐到首页</a-button
                       >
                       <a-button v-if="record.isRecommend === 1" type="primary" @click="Operation(0, record)"
@@ -154,7 +179,7 @@
                       >
                       <a-button v-if="record.isSearch === 0"  type="primary" @click="SearchOperation(1, record)"
                       >关闭隐身</a-button
-                      >
+                      > -->
                       <a-button v-if="record.lottery_status === 1"  type="primary" @click="openModal1(record)"
                       >修改抽奖比例</a-button
                       >
@@ -231,7 +256,59 @@
         </a-modal>
       </a-card>
     </a-spin>
-
+    <a-modal 
+          :visible="robotModal"
+          :mask-closable="false"
+          @ok="okRobotModal"
+          @cancel="robotModal = false"
+          width="1000px"
+    >
+      <template #title> 信息修改   </template>
+      <div>
+        <a-form ref="formRef"  :model="updateRobotVlaue1"  >
+          <a-form-item  label="介绍" validate-trigger="blur">
+            <a-input v-model="updateRobotVlaue1.characterIntroduction" />
+          </a-form-item>
+          <a-form-item field="password0" label="标签" validate-trigger="blur">
+            <a-textarea  v-model="updateRobotVlaue1.tag" auto-size />
+          </a-form-item>
+          <a-form-item field="password1" label="机器人性格" validate-trigger="blur">
+            <a-textarea  v-model="updateRobotVlaue1.personalityTraits" auto-size />
+          </a-form-item>
+          <a-form-item field="password2" label="机器人配置" validate-trigger="blur">
+            <a-textarea  v-model="updateRobotVlaue1.configurationTips" auto-size />
+          </a-form-item>
+        </a-form>
+      </div>
+    </a-modal>
+    <a-modal 
+          :visible="addRobotModal"
+          :mask-closable="false"
+          @ok="uploadAddRobotModal"
+          @cancel="canceladdRobotModal"
+          width="1000px"
+    >
+      <template #title> 创建机器人   </template>
+      <div>
+        <a-form ref="formRef"  :model="robotInfo"  >
+          <a-form-item  label="名字" validate-trigger="blur">
+            <a-input v-model="robotInfo.name" />
+          </a-form-item>
+          <a-form-item  label="介绍" validate-trigger="blur">
+            <a-input v-model="robotInfo.characterIntroduction" />
+          </a-form-item>
+          <a-form-item field="password0" label="标签" validate-trigger="blur">
+            <a-textarea  v-model="robotInfo.tag" auto-size />
+          </a-form-item>
+          <a-form-item field="password1" label="机器人性格" validate-trigger="blur">
+            <a-textarea  v-model="robotInfo.personalityTraits" auto-size />
+          </a-form-item>
+          <a-form-item field="password2" label="机器人配置" validate-trigger="blur">
+            <a-textarea  v-model="robotInfo.configurationTips" auto-size />
+          </a-form-item>
+        </a-form>
+      </div>
+    </a-modal>
     <a-modal v-model:visible="bindVisible" @ok="okBind">
       <template #title> 绑定推特账号 </template>
       <div>
@@ -296,10 +373,9 @@
 </template>
 
 <script setup lang="ts">
-  import { getRobotList, updateRobot } from '@/api/robots';
+  import { getRobotList, updateRobot ,addCreateRobot} from '@/api/robots';
   import { Message } from '@arco-design/web-vue';
   import { onMounted, reactive, ref } from 'vue';
-  import { stringify } from "query-string/base";
 
   const List = ref([]);
   const loading = ref(false);
@@ -584,6 +660,72 @@
   onMounted(async () => {
     getlList();
   });
+
+const robotModal = ref(false)
+const formRef = ref(null);
+const updateRobotVlaue1 = ref({
+  characterIntroduction: '',
+  tag: '',
+  personalityTraits: '',
+  configurationTips: '',
+})
+const OperRobotModal =(record:any)=>{
+  console.log(record);
+  robotModal.value = true
+  updateRobotVlaue.value = JSON.parse(JSON.stringify(record));
+  updateRobotVlaue1.value.characterIntroduction  = record.characterIntroduction
+  updateRobotVlaue1.value.tag  = record.tag
+  updateRobotVlaue1.value.personalityTraits  = record.personalityTraits
+  updateRobotVlaue1.value.configurationTips  = record.configurationTips
+}
+
+const okRobotModal = async () => {
+  updateRobotVlaue.value.characterIntroduction = updateRobotVlaue1.value.characterIntroduction
+  updateRobotVlaue.value.tag = updateRobotVlaue1.value.tag
+  updateRobotVlaue.value.personalityTraits = updateRobotVlaue1.value.personalityTraits
+  updateRobotVlaue.value.configurationTips = updateRobotVlaue1.value.configurationTips
+  updateRobotVlaue.value.id = Number(updateRobotVlaue.value.id)
+  updateRobotVlaue.value.lottery_rate = updateRobotVlaue.value.lottery_rate.toString()
+  updateRobotVlaue.value.avatarUrl = updateRobotVlaue.value.avatar
+
+  const res = await updateRobot(updateRobotVlaue.value);
+  if (res.code === 0) {
+    robotModal.value = false
+    Message.success('修改成功');
+    updateRobotVlaue.value.characterIntroduction=''
+    updateRobotVlaue.value.tag=''
+    updateRobotVlaue.value.personalityTraits=''
+    updateRobotVlaue.value.configurationTips=''
+    getlList();
+  }
+}
+const addRobotModal = ref(false)
+const createRobot = ()=>{
+  addRobotModal.value = true
+}
+const robotInfo = ref({
+  name:"",
+  characterIntroduction: '',
+  tag: '',
+  personalityTraits: '',
+  configurationTips:""
+})
+const canceladdRobotModal = ()=>{
+  addRobotModal.value = false
+  robotInfo.value.name=""
+  robotInfo.value.characterIntroduction = ''
+  robotInfo.value.tag = ''
+  robotInfo.value.personalityTraits = ''
+  robotInfo.value.configurationTips=""
+}
+const uploadAddRobotModal = async () => {
+  const res = await addCreateRobot(robotInfo.value);
+  if (res.code === 0) {
+    Message.success('修改成功');
+    canceladdRobotModal()
+    getlList();
+  }
+}
 </script>
 
 <style scoped></style>

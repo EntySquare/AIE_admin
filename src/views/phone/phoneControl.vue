@@ -1037,6 +1037,9 @@ pagination.onChange = (page: number) => {
 
 
 const handleSendPrivateMessage = async () => {
+  if (typeof fanDateForm.fanAccount === 'string') {
+    fanDateForm.fanAccount = fanDateForm.fanAccount.split(',');
+  } 
   try {
     const res = await chatWithFansApi(fanDateForm);
     // console.log(res);

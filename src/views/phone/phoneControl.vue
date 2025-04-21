@@ -39,9 +39,9 @@
         <a-button type="primary" @click="twitterTweetVisible = true"
           >Twitter API发推</a-button
         >
-        <a-button type="primary" @click="sendPrivateMessageShow = true"
+        <!-- <a-button type="primary" @click="sendPrivateMessageShow = true"
           >发送私信</a-button
-        >
+        > -->
       </div>
     </a-card>
 

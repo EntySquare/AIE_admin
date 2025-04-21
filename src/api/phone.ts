@@ -64,3 +64,12 @@ export function getDailyOperatesApi(params: any) {
 export function getConfigByName(params: any) {
   return axios.get<any>('/admin/getConfigByName', { params });
 }
+
+// 发送私信给指定粉丝
+export function chatWithFansApi(data: any) {
+  return axios.post<any>('/admin/control/device/chatWithFans', data);
+}
+// 获取账号粉丝
+export function getFansListApi(params: any) {
+  return axios.get<any>('/admin/control/device/GetFansList', { params });
+}

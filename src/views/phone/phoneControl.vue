@@ -39,6 +39,9 @@
         <a-button type="primary" @click="twitterTweetVisible = true"
           >Twitter API发推</a-button
         >
+        <a-button type="primary" @click="sendPrivateMessageShow = true"
+          >发送私信</a-button
+        >
       </div>
     </a-card>
 
@@ -534,6 +537,41 @@
       </div>
     </a-modal>
   </div>
+
+  <a-modal v-model:visible="sendPrivateMessageShow" @ok="handleSendPrivateMessage" @cancel="handleCancelsendPrivateMessage">
+    <template #title>
+      指定账号发送私信
+    </template>
+    <div>
+      <a-form :model="fanDateForm">
+        <a-form-item field="userAccount" label="用户">
+          <a-input v-model.trim="fanDateForm.userAccount" allow-clear/>
+        </a-form-item>
+        <a-form-item field="fanAccount" label="粉丝账户">
+          <a-input v-model.trim="fanDateForm.fanAccount" allow-clear />
+        </a-form-item>
+        <a-form-item field="message" label="发送内容">
+          <a-input v-model.trim="fanDateForm.message" allow-clear />
+        </a-form-item>
+      </a-form>
+
+      <a-button type="primary" @click="headlGetfanList">
+          获取粉丝列表</a-button
+        >
+       
+      <a-modal
+        v-model:visible="fanTableShow"
+        title="内层 Modal"
+        @ok="handlfanTable"
+        :mask-closable="false"
+        :closable="true"
+      >
+      <a-table row-key="name" :columns="fanColumns" :data="fansList"  v-model:selectedKeys="fansSelectedKeys" :row-selection="rowSelection" :pagination="pagination" />
+      </a-modal>
+    </div>
+  </a-modal>
+
+
 </template>
 
 <script setup lang="ts">
@@ -553,6 +591,8 @@ import {
   postTweetApi2,
   updateDeviceCommentApi,
   getConfigByName,
+  chatWithFansApi,
+  getFansListApi
 } from '@/api/phone';
 
 const tableList = ref([]);
@@ -934,6 +974,91 @@ onMounted(async () => {
   }, 100000);
   // queryTweetList();
 });
+
+const sendPrivateMessageShow = ref(false); // 发送私信弹窗
+const fanDateForm = reactive({
+  userAccount: '',
+  fanAccount: [] as string[],
+  message: '',
+});
+
+
+const fanTableShow = ref(false);
+
+const fanColumns = [
+    {
+       title: 'Name',
+       dataIndex: 'name',
+    },
+]
+const fansList = ref([]);
+const fansSelectedKeys=ref([]);
+const handlfanTable = () => {
+  // fanTableShow.value = false;
+  fanDateForm.fanAccount = []
+  fanDateForm.fanAccount.push(...fansSelectedKeys.value);
+  // console.log(fanDateForm.fanAccount);
+};
+const rowSelection = reactive({
+    type: 'checkbox',
+    showCheckedAll: true,
+    onlyCurrent: false,
+  });
+const pagination = reactive({
+  current: 1,
+  pageSize: 10,
+    total: 0,
+    showTotal: true,
+  })
+const headlGetfanList = ()=> {
+  const data = {
+    userAccount: fanDateForm.userAccount,
+    pageIndex:pagination.current,
+    pageSize: pagination.pageSize,
+  }
+  console.log(data);
+  
+  getFansListApi(data).then((res) => {
+    console.log(res.data);
+    if (res.code === 0) {
+      pagination.total = res.data.total;
+      fanTableShow.value = true;
+       const newData = res.data.fans.map((item: any) => ({
+        name: item,
+        }));
+        fansList.value = newData;
+    }
+  });
+};
+pagination.onChange = (page: number) => {
+  pagination.current = page;
+  headlGetfanList();
+};
+
+
+const handleSendPrivateMessage = async () => {
+  try {
+    const res = await chatWithFansApi(fanDateForm);
+    // console.log(res);
+    fanDateForm.userAccount = '';
+    fanDateForm.message = '';
+    fanDateForm.fanAccount = [];
+    fansSelectedKeys.value = [];
+    pagination.current = 1;
+    Message.success('生成任务成功，等待执行');
+  } catch (err) {
+    // Message.error('发送失败');
+  }
+};
+const handleCancelsendPrivateMessage = () => {
+  sendPrivateMessageShow.value = false;
+  fanDateForm.userAccount = '';
+  fanDateForm.message = '';
+  fanDateForm.fanAccount = [];
+  fansSelectedKeys.value = [];
+  pagination.current = 1;
+};
+
 </script>
 
 <style scoped>

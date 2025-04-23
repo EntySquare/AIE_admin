@@ -39,9 +39,9 @@
         <a-button type="primary" @click="twitterTweetVisible = true"
           >Twitter API发推</a-button
         >
-        <!-- <a-button type="primary" @click="sendPrivateMessageShow = true"
+        <a-button type="primary" @click="sendPrivateMessageShow = true"
           >发送私信</a-button
-        > -->
+        >
       </div>
     </a-card>
 
@@ -1037,6 +1037,9 @@ pagination.onChange = (page: number) => {
 
 
 const handleSendPrivateMessage = async () => {
+  if (typeof fanDateForm.fanAccount === 'string') {
+    fanDateForm.fanAccount = fanDateForm.fanAccount.split(',');
+  } 
   try {
     const res = await chatWithFansApi(fanDateForm);
     // console.log(res);

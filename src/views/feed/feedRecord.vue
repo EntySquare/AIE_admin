@@ -124,6 +124,8 @@
         pageSize: form.pageSize,
         pageIndex: Number(form.pageIndex + 1),
       });
+      console.log(res, '查询喂养记录列表数据：');
+      
       if (res.code === 0) {
         feedsRecord.value = res.data.data;
         total.value = res.data.total;

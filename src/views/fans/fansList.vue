@@ -119,6 +119,11 @@ const fetchChatHistory = async () => {
     if (res.code === 0) {
       chatMessages.value = res.data.message_list.reverse();
       console.log('获取消息历史消息', res.data);
+      nextTick(() => {
+        if (chatContentRef.value) {
+          chatContentRef.value.scrollTop = chatContentRef.value.scrollHeight;
+        }
+      });
       chatWindowShow.value = true;
     }
   } catch (error) {

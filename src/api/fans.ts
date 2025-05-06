@@ -29,4 +29,7 @@ export function getPhoneControlApi() {
   export function sendMessageApi(data: any) {
     return axios.post<any>('/admin/control/message/sendMessage', data);
   }
-  
+  // /api/admin/control/message/recentChats
+  export function getRecentChatsApi(params: any) {
+    return axios.get<any>('/admin/control/message/recentChats', params);
+  }

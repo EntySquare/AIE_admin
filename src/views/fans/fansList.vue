@@ -2,17 +2,36 @@
   <div class="chat-container">
     <!-- 用户列表部分 -->
     <div class="user-list-section scrollable">
-      <h2 class="section-title">用户列表</h2>
-      <div class="user-list">
-        <!-- <div class="user-item" @click="selectUser('@JCunegatti')">
-          <img :src="getAvatar('abc')" alt="avatar" class="avatar" />
-          <span class="user-name">@JCunegatti</span>
-        </div> -->
-        <div v-for="(user, i) in users" :key="i">
-          <div v-if="user.tweet_account_list.length > 0" class="user-item"
-            @click="selectUser(user.tweet_account_list[0].tweet_account)">
-            <img :src="getAvatar(user.tweet_account_list[0].tweet_account)" alt="avatar" class="avatar" />
-            <span class="user-name">{{ user.tweet_account_list[0].tweet_account }}</span>
+      <div>
+        <h2 class="section-title">最近联系</h2>
+        <div class="user-list">
+          <!-- <div class="user-item"
+            @click="recentOpenChat({ user_account: '@JCunegatti', chain_id: '-8028072419120791264', fan_account: '@blau_jack72635', unread: 0 })">
+            <img :src="getAvatar('abc')" alt="avatar" class="avatar" />
+            <span class="user-name">@JCunegatti</span>
+          </div> -->
+          <div v-for="(user, i) in recentChats" :key="i" class="recent_item">
+            <div class="user-item" @click="recentOpenChat(user)">
+              <img :src="getAvatar(user.fan_account)" alt="avatar" class="avatar" />
+              <span class="user-name">{{ user.fan_account }}</span>
+            </div>
+            <div class="read" v-if="user.unread > 0"></div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <h2 class="section-title">用户列表</h2>
+        <div class="user-list">
+          <div class="user-item" @click="selectUser('@JCunegatti')">
+            <img :src="getAvatar('abc')" alt="avatar" class="avatar" />
+            <span class="user-name">@JCunegatti</span>
+          </div>
+          <div v-for="(user, i) in users" :key="i">
+            <div v-if="user.tweet_account_list.length > 0" class="user-item"
+              @click="selectUser(user.tweet_account_list[0].tweet_account)">
+              <img :src="getAvatar(user.tweet_account_list[0].tweet_account)" alt="avatar" class="avatar" />
+              <span class="user-name">{{ user.tweet_account_list[0].tweet_account }}</span>
+            </div>
           </div>
         </div>
       </div>
@@ -66,6 +85,7 @@ import {
   getChatListApi,
   getLatestMessageApi,
   sendMessageApi,
+  getRecentChatsApi
 } from '@/api/fans'
 
 interface TweetAccount {
@@ -86,6 +106,12 @@ interface FansList {
   chain_id: string;
   read: number;
 }
+interface RecentChats {
+  user_account: string;
+  chain_id: string;
+  fan_account: string;
+  unread: number;
+}
 // 定义响应式数据
 const users = ref<User[]>([]);
 const fans = ref<FansList[]>([]);
@@ -105,7 +131,6 @@ const chatContentRef = ref<HTMLElement | null>(null);
 
 const timer = ref<ReturnType<typeof setInterval> | null>(null)
 const fansTimer = ref<ReturnType<typeof setInterval> | null>(null)
-
 const fetchChatHistory = async () => {
   try {
     const data = {
@@ -273,7 +298,8 @@ const openChat = async (fan: FansList) => {
   fetchFans();
   const data = {
     chain_id: fan.chain_id,
-    account: chatInfo.userAccount
+    account: chatInfo.userAccount,
+    fans_account: chatInfo.fanAccount,
   }
   try {
     const res = await createChatApi(data);
@@ -296,8 +322,44 @@ const closeChat = () => {
   // activeChat.value = null;
   chatWindowShow.value = false;
   clearInterval(timer.value);
+  clearInterval(fansTimer.value);
 };
 
+
+
+const recentOpenChat = async (user: RecentChats) => {
+  fansListShow.value = false;
+  if (user.chain_id === fansId.value) {
+    return;
+  }
+  clearInterval(timer.value);
+  clearInterval(fansTimer.value);
+  chatInfo.userAccount = user.user_account;
+  chatInfo.fanAccount = user.fan_account;
+  fansId.value = user.chain_id;
+
+  const data = {
+    chain_id: user.chain_id,
+    account: chatInfo.userAccount,
+    fans_account: chatInfo.fanAccount,
+  }
+  try {
+    const res = await createChatApi(data);
+    if (res.code === 0) {
+      chatInfo.chat_id = res.data.chat_id;
+      fetchChatHistory();
+      timer.value = setInterval(async () => {
+        timerQuertHistory()
+      }, 20000)
+    }
+  } catch (error) {
+    console.error('获取聊天记录失败:', error);
+    chatInfo.userAccount = '';
+    chatInfo.fanAccount = '';
+    fansId.value = '';
+  }
+
+};
 // 发送消息
 const sendMessage = async () => {
   if (chatInfo.message.trim()) {
@@ -324,6 +386,29 @@ const sendMessage = async () => {
   }
 };
 
+const recentChats = ref<RecentChats[]>([]);
+const fetchRecentChats = async () => {
+  // 判断索引在不在列表里面 如果不在就不管，就添加进去
+  try {
+    const data = {
+      pageNum: 1,
+      pageSize: 10,
+    }
+    const res = await getRecentChatsApi(data);
+    if (res.code === 0) {
+      recentChats.value = res.data.recent_chats;
+    }
+  } catch (error) {
+    clearInterval(timer.value);
+  }
+
+}
+const recentTimer = ref<ReturnType<typeof setInterval> | null>(null)
+const pollingRecentRecord = async () => {
+  recentTimer.value = setInterval(() => {
+    fetchRecentChats();
+  }, 5000);
+};
 // 获取头像
 const getAvatar = (id: number | string) => {
   // 这里可以根据 id 返回不同的头像，目前用占位图
@@ -339,9 +424,18 @@ onUnmounted(() => {
     clearInterval(fansTimer.value);
     fansTimer.value = null; // 确保重置为 null
   }
+  if (recentTimer.value) {
+    clearInterval(recentTimer.value);
+    recentTimer.value = null; // 确保重置为 null
+  }
 });
+
+
+
 onMounted(() => {
   fetchUsers();
+  fetchRecentChats();
+  pollingRecentRecord();
 });
 </script>
 
@@ -412,6 +506,16 @@ onMounted(() => {
 
 }
 
+.recent_item {
+  width: 100%;
+  cursor: pointer;
+  border-radius: 12px;
+  transition: background-color 0.2s;
+  display: flex;
+  align-items: center;
+}
+
+
 .fan-info-left {
   display: flex;
   align-items: center;
@@ -432,6 +536,7 @@ onMounted(() => {
 .fan-item:hover {
   background-color: #e0e0e0;
 }
+
 
 .avatar {
   width: 40px;

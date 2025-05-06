@@ -1,24 +1,25 @@
 <template>
   <div class="chat-container">
-    <!-- 用户列表部分 -->
     <div class="user-list-section scrollable">
-      <div>
-        <h2 class="section-title">最近联系</h2>
-        <div class="user-list">
-          <!-- <div class="user-item"
+      <h2 class="section-title">最近联系</h2>
+      <div class="user-list">
+        <!-- <div class="user-item"
             @click="recentOpenChat({ user_account: '@JCunegatti', chain_id: '-8028072419120791264', fan_account: '@blau_jack72635', unread: 0 })">
             <img :src="getAvatar('abc')" alt="avatar" class="avatar" />
             <span class="user-name">@JCunegatti</span>
           </div> -->
-          <div v-for="(user, i) in recentChats" :key="i" class="recent_item">
-            <div class="user-item" @click="recentOpenChat(user)">
-              <img :src="getAvatar(user.fan_account)" alt="avatar" class="avatar" />
-              <span class="user-name">{{ user.fan_account }}</span>
-            </div>
-            <div class="read" v-if="user.unread > 0"></div>
+        <div v-for="(user, i) in recentChats" :key="i" class="recent_item">
+          <div class="user-item" @click="recentOpenChat(user)">
+            <img :src="getAvatar(user.fan_account)" alt="avatar" class="avatar" />
+            <span class="user-name">{{ user.fan_account }}</span>
           </div>
+          <div class="read" v-if="user.unread > 0"></div>
         </div>
       </div>
+    </div>
+    <!-- 用户列表部分 -->
+    <div class="user-list-section scrollable">
+
       <div>
         <h2 class="section-title">用户列表</h2>
         <div class="user-list">

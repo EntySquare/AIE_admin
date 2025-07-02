@@ -5,43 +5,23 @@
 
       <!-- 按钮操作区域 -->
       <div class="actions">
-        <a-button type="primary" @click="followUserVisible = true"
-          >关注用户</a-button
-        >
+        <a-button type="primary" @click="followUserVisible = true">关注用户</a-button>
         <!--        <a-button type="primary">点赞</a-button>-->
-        <a-button type="primary" @click="forwardTweetVisible = true"
-          >转发+引用推文</a-button
-        >
-        <a-button type="primary" @click="commentVisible = true"
-          >评论推文</a-button
-        >
+        <a-button type="primary" @click="forwardTweetVisible = true">转发+引用推文</a-button>
+        <a-button type="primary" @click="commentVisible = true">评论推文</a-button>
         <!--        <a-button type="primary">AI评论</a-button>-->
-        <a-button type="primary" @click="postTweetVisible = true"
-          >发布推文</a-button
-        >
+        <a-button type="primary" @click="postTweetVisible = true">发布推文</a-button>
 
-        <a-button type="primary" @click="followUserVisible2 = true"
-          >指定账号关注用户</a-button
-        >
+        <a-button type="primary" @click="followUserVisible2 = true">指定账号关注用户</a-button>
 
-        <a-button type="primary" @click="forwardTweetVisible2 = true"
-          >指定账号转发+引用推文</a-button
-        >
+        <a-button type="primary" @click="forwardTweetVisible2 = true">指定账号转发+引用推文</a-button>
 
-        <a-button type="primary" @click="commentVisible2 = true"
-          >指定账号评论推文</a-button
-        >
+        <a-button type="primary" @click="commentVisible2 = true">指定账号评论推文</a-button>
 
-        <a-button type="primary" @click="postTweetVisible2 = true"
-          >指定账号发布推文</a-button
-        >
+        <a-button type="primary" @click="postTweetVisible2 = true">指定账号发布推文</a-button>
 
-        <a-button type="primary" @click="twitterTweetVisible = true"
-          >Twitter API发推</a-button
-        >
-        <a-button type="primary" @click="sendPrivateMessageShow = true"
-          >发送私信</a-button
-        >
+        <a-button type="primary" @click="twitterTweetVisible = true">Twitter API发推</a-button>
+        <a-button type="primary" @click="sendPrivateMessageShow = true">发送私信</a-button>
       </div>
     </a-card>
 
@@ -49,10 +29,7 @@
       <a-grid-item :span="{ xs: 24, sm: 24, md: 24, lg: 24, xl: 24, xxl: 24 }">
         <a-table :data="tableList" :pagination="false">
           <template #columns>
-            <a-table-column
-              title="设备ID"
-              data-index="device_id"
-            ></a-table-column>
+            <a-table-column title="设备ID" data-index="device_id"></a-table-column>
 
             <a-table-column title="时间" data-index="ping_time">
               <template #cell="{ record }">
@@ -74,56 +51,46 @@
 
             <a-table-column title="控制记录" data-index="">
               <template #cell="{ record }">
-                <div
-                  v-for="(item, index) in record.tweet_account_list"
-                  :key="index"
-                  style="
+                <div v-for="(item, index) in record.tweet_account_list" :key="index" style="
                     display: flex;
                     flex-direction: column;
                     align-items: flex-start;
                     margin-top: 10px;
-                  "
-                >
-                  <div
-                    style="
+                  ">
+                  <div style="
                       display: flex;
                       align-items: center;
                       margin-right: 5px;
-                    "
-                  >
+                    ">
                     <p style="margin-right: 5px">{{ item.tweet_account }}</p>
                     <p style="margin-right: 5px">{{
                       item.control_cmd === '1'
                         ? '转发'
                         : item.control_cmd === '2'
-                        ? '转发评论'
-                        : item.control_cmd === '3'
-                        ? '评论'
-                        : item.control_cmd === '4'
-                        ? '点赞'
-                        : item.control_cmd === '5'
-                        ? '发布'
-                        : item.control_cmd === '6'
-                        ? '关注用户'
-                        : item.control_cmd === '7'
-                        ? '取消关注'
-                        : ''
+                          ? '转发评论'
+                          : item.control_cmd === '3'
+                            ? '评论'
+                            : item.control_cmd === '4'
+                              ? '点赞'
+                              : item.control_cmd === '5'
+                                ? '发布'
+                                : item.control_cmd === '6'
+                                  ? '关注用户'
+                                  : item.control_cmd === '7'
+                                    ? '取消关注'
+                                    : ''
                     }}</p>
-                    <p
-                      style="margin-right: 5px"
-                      :class="statusStyle(item.control_status)"
-                      >{{
-                        item.control_status === 0
-                          ? '初始化'
-                          : item.control_status === 1
+                    <p style="margin-right: 5px" :class="statusStyle(item.control_status)">{{
+                      item.control_status === 0
+                        ? '初始化'
+                        : item.control_status === 1
                           ? '已下达'
                           : item.control_status === 2
-                          ? '完成'
-                          : item.control_status === -1
-                          ? '执行失败'
-                          : ''
-                      }}</p
-                    >
+                            ? '完成'
+                            : item.control_status === -1
+                              ? '执行失败'
+                              : ''
+                    }}</p>
                   </div>
                 </div>
               </template>
@@ -138,25 +105,16 @@
             <!--              </template>-->
             <!--            </a-table-column>-->
 
-            <a-table-column
-              title="硬件配置(推特,ins,TruthSocial)"
-               data-index="platform"
-            >
+            <a-table-column title="硬件配置(推特,ins,TruthSocial)" data-index="platform">
               <template #cell="{ record }">
-                <a-select
-                  v-model="record.platform"
-                  style="width: 120px"
-                  :options="platform"
-                  @change="handleChangeplatform(record)"
-                ></a-select>
+                <a-select v-model="record.platform" style="width: 120px" :options="platform"
+                  @change="handleChangeplatform(record)"></a-select>
               </template>
             </a-table-column>
             <a-table-column title="操作">
               <template #cell="{ record }">
                 <a-space>
-                  <a-button type="primary" @click="openModal(record)"
-                    >修改备注</a-button
-                  >
+                  <a-button type="primary" @click="openModal(record)">修改备注</a-button>
                 </a-space>
               </template>
             </a-table-column>
@@ -170,10 +128,7 @@
       <div>
         <a-form :model="followUserForm" auto-label-width>
           <a-form-item field="tweets_user_name" label="需要关注的用户url">
-            <a-input
-              v-model.trim="followUserForm.tweets_user_name"
-              placeholder="请输入需要关注的用户url"
-            />
+            <a-input v-model.trim="followUserForm.tweets_user_name" placeholder="请输入需要关注的用户url" />
           </a-form-item>
         </a-form>
       </div>
@@ -184,37 +139,18 @@
       <div>
         <a-form :model="followUserForm2" auto-label-width>
           <a-form-item field="" label="需要关注的用户url">
-            <a-input
-              v-model.trim="followUserForm2.tweets_user_name"
-              placeholder="请输入需要关注的用户url"
-            />
+            <a-input v-model.trim="followUserForm2.tweets_user_name" placeholder="请输入需要关注的用户url" />
           </a-form-item>
           <div style="margin-bottom: 10px">
             <div style="margin-bottom: 10px">指定账号</div>
-            <a-button
-              type="primary"
-              style="margin-bottom: 10px"
-              @click="addAccount(followUserForm2)"
-              >+</a-button
-            >
+            <a-button type="primary" style="margin-bottom: 10px" @click="addAccount(followUserForm2)">+</a-button>
 
-            <div
-              v-for="(account, index) in followUserForm2.tweets_user_name_list"
-              :key="index"
-              style="display: flex; align-items: center; margin-bottom: 10px"
-            >
-              <a-input
-                v-model.trim="followUserForm2.tweets_user_name_list[index]"
-                style="width: 250px"
-                placeholder="请输入指定账号"
-              />
-              <a-button
-                type="primary"
-                danger
-                style="margin: 0 10px"
-                @click="removeAccount(followUserForm2, index)"
-                >-</a-button
-              >
+            <div v-for="(account, index) in followUserForm2.tweets_user_name_list" :key="index"
+              style="display: flex; align-items: center; margin-bottom: 10px">
+              <a-input v-model.trim="followUserForm2.tweets_user_name_list[index]" style="width: 250px"
+                placeholder="请输入指定账号" />
+              <a-button type="primary" danger style="margin: 0 10px"
+                @click="removeAccount(followUserForm2, index)">-</a-button>
             </div>
           </div>
         </a-form>
@@ -226,43 +162,22 @@
       <div>
         <a-form :model="forwardTweetForm" auto-label-width>
           <a-form-item field="twitter_url" label="当前推文链接">
-            <a-input
-              v-model.trim="forwardTweetForm.twitter_url"
-              placeholder="请输入当前推文链接"
-            />
+            <a-input v-model.trim="forwardTweetForm.twitter_url" placeholder="请输入当前推文链接" />
           </a-form-item>
           <a-form-item field="username" label="推文用户名">
-            <a-input
-              v-model.trim="forwardTweetForm.username"
-              placeholder="请输入推文用户名"
-            />
+            <a-input v-model.trim="forwardTweetForm.username" placeholder="请输入推文用户名" />
           </a-form-item>
           <a-form-item field="twitterQuote" label="当前推文引用正文">
-            <a-input
-              v-model.trim="forwardTweetForm.twitterQuote"
-              placeholder="请输入当前推文引用正文"
-            />
+            <a-input v-model.trim="forwardTweetForm.twitterQuote" placeholder="请输入当前推文引用正文" />
           </a-form-item>
           <a-form-item field="target" label="目的">
-            <a-textarea
-              v-model="forwardTweetForm.target"
-              placeholder="请输入目的"
-              allow-clear
-            />
+            <a-textarea v-model="forwardTweetForm.target" placeholder="请输入目的" allow-clear />
           </a-form-item>
           <a-form-item field="content" label="当前推文正文">
-            <a-textarea
-              v-model="forwardTweetForm.content"
-              placeholder="请输入当前推文正文"
-              allow-clear
-            />
+            <a-textarea v-model="forwardTweetForm.content" placeholder="请输入当前推文正文" allow-clear />
           </a-form-item>
           <a-form-item field="count" label="输入转发推特数">
-            <a-input-number
-              v-model.trim="forwardTweetForm.count"
-              placeholder="请输入数量"
-              allow-clear
-            />
+            <a-input-number v-model.trim="forwardTweetForm.count" placeholder="请输入数量" allow-clear />
           </a-form-item>
         </a-form>
       </div>
@@ -274,65 +189,32 @@
         <a-form :model="forwardTweetForm2" auto-label-width>
           <div style="margin-bottom: 10px">
             <div style="margin-bottom: 10px">指定账号</div>
-            <a-button
-              type="primary"
-              style="margin-bottom: 10px"
-              @click="addAccount(forwardTweetForm2)"
-              >+</a-button
-            >
+            <a-button type="primary" style="margin-bottom: 10px" @click="addAccount(forwardTweetForm2)">+</a-button>
 
-            <div
-              v-for="(
-                account, index
-              ) in forwardTweetForm2.tweets_user_name_list"
-              :key="index"
-              style="display: flex; align-items: center; margin-bottom: 10px"
-            >
-              <a-input
-                v-model.trim="forwardTweetForm2.tweets_user_name_list[index]"
-                style="width: 250px"
-                placeholder="请输入指定账号"
-              />
-              <a-button
-                type="primary"
-                danger
-                style="margin: 0 10px"
-                @click="removeAccount(forwardTweetForm2, index)"
-                >-</a-button
-              >
+            <div v-for="(
+account, index
+              ) in forwardTweetForm2.tweets_user_name_list" :key="index"
+              style="display: flex; align-items: center; margin-bottom: 10px">
+              <a-input v-model.trim="forwardTweetForm2.tweets_user_name_list[index]" style="width: 250px"
+                placeholder="请输入指定账号" />
+              <a-button type="primary" danger style="margin: 0 10px"
+                @click="removeAccount(forwardTweetForm2, index)">-</a-button>
             </div>
           </div>
           <a-form-item field="twitter_url" label="当前推文链接">
-            <a-input
-              v-model.trim="forwardTweetForm2.twitter_url"
-              placeholder="请输入当前推文链接"
-            />
+            <a-input v-model.trim="forwardTweetForm2.twitter_url" placeholder="请输入当前推文链接" />
           </a-form-item>
           <a-form-item field="username" label="推文用户名">
-            <a-input
-              v-model.trim="forwardTweetForm2.username"
-              placeholder="请输入推文用户名"
-            />
+            <a-input v-model.trim="forwardTweetForm2.username" placeholder="请输入推文用户名" />
           </a-form-item>
           <a-form-item field="twitterQuote" label="当前推文引用正文">
-            <a-input
-              v-model.trim="forwardTweetForm2.twitterQuote"
-              placeholder="请输入当前推文引用正文"
-            />
+            <a-input v-model.trim="forwardTweetForm2.twitterQuote" placeholder="请输入当前推文引用正文" />
           </a-form-item>
           <a-form-item field="target" label="目的">
-            <a-textarea
-              v-model="forwardTweetForm2.target"
-              placeholder="请输入目的"
-              allow-clear
-            />
+            <a-textarea v-model="forwardTweetForm2.target" placeholder="请输入目的" allow-clear />
           </a-form-item>
           <a-form-item field="content" label="当前推文正文">
-            <a-textarea
-              v-model="forwardTweetForm2.content"
-              placeholder="请输入当前推文正文"
-              allow-clear
-            />
+            <a-textarea v-model="forwardTweetForm2.content" placeholder="请输入当前推文正文" allow-clear />
           </a-form-item>
         </a-form>
       </div>
@@ -343,24 +225,13 @@
       <div>
         <a-form :model="commentForm" auto-label-width>
           <a-form-item field="tweets_user_name" label="点赞的推文链接">
-            <a-input
-              v-model.trim="commentForm.twitter_url"
-              placeholder="请输入点赞的推文链接"
-            />
+            <a-input v-model.trim="commentForm.twitter_url" placeholder="请输入点赞的推文链接" />
           </a-form-item>
           <a-form-item field="content" label="评价内容">
-            <a-textarea
-              v-model="commentForm.content"
-              placeholder="请输入评价内容"
-              allow-clear
-            />
+            <a-textarea v-model="commentForm.content" placeholder="请输入评价内容" allow-clear />
           </a-form-item>
           <a-form-item field="count" label="输入需要推送的推特数">
-            <a-input-number
-              v-model.trim="commentForm.count"
-              placeholder="请输入数量"
-              allow-clear
-            />
+            <a-input-number v-model.trim="commentForm.count" placeholder="请输入数量" allow-clear />
           </a-form-item>
         </a-form>
       </div>
@@ -372,44 +243,21 @@
         <a-form :model="commentForm2" auto-label-width>
           <div style="margin-bottom: 10px">
             <div style="margin-bottom: 10px">指定账号</div>
-            <a-button
-              type="primary"
-              style="margin-bottom: 10px"
-              @click="addAccount(commentForm2)"
-              >+</a-button
-            >
+            <a-button type="primary" style="margin-bottom: 10px" @click="addAccount(commentForm2)">+</a-button>
 
-            <div
-              v-for="(account, index) in commentForm2.tweets_user_name_list"
-              :key="index"
-              style="display: flex; align-items: center; margin-bottom: 10px"
-            >
-              <a-input
-                v-model.trim="commentForm2.tweets_user_name_list[index]"
-                style="width: 250px"
-                placeholder="请输入指定账号"
-              />
-              <a-button
-                type="primary"
-                danger
-                style="margin: 0 10px"
-                @click="removeAccount(commentForm2, index)"
-                >-</a-button
-              >
+            <div v-for="(account, index) in commentForm2.tweets_user_name_list" :key="index"
+              style="display: flex; align-items: center; margin-bottom: 10px">
+              <a-input v-model.trim="commentForm2.tweets_user_name_list[index]" style="width: 250px"
+                placeholder="请输入指定账号" />
+              <a-button type="primary" danger style="margin: 0 10px"
+                @click="removeAccount(commentForm2, index)">-</a-button>
             </div>
           </div>
           <a-form-item field="tweets_user_name" label="当前推文链接">
-            <a-input
-              v-model.trim="commentForm2.twitter_url"
-              placeholder="请输入当前推文链接"
-            />
+            <a-input v-model.trim="commentForm2.twitter_url" placeholder="请输入当前推文链接" />
           </a-form-item>
           <a-form-item field="content" label="评价内容">
-            <a-textarea
-              v-model="commentForm2.content"
-              placeholder="请输入评价内容"
-              allow-clear
-            />
+            <a-textarea v-model="commentForm2.content" placeholder="请输入评价内容" allow-clear />
           </a-form-item>
         </a-form>
       </div>
@@ -420,25 +268,13 @@
       <div>
         <a-form :model="postTweetForm" auto-label-width>
           <a-form-item field="content" label="内容">
-            <a-textarea
-              v-model="postTweetForm.content"
-              placeholder="请输入内容"
-              allow-clear
-            />
+            <a-textarea v-model="postTweetForm.content" placeholder="请输入内容" allow-clear />
           </a-form-item>
           <a-form-item field="img_url" label="发布推文图片">
-            <a-input
-              v-model.trim="postTweetForm.img_url"
-              placeholder="请输入发布推文图片url"
-              allow-clear
-            />
+            <a-input v-model.trim="postTweetForm.img_url" placeholder="请输入发布推文图片url" allow-clear />
           </a-form-item>
           <a-form-item field="count" label="输入需要推送的推特数">
-            <a-input-number
-              v-model.trim="postTweetForm.count"
-              placeholder="请输入数量"
-              allow-clear
-            />
+            <a-input-number v-model.trim="postTweetForm.count" placeholder="请输入数量" allow-clear />
           </a-form-item>
         </a-form>
       </div>
@@ -450,45 +286,21 @@
         <a-form :model="postTweetForm2" auto-label-width>
           <div style="margin-bottom: 10px">
             <div style="margin-bottom: 10px">指定账号</div>
-            <a-button
-              type="primary"
-              style="margin-bottom: 10px"
-              @click="addAccount(postTweetForm2)"
-              >+</a-button
-            >
+            <a-button type="primary" style="margin-bottom: 10px" @click="addAccount(postTweetForm2)">+</a-button>
 
-            <div
-              v-for="(account, index) in postTweetForm2.tweets_user_name_list"
-              :key="index"
-              style="display: flex; align-items: center; margin-bottom: 10px"
-            >
-              <a-input
-                v-model.trim="postTweetForm2.tweets_user_name_list[index]"
-                style="width: 250px"
-                placeholder="请输入指定账号"
-              />
-              <a-button
-                type="primary"
-                danger
-                style="margin: 0 10px"
-                @click="removeAccount(postTweetForm2, index)"
-                >-</a-button
-              >
+            <div v-for="(account, index) in postTweetForm2.tweets_user_name_list" :key="index"
+              style="display: flex; align-items: center; margin-bottom: 10px">
+              <a-input v-model.trim="postTweetForm2.tweets_user_name_list[index]" style="width: 250px"
+                placeholder="请输入指定账号" />
+              <a-button type="primary" danger style="margin: 0 10px"
+                @click="removeAccount(postTweetForm2, index)">-</a-button>
             </div>
           </div>
           <a-form-item field="content" label="内容">
-            <a-textarea
-              v-model="postTweetForm2.content"
-              placeholder="请输入内容"
-              allow-clear
-            />
+            <a-textarea v-model="postTweetForm2.content" placeholder="请输入内容" allow-clear />
           </a-form-item>
           <a-form-item field="img_url" label="发布推文图片">
-            <a-input
-              v-model.trim="postTweetForm2.img_url"
-              placeholder="请输入推文图片url"
-              allow-clear
-            />
+            <a-input v-model.trim="postTweetForm2.img_url" placeholder="请输入推文图片url" allow-clear />
           </a-form-item>
         </a-form>
       </div>
@@ -499,25 +311,13 @@
       <div>
         <a-form :model="postTwitterTweetForm" auto-label-width>
           <a-form-item field="content" label="内容">
-            <a-textarea
-              v-model="postTwitterTweetForm.content"
-              placeholder="请输入内容"
-              allow-clear
-            />
+            <a-textarea v-model="postTwitterTweetForm.content" placeholder="请输入内容" allow-clear />
           </a-form-item>
           <a-form-item field="img_url" label="发布推文图片">
-            <a-input
-              v-model.trim="postTwitterTweetForm.imageUrl"
-              placeholder="请输入推文图片url"
-              allow-clear
-            />
+            <a-input v-model.trim="postTwitterTweetForm.imageUrl" placeholder="请输入推文图片url" allow-clear />
           </a-form-item>
           <a-form-item field="count" label="机器人名称">
-            <a-input
-              v-model.trim="postTwitterTweetForm.robotName"
-              placeholder="请输入机器人名称"
-              allow-clear
-            />
+            <a-input v-model.trim="postTwitterTweetForm.robotName" placeholder="请输入机器人名称" allow-clear />
           </a-form-item>
         </a-form>
       </div>
@@ -528,55 +328,49 @@
       <div>
         <a-form :model="updateCommentForm" auto-label-width>
           <a-form-item field="tweets_user_name" label="备注">
-            <a-input
-              v-model.trim="updateCommentForm.comment"
-              placeholder="请输入备注内容"
-            />
+            <a-input v-model.trim="updateCommentForm.comment" placeholder="请输入备注内容" />
           </a-form-item>
         </a-form>
       </div>
     </a-modal>
+    <a-modal v-model:visible="sendPrivateMessageShow" @ok="handleSendPrivateMessage"
+      @cancel="handleCancelsendPrivateMessage">
+      <template #title>
+        Title
+      </template>
+      <div>
+        <a-form :model="fanDateForm">
+          <a-form-item field="userAccount" label="用户">
+            <a-input v-model.trim="fanDateForm.userAccount" allow-clear />
+          </a-form-item>
+          <a-form-item field="fanAccount" label="粉丝账户">
+            <a-input v-model.trim="fanDateForm.fanAccount" allow-clear />
+          </a-form-item>
+          <a-form-item field="message" label="发送内容">
+            <a-input v-model.trim="fanDateForm.message" allow-clear />
+          </a-form-item>
+        </a-form>
+
+        <a-button type="primary" @click="headlGetfanList">
+          获取粉丝列表</a-button>
+
+        <a-modal v-model:visible="fanTableShow" title="内层 Modal" @ok="handlfanTable" :mask-closable="false"
+          :closable="true">
+          <a-table row-key="name" :columns="fanColumns" :data="fansList" v-model:selectedKeys="fansSelectedKeys"
+            :row-selection="rowSelection" :pagination="pagination" />
+        </a-modal>
+      </div>
+    </a-modal>
   </div>
 
-  <a-modal v-model:visible="sendPrivateMessageShow" @ok="handleSendPrivateMessage" @cancel="handleCancelsendPrivateMessage">
-    <template #title>
-      Title
-    </template>
-    <div>
-      <a-form :model="fanDateForm">
-        <a-form-item field="userAccount" label="用户">
-          <a-input v-model.trim="fanDateForm.userAccount" allow-clear/>
-        </a-form-item>
-        <a-form-item field="fanAccount" label="粉丝账户">
-          <a-input v-model.trim="fanDateForm.fanAccount" allow-clear />
-        </a-form-item>
-        <a-form-item field="message" label="发送内容">
-          <a-input v-model.trim="fanDateForm.message" allow-clear />
-        </a-form-item>
-      </a-form>
 
-      <a-button type="primary" @click="headlGetfanList">
-          获取粉丝列表</a-button
-        >
-       
-      <a-modal
-        v-model:visible="fanTableShow"
-        title="内层 Modal"
-        @ok="handlfanTable"
-        :mask-closable="false"
-        :closable="true"
-      >
-      <a-table row-key="name" :columns="fanColumns" :data="fansList"  v-model:selectedKeys="fansSelectedKeys" :row-selection="rowSelection" :pagination="pagination" />
-      </a-modal>
-    </div>
-  </a-modal>
 
 
 </template>
 
 <script setup lang="ts">
 import { onMounted, ref, reactive } from 'vue';
-import { Message ,SelectProps} from '@arco-design/web-vue';
+import { Message, SelectProps } from '@arco-design/web-vue';
 import {
   commentTweetApi,
   commentTweetApi2,
@@ -669,7 +463,7 @@ const forwardTweetForm2 = reactive({
 const updateCommentForm = reactive({
   comment: '',
   deviceId: '',
-  platform:0
+  platform: 0
 });
 // Twitter发布表单
 const postTwitterTweetForm = reactive({
@@ -935,10 +729,10 @@ const getdisposition = async () => {
       // platform.value = res.data.data;
       const a = Object.entries(res.data).map(([key, value]) => ({
         label: key,
-        value:Number(value),
+        value: Number(value),
       }));
       console.log(a);
-      
+
       platform.value = a;
     }
   } catch (err) {
@@ -947,7 +741,7 @@ const getdisposition = async () => {
     Message.error('获取失败');
   }
 };
-const handleChangeplatform = async (record:any) => {
+const handleChangeplatform = async (record: any) => {
   updateCommentForm.comment = record.comment;
   updateCommentForm.deviceId = record.device_id;
 
@@ -962,7 +756,7 @@ const handleChangeplatform = async (record:any) => {
   } catch (err) {
     Message.error('修改失败');
   }
-  
+
 };
 const num = ref('1')
 onMounted(async () => {
@@ -986,13 +780,13 @@ const fanDateForm = reactive({
 const fanTableShow = ref(false);
 
 const fanColumns = [
-    {
-       title: 'Name',
-       dataIndex: 'name',
-    },
+  {
+    title: 'Name',
+    dataIndex: 'name',
+  },
 ]
 const fansList = ref([]);
-const fansSelectedKeys=ref([]);
+const fansSelectedKeys = ref([]);
 const handlfanTable = () => {
   // fanTableShow.value = false;
   fanDateForm.fanAccount = []
@@ -1000,33 +794,33 @@ const handlfanTable = () => {
   // console.log(fanDateForm.fanAccount);
 };
 const rowSelection = reactive({
-    type: 'checkbox',
-    showCheckedAll: true,
-    onlyCurrent: false,
-  });
+  type: 'checkbox',
+  showCheckedAll: true,
+  onlyCurrent: false,
+});
 const pagination = reactive({
   current: 1,
   pageSize: 10,
-    total: 0,
-    showTotal: true,
-  })
-const headlGetfanList = ()=> {
+  total: 0,
+  showTotal: true,
+})
+const headlGetfanList = () => {
   const data = {
     userAccount: fanDateForm.userAccount,
-    pageIndex:pagination.current,
+    pageIndex: pagination.current,
     pageSize: pagination.pageSize,
   }
   console.log(data);
-  
+
   getFansListApi(data).then((res) => {
     console.log(res.data);
     if (res.code === 0) {
       pagination.total = res.data.total;
       fanTableShow.value = true;
-       const newData = res.data.fans.map((item: any) => ({
+      const newData = res.data.fans.map((item: any) => ({
         name: item,
-        }));
-        fansList.value = newData;
+      }));
+      fansList.value = newData;
     }
   });
 };
@@ -1039,7 +833,7 @@ pagination.onChange = (page: number) => {
 const handleSendPrivateMessage = async () => {
   if (typeof fanDateForm.fanAccount === 'string') {
     fanDateForm.fanAccount = fanDateForm.fanAccount.split(',');
-  } 
+  }
   try {
     const res = await chatWithFansApi(fanDateForm);
     // console.log(res);
@@ -1070,18 +864,23 @@ const handleCancelsendPrivateMessage = () => {
   display: flex;
   gap: 10px;
 }
+
 .status-gray {
   color: gray;
 }
+
 .status-blue {
   color: blue;
 }
+
 .status-green {
   color: green;
 }
+
 .status-red {
   color: red;
 }
+
 .status-black {
   color: black;
 }

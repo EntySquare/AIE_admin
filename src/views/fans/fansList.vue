@@ -9,9 +9,12 @@
             <span class="user-name">@JCunegatti</span>
           </div> -->
         <div v-for="(user, i) in recentChats" :key="i" class="recent_item">
-          <div class="user-item" @click="recentOpenChat(user)">
-            <img :src="getAvatar(user.fan_account)" alt="avatar" class="avatar" />
-            <span class="user-name">{{ user.fan_account }}</span>
+          <div class="recent_item-1">
+            <div @click="recentOpenChat(user)" class="recent_line">
+              <img :src="getAvatar(user.fan_account)" alt="avatar" class="avatar" />
+              <span class="user-name">{{ user.fan_account }}</span>
+            </div>
+            <div>{{ user.message }}</div>
           </div>
           <div class="read" v-if="user.unread > 0"></div>
         </div>
@@ -112,6 +115,7 @@ interface RecentChats {
   chain_id: string;
   fan_account: string;
   unread: number;
+  message: string;
 }
 // 定义响应式数据
 const users = ref<User[]>([]);
@@ -508,7 +512,6 @@ onMounted(() => {
 }
 
 .recent_item {
-  width: 100%;
   cursor: pointer;
   border-radius: 12px;
   transition: background-color 0.2s;
@@ -534,10 +537,29 @@ onMounted(() => {
 }
 
 .user-item:hover,
-.fan-item:hover {
+.fan-item:hover,
+.recent_item-1:hover {
   background-color: #e0e0e0;
 }
 
+.recent_item-1 {
+  /* padding: 16px; */
+  cursor: pointer;
+  border-radius: 12px;
+  transition: background-color 0.2s;
+  /* display: flex; */
+  /* align-items: center; */
+}
+
+.recent_line {
+  padding: 16px;
+  display: flex;
+  align-items: center;
+}
+
+.recent_line span {
+  margin-left: 15px;
+}
 
 .avatar {
   width: 40px;

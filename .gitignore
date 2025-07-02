@@ -26,6 +26,6 @@ vendor
 .log
 */.log
 log
-
+.env.development
 managerLog
 *.log

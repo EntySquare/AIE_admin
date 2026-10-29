@@ -2,7 +2,6 @@
   <div class="container">
     <a-card>
       <h2>手动群控</h2>
-      <a-alert type="info" style="margin-bottom: 16px">提交后会排队执行，结果在下方控制记录中自动更新。</a-alert>
 
       <!-- 按钮操作区域 -->
       <div class="actions">
@@ -32,7 +31,7 @@
           <template #columns>
             <a-table-column title="设备ID" data-index="device_id"></a-table-column>
 
-            <a-table-column title="心跳时间" data-index="ping_time">
+            <a-table-column title="时间" data-index="ping_time">
               <template #cell="{ record }">
                 {{ formatDate(record.ping_time) }}
               </template>
@@ -81,9 +80,18 @@
                                     ? '取消关注'
                                     : ''
                     }}</p>
-                    <p style="margin-right: 5px" :class="statusStyle(item.control_status)">{{ controlStatusLabel(item.control_status) }}</p>
+                    <p style="margin-right: 5px" :class="statusStyle(item.control_status)">{{
+                      item.control_status === 0
+                        ? '初始化'
+                        : item.control_status === 1
+                          ? '已下达'
+                          : item.control_status === 2
+                            ? '完成'
+                            : item.control_status === -1
+                              ? '执行失败'
+                              : ''
+                    }}</p>
                   </div>
-                  <p v-if="item.error_msg" class="status-red">{{ item.error_msg }}</p>
                 </div>
               </template>
             </a-table-column>
@@ -151,7 +159,6 @@
 
     <a-modal v-model:visible="forwardTweetVisible" @ok="forwardTweet">
       <template #title> 转发和引用推文 </template>
-      <p>将分别提交一条评论和一条引用推文。</p>
       <div>
         <a-form :model="forwardTweetForm" auto-label-width>
           <a-form-item field="twitter_url" label="当前推文链接">
@@ -178,7 +185,6 @@
 
     <a-modal v-model:visible="forwardTweetVisible2" @ok="forwardTweet2">
       <template #title> 指定账号 转发和引用推文 </template>
-      <p>每个指定账号将分别提交一条评论和一条引用推文。</p>
       <div>
         <a-form :model="forwardTweetForm2" auto-label-width>
           <div style="margin-bottom: 10px">
@@ -363,7 +369,7 @@ account, index
 </template>
 
 <script setup lang="ts">
-import { onMounted, onBeforeUnmount, ref, reactive } from 'vue';
+import { onMounted, ref, reactive } from 'vue';
 import { Message, SelectProps } from '@arco-design/web-vue';
 import {
   commentTweetApi,
@@ -383,7 +389,7 @@ import {
   getFansListApi
 } from '@/api/phone';
 
-const tableList = ref<any[]>([]);
+const tableList = ref([]);
 const followUserVisible = ref(false); // 关注用户弹窗
 const commentVisible = ref(false); // 评论弹窗
 const postTweetVisible = ref(false); // 发布弹窗
@@ -485,7 +491,6 @@ const formatDate = (timestamp: any) => {
 const statusStyle = (status: any) => {
   switch (status) {
     case 0:
-    case 3:
       return 'status-gray'; // 初始化
     case 1:
       return 'status-blue'; // 已下达
@@ -495,22 +500,6 @@ const statusStyle = (status: any) => {
       return 'status-red'; // 执行失败
     default:
       return 'status-black'; // 未知状态
-  }
-};
-
-const controlStatusLabel = (status: number) => {
-  const labels: Record<number, string> = { 0: '等待执行', 3: '等待下发', 1: '执行中', 2: '执行完成', '-1': '执行失败' };
-  return labels[status] || '未知状态';
-};
-
-const showControlReceipt = (res: any, action: string) => {
-  if (res.data?.status === 'completed') {
-    Message.success(`${action}任务已执行完成`);
-  } else if (res.data?.status === 'failed') {
-    Message.error(`${action}任务存在执行失败，请查看控制记录`);
-  } else {
-    const count = Array.isArray(res.data?.task_ids) ? res.data.task_ids.length : 0;
-    Message.info(`${action}任务已提交${count ? `（${count}项）` : ''}，执行结果见控制记录`);
   }
 };
 
@@ -524,10 +513,7 @@ const removeAccount = (form: any, index: any) => {
 };
 
 // 查询列表
-let queryInFlight = false;
 const queryListData = async () => {
-  if (queryInFlight) return;
-  queryInFlight = true;
   try {
     const res = await getPhoneControlApi();
     if (res.code === 0) {
@@ -536,8 +522,6 @@ const queryListData = async () => {
     console.log('手机控制列表数据：', res);
   } catch (err) {
     // you can report use errorHandler or other
-  } finally {
-    queryInFlight = false;
   }
 };
 
@@ -568,11 +552,11 @@ const followUser = async () => {
     if (res.code === 0) {
       followUserVisible.value = false;
       followUserForm.tweets_user_name = '';
-      showControlReceipt(res, '关注');
+      Message.success('关注成功');
     }
     queryListData();
   } catch (err) {
-    Message.error('关注任务提交失败');
+    Message.error('关注失败');
     console.log(err);
   }
 };
@@ -585,11 +569,11 @@ const followUser2 = async () => {
       followUserVisible2.value = false;
       followUserForm2.tweets_user_name = '';
       followUserForm2.tweets_user_name_list = [];
-      showControlReceipt(res, '关注');
+      Message.success('关注成功');
     }
     queryListData();
   } catch (err) {
-    Message.error('关注任务提交失败');
+    Message.error('关注失败');
     console.log(err);
   }
 };
@@ -606,12 +590,12 @@ const forwardTweet = async () => {
       forwardTweetForm.username = '';
       forwardTweetForm.target = '';
       forwardTweetForm.twitterQuote = '';
-      showControlReceipt(res, '转发');
+      Message.success('转发成功');
     }
     queryListData();
   } catch (err) {
     console.log(err);
-    Message.error('转发任务提交失败');
+    Message.error('转发失败');
   }
 };
 // 指定账号转发引用推文
@@ -626,12 +610,12 @@ const forwardTweet2 = async () => {
       forwardTweetForm2.username = '';
       forwardTweetForm2.target = '';
       forwardTweetForm2.twitterQuote = '';
-      showControlReceipt(res, '转发');
+      Message.success('转发成功');
     }
     queryListData();
   } catch (err) {
     console.log(err);
-    Message.error('转发任务提交失败');
+    Message.error('转发失败');
   }
 };
 
@@ -644,12 +628,12 @@ const commentTweet = async () => {
       commentForm.content = '';
       commentForm.count = 0;
       commentForm.twitter_url = '';
-      showControlReceipt(res, '评论');
+      Message.success('评论成功');
     }
     queryListData();
   } catch (err) {
     console.log(err);
-    Message.error('评论任务提交失败');
+    Message.error('评论失败');
   }
 };
 // 指定账号评论推文
@@ -661,12 +645,12 @@ const commentTweet2 = async () => {
       commentForm2.content = '';
       commentForm2.tweets_user_name_list = [];
       commentForm2.twitter_url = '';
-      showControlReceipt(res, '评论');
+      Message.success('评论成功');
     }
     queryListData();
   } catch (err) {
     console.log(err);
-    Message.error('评论任务提交失败');
+    Message.error('评论失败');
   }
 };
 
@@ -679,12 +663,12 @@ const postTweet = async () => {
       postTweetForm.content = '';
       postTweetForm.img_url = '';
       postTweetForm.count = 0;
-      showControlReceipt(res, '发布');
+      Message.success('发布成功');
     }
     queryListData();
   } catch (err) {
     console.log(err);
-    Message.error('发布任务提交失败');
+    Message.error('发布失败');
   }
 };
 // 指定账号发布推文
@@ -696,12 +680,12 @@ const postTweet2 = async () => {
       postTweetForm2.content = '';
       postTweetForm2.img_url = '';
       postTweetForm2.tweets_user_name_list = [];
-      showControlReceipt(res, '发布');
+      Message.success('发布成功');
     }
     queryListData();
   } catch (err) {
     console.log(err);
-    Message.error('发布任务提交失败');
+    Message.error('发布失败');
   }
 };
 
@@ -736,7 +720,7 @@ const getUpdateComment = async () => {
     Message.error('修改失败');
   }
 };
-const platform = ref<Array<{ label: string; value: number }>>([]);
+const platform = ref([],);
 // const abc = ref(0)
 const getdisposition = async () => {
   try {
@@ -775,14 +759,14 @@ const handleChangeplatform = async (record: any) => {
 
 };
 const num = ref('1')
-let controlRefreshTimer: ReturnType<typeof setInterval> | undefined;
-onMounted(() => {
-  getdisposition();
-  queryListData();
-  controlRefreshTimer = setInterval(queryListData, 5000);
-});
-onBeforeUnmount(() => {
-  if (controlRefreshTimer !== undefined) clearInterval(controlRefreshTimer);
+onMounted(async () => {
+  await getdisposition();
+  await queryListData();
+  // 每10秒查询一次列表数据
+  setInterval(() => {
+    // queryListData();
+  }, 100000);
+  // queryTweetList();
 });
 
 const sendPrivateMessageShow = ref(false); // 发送私信弹窗
@@ -811,11 +795,11 @@ const handlfanTable = () => {
   // console.log(fanDateForm.fanAccount);
 };
 const rowSelection = reactive({
-  type: 'checkbox' as const,
+  type: 'checkbox',
   showCheckedAll: true,
   onlyCurrent: false,
 });
-const pagination = reactive<{ current: number; pageSize: number; total: number; showTotal: boolean; onChange?: (page: number) => void }>({
+const pagination = reactive({
   current: 1,
   pageSize: 10,
   total: 0,
